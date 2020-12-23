@@ -1,9 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Monster : GameUnit
 {
+    //Monster 들이 공통적으로 사용할 컴포넌트 선언..
+    private NavMeshAgent nav;
+
+    protected NavMeshAgent Nav { get => nav; }
+
+    protected override void Start()
+    {
+        base.Start();
+    }
+
     protected delegate void AttackMethodDelegate();
     protected class Pattern
     {

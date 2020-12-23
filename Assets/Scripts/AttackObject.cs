@@ -30,27 +30,29 @@ public class AttackObject : MonoBehaviour
         if (updateMethod != null)
             updateMethod();
     }
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
         //충돌체가 공격 대상일시
-        if (targetTag.Equals(collision.gameObject.tag))
+        if (targetTag.Equals(other.tag))
         {
-            var hitscript = GameManager.Instance.Units[collision.gameObject.name];
+            var hitscript = GameManager.Instance.Units[other.gameObject.name];
             var validDamage = hitscript.hitbyAttack(damage, startpos);
             //적용된 데미지가 0 초과일시 공격 성공으로 판정
-            if(validDamage > 0.0f)
+            if (validDamage > 0.0f)
             {
                 //타격 이펙트
-                var hitpos = collision.GetContact(0).point;
+                //hitpos 식을 타격 위치로 얻어오도록 변경..
+                var hitpos = Vector3.zero;
+         
                 var hitdir = hitpos - startpos;
                 hitdir.y = 0;
                 hitdir = hitdir.normalized;
-                caller.HitEffect(hitpos,hitdir);
+                caller.HitEffect(hitpos, hitdir);
                 //데미지 이펙트
                 GameManager.Instance.UI.PrintDamage(validDamage, hitscript.transform.position);
                 //그외 공격 성공 후 처리 필요할 시 작성
             }
-            //TODO : AttackObject 삭제 또는 비활성화 처리
+            Destroy(this.gameObject);
         }
     }
 }
