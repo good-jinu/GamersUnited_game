@@ -9,10 +9,19 @@ public class GameManager : MonoBehaviour
     private Dictionary<string,GameUnit> units;
     private UIManager ui;
     private EffectManager effect;
+    private Player player;
+
+    
+    //
+    // Prefab 정보를 Public 변수로 저장한 후 Unity상의 GameManager에서 직접 연결해줘야 하는 것으로 보임.
+    // 오브젝트를 인스턴스화 시킬때 Prefab 정보가 필요할 시 GameManager.cs에 public 변수(Property 아님) 추가 후 사용할 것
+    //
+
     public static GameManager Instance { get => instance; }
     public Dictionary<string, GameUnit> Units { get => units; set => units = value; }
     public UIManager UI { get => ui; set => ui = value; }
     public EffectManager Effect { get => effect; set => effect = value; }
+    public Player Player { get => player; set => player = value; }
 
     void Awake()
     {
@@ -42,15 +51,12 @@ public class GameManager : MonoBehaviour
         //      Monster 사망시 확률적으로 랜덤한 아이템 생성
         //      Monster 전부 사망 시 다음 중 하나 : 바로(또는 일정시간 후) 다음 레벨로 이동 / 다음 레벨로 이동하게 할 워프 Object 생성시키기
         //                                         후자의 경우 워프 오브젝트의 스크립트도 GameManager 담당이 코딩
-        //      Monster 중 D Type(죽을시 2마리로 분리) 사망 시 랜덤한 Monster 2기 생성하기
         //      Player 사망시 다음 중 하나 : 바로 게임 재시작 / UI창 뛰운 후 재시작 또는 메뉴로 되돌아가기 선택
     }
-    //선택할 사항 1: 각종 Effect/사망한 Unit/획득한 Item을 Scene에서 그 순간에 바로 Destory할지, 아니면 비활성화 후 GameManager가 특정 타이밍에 다 Destory할지
-    //              전자 선택시 Effect 처리/Unit또는 Item 습득 처리 직후 바로 Destory 하도록 코딩해야함
-    //              후자 선택시 비활성화만 한 후 GameManager의 리스트 자료형에 gameObject 추가, gameObject가 특정 간격으로 자동으로 Destory하도록 코딩해야함
 
     //TODO : Scene 시작시 마다 Monster 랜덤으로 3개 생성/스탯 설정
     //      Scene 이동시 마다 Player의 현재 스탯(아이템 정보 포함)을 불러오기 할 것
     //      
+    //      D Type Monster의 사망시 분리(2기 생성)를 위해 특정 위치에 몬스터 생성하는 public method 추가해줄 것(몬스터 종류 선택/메소드 내에서 랜덤은 자유)
 
 }

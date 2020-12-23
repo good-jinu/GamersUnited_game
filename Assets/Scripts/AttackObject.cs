@@ -1,29 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//이 클래스는 이름이 바뀌거나 삭제될 수 있음
 public class AttackObject : MonoBehaviour
 {
     public delegate void ObjectMoveMethod();
-    private ObjectMoveMethod method;
+    private ObjectMoveMethod updateMethod;
     private float damage;
     private string targetTag;
     private Vector3 startpos;
     private Weapon caller;
 
-    public void init(ObjectMoveMethod method, float damage, string targetTag, Vector3 pos, Weapon caller)
+    public ObjectMoveMethod UpdateMethod { set => updateMethod = value; }
+
+    public void init(float damage, string targetTag, Vector3 pos, Weapon caller)
     {
-        this.method = method;
         this.damage = damage;
         this.targetTag = targetTag;
         this.startpos = pos;
         this.caller = caller;
     }
-
-    void FixedUpdate()
+    public void DoMethod(ObjectMoveMethod method)
     {
-        if (method != null)
-            method();
+        method();
+    }
+
+    void Update()
+    {
+        if (updateMethod != null)
+            updateMethod();
     }
     private void OnCollisionEnter(Collision collision)
     {

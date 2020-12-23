@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//이 클래스는 이름이 바뀌거나 삭제될 수 있음
 public abstract class Weapon
 {
     private ItemGrade grade;
