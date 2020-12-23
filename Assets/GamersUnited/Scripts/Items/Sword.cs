@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class Sword : Weapon
 {
-    public Sword(ItemGrade grade) : base(GameManager.Instance.Effect.HitEffect, grade)
+    private int damage;
+    private float cooldown;
+    public override void Init(EffectManager.EffectMethod hitEffect, ItemGrade grade)
     {
-
+        base.Init(hitEffect, grade);
+        var stat = GameData.GetWeaponStat(WeaponType.Sword, grade);
+        damage = stat.Item1;
+        cooldown = stat.Item2;
     }
-    public override void Attack()
+    public override bool Attack()
     {
         throw new System.NotImplementedException();
     }

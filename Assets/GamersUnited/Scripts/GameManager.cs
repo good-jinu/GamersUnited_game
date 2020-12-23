@@ -11,7 +11,6 @@ public class GameManager : MonoBehaviour
     private EffectManager effect;
     private Player player;
 
-
     //
     // Prefab 정보를 Public 변수로 저장한 후 Unity상의 GameManager에서 직접 연결해줘야 하는 것으로 보임.
     // 오브젝트를 인스턴스화 시킬때 Prefab 정보가 필요할 시 GameManager.cs에 public 변수(Property 아님) 추가 후 사용할 것
@@ -61,6 +60,5 @@ public class GameManager : MonoBehaviour
     //TODO : Scene 시작시 마다 Monster 랜덤으로 3개 생성/스탯 설정
     //      Scene 이동시 마다 Player의 현재 스탯(아이템 정보 포함)을 불러오기 할 것
     //      
-    //      D Type Monster의 사망시 분리(2기 생성)를 위해 특정 위치에 몬스터 생성하는 public method 추가해줄 것(몬스터 종류 선택/메소드 내에서 랜덤은 자유)
-
+    //    
 }

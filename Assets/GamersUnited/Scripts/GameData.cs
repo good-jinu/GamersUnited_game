@@ -28,10 +28,10 @@ using UnityEngine;
 public static class GameData
 {
     //Player Stat
-    public static readonly int playerBaseHp = 100;
-    public static readonly float playerBaseAtk = 1.0f;
-    public static readonly float playerBaseSpeed = 10;
-    public static readonly int playerBaseArmor = 0;
+    private static readonly int playerBaseHp = 100;
+    private static readonly float playerBaseAtk = 1.0f;
+    private static readonly float playerBaseSpeed = 10;
+    private static readonly int playerBaseArmor = 0;
     //Player의 기본적인 스탯 : 최대 체력/공격력 계수/이동속도/방어력 을 반환한다.
     public static (int,float,float,int) GetPlayerStat() { return (playerBaseHp, playerBaseAtk, playerBaseSpeed, playerBaseArmor); }
 
@@ -52,8 +52,8 @@ public static class GameData
     //Weapon Data
     private static readonly int[,] weaponAtk = { { 30, 40, 50 }, { 40, 55, 70 }, { 25, 30, 35 }, { 15, 18, 22 } };
     private static readonly float[,] weaponCooldown = { { 1.4f, 1.3f, 1.2f }, { 1.6f, 1.55f, 1.5f }, { 0.8f, 0.7f, 0.6f }, { 1.25f, 1.15f, 1.05f } };
-    private static readonly int[,] weaponRange = { { -1, -1, -1 }, { -1, -1, -1 }, { 7, 8, 9 }, { 4, 5, 6 } };
-    private static readonly int[,] weaponAmmo = { { -1, -1, -1 }, { -1, -1, -1 }, { 30, 40, 50 }, { 10, 15, 20 } };
+    private static readonly int[,] weaponRange = { { -1, -1, -1 }, { -1, -1, -1 }, { 14, 17, 20 }, { 10, 11, 12 } };
+    private static readonly int[,] weaponAmmo = { { -1, -1, -1 }, { -1, -1, -1 }, { 60, 80, 100 }, { 20, 30, 40 } };
     //Get Method 사용 방법 : 첫번째 매개변수는 Weapon 종류 지정(Enum WeaponType), 두번째 매개변수는 Weapon 등급 지정(Enum ItemGrade)
     //매개변수 type과 grade로 지정한 무기의 기본 정보 : 공격 시 공격력/공격 쿨타임/사거리/공격 가능 횟수(탄약) 반환
     public static (int,float,int,int) GetWeaponStat(WeaponType type, ItemGrade grade)
@@ -71,6 +71,14 @@ public static class GameData
     {
         return (bonusHp[(int)type, (int)grade], bonusArmor[(int)type, (int)grade], bonusSpeed[(int)type, (int)grade]);
     }
+
+    //Prefab 정보들
+    //현재 아래 방법 사용시 에러가 발생함. GameManager를 통해 prefab을 얻을것
+    private const string prefabPath = @"GamersUnited/Prefabs/";
+    public static readonly GameObject prefabShotGunBullet = Resources.Load<GameObject>($"{prefabPath}ShotGun Bullet");
+    public static readonly GameObject prefabGunBullet = Resources.Load<GameObject>($"{prefabPath}Gun Bullet");
+
+
 }
 public enum WeaponType { Sword, Longsword, Gun, Shotgun }
 public enum ItemGrade { Common, Rare, Unique}

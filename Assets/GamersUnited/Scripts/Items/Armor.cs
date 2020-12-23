@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Armor
+public class Armor : MonoBehaviour
 {
     private ArmorType type;
     private ItemGrade grade;
@@ -10,7 +10,7 @@ public class Armor
     public ItemGrade Grade { get => grade;}
     public ArmorType Type { get => type;}
 
-    public Armor(ArmorType type,ItemGrade grade)
+    public void Init(ArmorType type,ItemGrade grade)
     {
         this.type = type;
         this.grade = grade;

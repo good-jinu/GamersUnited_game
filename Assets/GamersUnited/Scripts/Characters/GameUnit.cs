@@ -24,7 +24,7 @@ public class GameUnit : MonoBehaviour
         invincible = false;
     }
     //스탯 초기화용 함수, 매개변수로 넣은 스탯 값으로 스탯 정보를 초기화한다.
-    public void initStat(int hp, float atk, float speed, int armor)
+    public void InitStat(int hp, float atk, float speed, int armor)
     {
         maxHp = hp;
         health = (float)hp;
