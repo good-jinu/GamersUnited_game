@@ -10,15 +10,17 @@ public class AttackObject : MonoBehaviour
     private string targetTag;
     private Vector3 startpos;
     private Weapon caller;
+    private int enableHitCount;
 
     public ObjectMoveMethod UpdateMethod { set => updateMethod = value; }
 
-    public void init(float damage, string targetTag, Vector3 pos, Weapon caller)
+    public void init(float damage, string targetTag, Vector3 pos, Weapon caller, int enableHitCount)
     {
         this.damage = damage;
         this.targetTag = targetTag;
         this.startpos = pos;
         this.caller = caller;
+        this.enableHitCount = enableHitCount;
     }
     public void DoMethod(ObjectMoveMethod method)
     {
@@ -52,6 +54,14 @@ public class AttackObject : MonoBehaviour
                 GameManager.Instance.UI.PrintDamage(validDamage, hitscript.transform.position);
                 //그외 공격 성공 후 처리 필요할 시 작성
             }
+            if (--enableHitCount <= 0)
+            {
+                Destroy(this.gameObject);
+            }
+        }
+        //벽에 부딪힐 시
+        else if (false)
+        {
             Destroy(this.gameObject);
         }
     }

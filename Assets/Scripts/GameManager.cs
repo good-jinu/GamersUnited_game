@@ -11,10 +11,14 @@ public class GameManager : MonoBehaviour
     private EffectManager effect;
     private Player player;
 
-    
+
     //
     // Prefab 정보를 Public 변수로 저장한 후 Unity상의 GameManager에서 직접 연결해줘야 하는 것으로 보임.
     // 오브젝트를 인스턴스화 시킬때 Prefab 정보가 필요할 시 GameManager.cs에 public 변수(Property 아님) 추가 후 사용할 것
+    public GameObject prefabShotGunBullet;
+    public GameObject prefabGunBullet;
+    public GameObject prefabSwordAttackRange;
+    public GameObject prefabLongSwordAttackRange;
     //
 
     public static GameManager Instance { get => instance; }

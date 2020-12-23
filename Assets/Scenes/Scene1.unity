@@ -285,6 +285,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c3673652f0be64a84e1b9672044e88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabShotGunBullet: {fileID: 6161147623649256555, guid: 29c562b5ffb27b241a2509213495371e,
+    type: 3}
+  prefabGunBullet: {fileID: 2423429443266779591, guid: 40c0b0a43c6017b46bbe74cdedb2beb2,
+    type: 3}
+  prefabSwordAttackRange: {fileID: 8655744194519485240, guid: f6985af883ba51942a1b1e352b9e74c0,
+    type: 3}
+  prefabLongSwordAttackRange: {fileID: 5503567119813179173, guid: c68bc994e76ea594dac4c11e651d4556,
+    type: 3}
 --- !u!4 &2064201474
 Transform:
   m_ObjectHideFlags: 0

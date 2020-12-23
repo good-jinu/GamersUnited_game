@@ -11,7 +11,7 @@ public class EffectManager : MonoBehaviour
     }
     public delegate void EffectMethod(Vector3 pos, Vector3 dir);
     //각종 이펙트 처리를 이 클래스 내 메소드로 수행함
-    public void hitEffect(Vector3 pos, Vector3 dir)
+    public void HitEffect(Vector3 pos, Vector3 dir)
     {
         //기본 타격 이펙트
     }
