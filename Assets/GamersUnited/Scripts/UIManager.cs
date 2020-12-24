@@ -34,7 +34,7 @@ public class UIManager : MonoBehaviour
     //구현해야할 UI 목록
     //필수 : 플레이어 체력 표기, 탄환 갯수 표기, 일시정지 버튼 또는 키 입력시 일시정지 구현, 일시정지 UI 창에서 재시작/메뉴 창으로 선택지 구현
     //선택 : 공격 쿨타임 표기, 몬스터 체력 표기, 특정 키 입력시 현재 장비한 모든 아이템/무기 정보를 볼 수 있는 UI창 생성
-    void Resume()
+    public void Resume()
     {
         //일시정지 화면에서 빠져나가기 Resume 할때 사용
         PauseMenu.SetActive(false);
