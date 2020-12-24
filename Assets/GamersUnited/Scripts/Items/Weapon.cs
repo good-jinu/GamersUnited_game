@@ -9,14 +9,13 @@ public abstract class Weapon : MonoBehaviour
     private EffectManager.EffectMethod hitEffect;
     private GameUnit unit;
     private System.DateTime cooldownEndTime = DateTime.MinValue;
-    public EffectManager.EffectMethod HitEffect { get => hitEffect;}
     public GameUnit Unit { get => unit; set => unit = value; }
     protected DateTime CooldownEndTime { get => cooldownEndTime; set => cooldownEndTime = value; }
     public ItemGrade Grade { get => grade; }
+    protected EffectManager.EffectMethod HitEffect { get => hitEffect; set => hitEffect = value; }
 
-    public virtual void Init(EffectManager.EffectMethod hitEffect, ItemGrade grade)
+    public virtual void Init(ItemGrade grade)
     {
-        this.hitEffect = hitEffect;
         this.grade = grade;
     }
 

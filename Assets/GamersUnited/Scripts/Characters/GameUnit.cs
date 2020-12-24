@@ -11,12 +11,12 @@ public class GameUnit : MonoBehaviour
     private float atk;
     private bool invincible;
 
-    protected int MaxHp { get => maxHp; set => maxHp = value; }
-    protected float Health { get => health; set => health = value; }
-    protected int Armor { get => armor; set => armor = value; }
-    protected float Movespeed { get => movespeed; set => movespeed = value; }
-    protected float Atk { get => atk; set => atk = value; }
-    public bool Invincible { get => invincible; set => invincible = value; }
+    public int MaxHp { get => maxHp; protected set => maxHp = value; }
+    public float Health { get => health; protected set => health = value; }
+    public int Armor { get => armor; protected set => armor = value; }
+    public float Movespeed { get => movespeed; protected set => movespeed = value; }
+    public float Atk { get => atk; protected set => atk = value; }
+    public bool Invincible { get => invincible; protected set => invincible = value; }
 
     protected virtual void Start()
     {
@@ -38,9 +38,21 @@ public class GameUnit : MonoBehaviour
     //반환값 : 실제 적용된 데미지
     public virtual float hitbyAttack(float damage, Vector3 pos)
     {
-        //데미지 처리
-        //피격 모션 또는 사망 모션 호출
-        return 0;
+        if (invincible)
+            return 0f;
+        float validDamage = damage - armor;
+        health -= validDamage;
+        Vector3 dir = transform.position - pos;
+        if (health > 0)
+        {
+            OnDamaged(dir);
+        }
+        else
+        {
+            OnDead(dir);
+        }
+        //무적이 아닐 시 최소 데미지 1을 받음
+        return validDamage >= 1 ? validDamage : 1;
     }
     //피격 후 hp가 0이되면 호출할 함수
     //dir : 사망 애니메이션을 수행할 방향
