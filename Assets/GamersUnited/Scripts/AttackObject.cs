@@ -6,15 +6,22 @@ public class AttackObject : MonoBehaviour
 {
     public delegate void ObjectMoveMethod();
     private ObjectMoveMethod updateMethod;
+    private ObjectMoveMethod fixedUpdateMethod;
+
     private float damage;
     private string targetTag;
     private Vector3 startpos;
     private Weapon caller;
     private int enableHitCount;
 
-    public ObjectMoveMethod UpdateMethod { set => updateMethod = value; }
+    //특정 Object에만 사용할 변수들..
+    private Rigidbody rigid;
+    private float range;
+    private float speed;
 
-    public void init(float damage, string targetTag, Vector3 pos, Weapon caller, int enableHitCount)
+    public Vector3 Startpos { get => startpos; set => startpos = value; }
+
+    public void Init(float damage, string targetTag, Vector3 pos, Weapon caller, int enableHitCount)
     {
         this.damage = damage;
         this.targetTag = targetTag;
@@ -22,15 +29,16 @@ public class AttackObject : MonoBehaviour
         this.caller = caller;
         this.enableHitCount = enableHitCount;
     }
-    public void DoMethod(ObjectMoveMethod method)
-    {
-        method();
-    }
 
     void Update()
     {
         if (updateMethod != null)
             updateMethod();
+    }
+    void FixedUpdate()
+    {
+        if (fixedUpdateMethod != null)
+            fixedUpdateMethod();
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -49,7 +57,8 @@ public class AttackObject : MonoBehaviour
                 var hitdir = hitpos - startpos;
                 hitdir.y = 0;
                 hitdir = hitdir.normalized;
-                caller.HitEffect(hitpos, hitdir);
+                if(caller.HitEffect != null)
+                    caller.HitEffect(hitpos, hitdir);
                 //데미지 이펙트
                 GameManager.Instance.UI.PrintDamage(validDamage, hitscript.transform.position);
                 //그외 공격 성공 후 처리 필요할 시 작성
@@ -61,6 +70,31 @@ public class AttackObject : MonoBehaviour
         }
         //벽에 부딪힐 시
         else if (false)
+        {
+            Destroy(this.gameObject);
+        }
+    }
+
+    //외부 호출용 public 함수들
+
+    public void StartBullet(float speed, float range)
+    {
+        this.speed = speed;
+        this.range = range;
+        rigid = GetComponent<Rigidbody>();
+        fixedUpdateMethod = BulletMoving;
+    }
+
+    //delegate용 함수들
+    private void BulletMoving()
+    {
+        Vector3 diff = startpos - transform.position;
+        float distance = Mathf.Sqrt(Mathf.Pow(diff.x, 2) + Mathf.Pow(diff.z, 2));
+        if(distance < range)
+        {
+            rigid.velocity = transform.forward * speed;
+        }
+        else
         {
             Destroy(this.gameObject);
         }
