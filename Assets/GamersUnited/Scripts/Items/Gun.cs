@@ -5,7 +5,7 @@ using UnityEngine;
 public class Gun : Weapon
 {
     private int ammo;
-    private const float BulletSpeed = 30f;
+    private const float BulletSpeed = 40f;
     public override void Init(ItemGrade grade)
     {
         base.Init(grade);
@@ -31,7 +31,7 @@ public class Gun : Weapon
         var bullet = Instantiate(GameData.PrefabGunBullet, Unit.transform.position, Unit.transform.rotation);
         var script = bullet.GetComponent<AttackObject>();
         var bulletstat = GameData.GetWeaponExtensionStat(WeaponType.Gun, Grade);
-        script.Init(damage, "Enemy", bullet.transform.position, Unit, bulletstat.Item3,HitEffect);
+        script.Init(damage, "Enemy", Unit.transform.position, Unit, bulletstat.Item3,HitEffect);
         script.StartBullet(BulletSpeed, bulletstat.Item1);
         yield break;
     }

@@ -24,7 +24,7 @@ public class Player : GameUnit
     //테스트용 임시 메소드, 삭제하여도됨
     void Tmp()
     {
-        weapon = GetComponentInChildren<Gun>();
+        weapon = GetComponentInChildren<ShotGun>();
         weapon.Init(ItemGrade.Unique);
         weapon.Unit = this;
     }
