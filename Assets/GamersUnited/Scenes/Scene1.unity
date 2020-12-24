@@ -568,9 +568,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adcb4108c7eb8614bbf924328bbc61a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hp_bar: {fileID: 1537355846}
+  ammo_bar: {fileID: 870635458}
   PauseMenu: {fileID: 943746664}
-  hp_bar: {fileID: 1537355844}
-  ammo_bar: {fileID: 870635457}
 --- !u!4 &328521569
 Transform:
   m_ObjectHideFlags: 0

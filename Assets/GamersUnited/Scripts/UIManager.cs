@@ -6,19 +6,15 @@ using TMPro;
 public class UIManager : MonoBehaviour
 {
     private bool GameIsPaused = false;
-    private TextMeshProUGUI hp_barVal;
-    private TextMeshProUGUI ammo_barVal;
 
+    public TextMeshProUGUI hp_bar;
+    public TextMeshProUGUI ammo_bar;
     public GameObject PauseMenu;
-    public GameObject hp_bar;
-    public GameObject ammo_bar;
 
     // Start is called before the first frame update
     void Start()
     {
         GameManager.Instance.UI = this;
-        hp_barVal = hp_bar.GetComponent<TextMeshProUGUI>();
-        ammo_barVal = ammo_bar.GetComponent<TextMeshProUGUI>();
     }
 
     private void Update()
@@ -61,8 +57,8 @@ public class UIManager : MonoBehaviour
     void ShowCurrentState()
     {
         //현재 체력과 총알 상태 텍스트로 업데이트
-        hp_barVal.text = "Hi";
-        ammo_barVal.text = "ss";
+        hp_bar.text = "Hi";
+        ammo_bar.text = "ss";
         //위는 테스트 용
     }
     
