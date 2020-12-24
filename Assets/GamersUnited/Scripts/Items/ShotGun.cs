@@ -18,6 +18,7 @@ public class ShotGun : Weapon
         if (ammo > 0 && IsCanAttack())
         {
             var stat = GameData.GetWeaponStat(WeaponType.Shotgun, Grade);
+            ammo--;
             StartCoroutine(BulletFire(stat.Item1 * Unit.Atk));
             CooldownEndTime = System.DateTime.Now.AddSeconds(stat.Item2);
             return true;
