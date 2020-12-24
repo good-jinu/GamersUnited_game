@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameUnit : MonoBehaviour
+public abstract class GameUnit : MonoBehaviour
 {
     private int maxHp;
     private float health;
@@ -42,7 +42,7 @@ public class GameUnit : MonoBehaviour
             return 0f;
         float validDamage = damage - armor;
         health -= validDamage;
-        Vector3 dir = transform.position - pos;
+        Vector3 dir = (transform.position - pos).normalized;
         if (health > 0)
         {
             OnDamaged(dir);

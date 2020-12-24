@@ -4,5 +4,24 @@ using UnityEngine;
 
 public class MonsterA : Monster
 {
-    //각종 Pattern 구현, Update 등에서 Pattern호출 등을 수행한다.
+    private const float MeleeAttackDamage = 10f;
+
+    private Pattern meleeAttack;
+
+    protected override void Start()
+    {
+        base.Start();
+        meleeAttack = new Pattern(MeleeAttack, 1f, 1);
+    }
+
+    private IEnumerator MeleeAttack()
+    {
+        //animation 작업
+        //attack
+        var area = Instantiate(GameData.PrefabMonsterMeleeAttackArea, transform.position, transform.rotation);
+        var script = area.GetComponent<AttackObject>();
+        script.Init(Atk * MeleeAttackDamage, "Player", transform.position, this, int.MaxValue, null);
+        StartCoroutine(script.SetTimer(0.5f));
+        yield break;
+    }
 }

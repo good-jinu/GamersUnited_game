@@ -69,6 +69,12 @@ public class Player : GameUnit
         {
             weapon.Attack();
         }
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            var instant = Instantiate(GameData.PrefabWarningArea, transform.position + transform.forward*2, transform.rotation);
+            var script = instant.GetComponent<InstantObject>();
+            script.IncreaseScale(4f, 1f, 5f, 1f);
+        }
     }
     public void EquipArmor(Armor armor)
     {
