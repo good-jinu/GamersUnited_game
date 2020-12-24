@@ -11,8 +11,10 @@ public class AttackObject : MonoBehaviour
     private float damage;
     private string targetTag;
     private Vector3 startpos;
-    private Weapon caller;
+    private GameUnit caster;
     private int enableHitCount;
+    private EffectManager.EffectMethod hitEffect;
+    private HashSet<GameObject> hitSet = new HashSet<GameObject>();
 
     //특정 Object에만 사용할 변수들..
     private Rigidbody rigid;
@@ -21,13 +23,14 @@ public class AttackObject : MonoBehaviour
 
     public Vector3 Startpos { get => startpos; set => startpos = value; }
 
-    public void Init(float damage, string targetTag, Vector3 pos, Weapon caller, int enableHitCount)
+    public void Init(float damage, string targetTag, Vector3 pos, GameUnit caster, int enableHitCount, EffectManager.EffectMethod effect)
     {
         this.damage = damage;
         this.targetTag = targetTag;
         this.startpos = pos;
-        this.caller = caller;
+        this.caster = caster;
         this.enableHitCount = enableHitCount;
+        hitEffect = effect;
     }
 
     void Update()
@@ -42,9 +45,10 @@ public class AttackObject : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        //충돌체가 공격 대상일시
-        if (targetTag.Equals(other.tag))
+        //충돌체가 공격 대상이고, 아직 공격하지 않았어야 함
+        if (targetTag.Equals(other.tag) && !hitSet.Contains(other.gameObject))
         {
+            hitSet.Add(other.gameObject);
             var hitscript = GameManager.Instance.Units[other.gameObject.name];
             var validDamage = hitscript.hitbyAttack(damage, startpos);
             //적용된 데미지가 0 초과일시 공격 성공으로 판정
@@ -57,8 +61,8 @@ public class AttackObject : MonoBehaviour
                 var hitdir = hitpos - startpos;
                 hitdir.y = 0;
                 hitdir = hitdir.normalized;
-                if(caller.HitEffect != null)
-                    caller.HitEffect(hitpos, hitdir);
+                if (hitEffect != null)
+                    hitEffect(hitpos,hitdir);
                 //데미지 이펙트
                 GameManager.Instance.UI.PrintDamage(validDamage, hitscript.transform.position);
                 //그외 공격 성공 후 처리 필요할 시 작성

@@ -4,14 +4,10 @@ using UnityEngine;
 
 public class LongSword : Weapon
 {
-    private int damage;
-    private float cooldown;
-    public override void Init(EffectManager.EffectMethod hitEffect, ItemGrade grade)
+    public override void Init(ItemGrade grade)
     {
-        base.Init(hitEffect, grade);
-        var stat = GameData.GetWeaponStat(WeaponType.Longsword, grade);
-        damage = stat.Item1;
-        cooldown = stat.Item2;
+        base.Init(grade);
+        HitEffect = GameManager.Instance.Effect.HitEffect;
     }
     public override bool Attack()
     {

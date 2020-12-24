@@ -18,11 +18,15 @@ public class Player : GameUnit
         GameManager.Instance.Player = this;
         equip = new Armor[3];
 
-        //아래는 무기 테스트용 코드, 삭제하여도 됨
+        //테스트용, 삭제하여도됨
+        Invoke("Tmp", 0.5f);
+    }
+    //테스트용 임시 메소드, 삭제하여도됨
+    void Tmp()
+    {
         weapon = GetComponentInChildren<Gun>();
-        weapon.Init(null, ItemGrade.Unique);
+        weapon.Init(ItemGrade.Unique);
         weapon.Unit = this;
-        Debug.Log(GameData.prefabGunBullet == null);
     }
 
     // Update is called once per frame

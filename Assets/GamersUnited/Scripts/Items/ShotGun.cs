@@ -5,19 +5,13 @@ using UnityEngine;
 public class ShotGun : Weapon
 {
     private int ammo;
-    private int damage;
-    private float cooldown;
-    private int range;
     private const float BulletSpeed = 40f;
     private const float Angular = 10f;
-    public override void Init(EffectManager.EffectMethod hitEffect, ItemGrade grade)
+    public override void Init(ItemGrade grade)
     {
-        base.Init(hitEffect, grade);
-        var stat = GameData.GetWeaponStat(WeaponType.Shotgun, grade);
-        damage = stat.Item1;
-        cooldown = stat.Item2;
-        range = stat.Item3;
-        ammo = stat.Item4;
+        base.Init(grade);
+        HitEffect = GameManager.Instance.Effect.HitEffect;
+        ammo = GameData.GetWeaponExtensionStat(WeaponType.Shotgun, grade).Item2;
     }
     public override bool Attack()
     {

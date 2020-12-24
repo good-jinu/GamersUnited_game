@@ -15,8 +15,11 @@ using UnityEngine;
 //Weapon Data information
 //weaponAtk = weapon에 의해 발생되는 충돌체 1개의 공격력
 //weaponCooldown = weapon 재 공격까지 필요한 시간
-//weaponRange = 탄환의 사거리, 미사용 무기는 -1로 반환한다.
-//weaponAmmo = 공격 가능 횟수(탄약 수), 미사용 무기는 -1로 반환한다.
+//위의 정보는 GetWeaponStat() 으로 얻을 수 있다.
+//특정 무기만 사용하는 Data(Gun, ShotGun) : GetWeaponExtensionStat()
+//weaponRange = 투사체 사거리
+//weaponAmmo = 공격 가능 횟수
+//weaponMultiHit = 투사체의 관통력(최대 명중 가능한 오브젝트 수를 제한)
 //
 //Armor Data information
 //Armor 계열은 단순히 스탯만 증가시킨다.
@@ -52,13 +55,21 @@ public static class GameData
     //Weapon Data
     private static readonly int[,] weaponAtk = { { 30, 40, 50 }, { 40, 55, 70 }, { 25, 30, 35 }, { 15, 18, 22 } };
     private static readonly float[,] weaponCooldown = { { 1.4f, 1.3f, 1.2f }, { 1.6f, 1.55f, 1.5f }, { 0.8f, 0.7f, 0.6f }, { 1.25f, 1.15f, 1.05f } };
-    private static readonly int[,] weaponRange = { { -1, -1, -1 }, { -1, -1, -1 }, { 14, 17, 20 }, { 10, 11, 12 } };
-    private static readonly int[,] weaponAmmo = { { -1, -1, -1 }, { -1, -1, -1 }, { 60, 80, 100 }, { 20, 30, 40 } };
+    private static readonly int[,] weaponRange = { { 14, 17, 20 }, { 10, 11, 12 } };
+    private static readonly int[,] weaponAmmo = { { 60, 80, 100 }, { 20, 30, 40 } };
+    private static readonly int[,] weaponMultiHit = { { 1, 1, 2 }, { 1, 2, 3 } };
     //Get Method 사용 방법 : 첫번째 매개변수는 Weapon 종류 지정(Enum WeaponType), 두번째 매개변수는 Weapon 등급 지정(Enum ItemGrade)
-    //매개변수 type과 grade로 지정한 무기의 기본 정보 : 공격 시 공격력/공격 쿨타임/사거리/공격 가능 횟수(탄약) 반환
-    public static (int,float,int,int) GetWeaponStat(WeaponType type, ItemGrade grade)
+    //매개변수 type과 grade로 지정한 무기의 기본 정보 : 공격 시 공격력/공격 쿨타임 반환
+    public static (int,float) GetWeaponStat(WeaponType type, ItemGrade grade)
     {
-        return (weaponAtk[(int)type, (int)grade], weaponCooldown[(int)type, (int)grade], weaponRange[(int)type, (int)grade], weaponAmmo[(int)type, (int)grade]);
+        return (weaponAtk[(int)type, (int)grade], weaponCooldown[(int)type, (int)grade]);
+    }
+    //type Gun/ShotGun으로 제한됨, 사거리/탄약 수/관통력 반환
+    public static (int,int,int) GetWeaponExtensionStat(WeaponType type,ItemGrade grade)
+    {
+        int index = (int)type - 2;
+        if (index < 0) throw new System.Exception("지정한 WeaponType은 해당 Stat을 사용하지 않습니다.");
+        return (weaponRange[index, (int)grade], weaponAmmo[index, (int)grade], weaponMultiHit[index, (int)grade]);
     }
 
     //Armor Data
@@ -72,11 +83,12 @@ public static class GameData
         return (bonusHp[(int)type, (int)grade], bonusArmor[(int)type, (int)grade], bonusSpeed[(int)type, (int)grade]);
     }
 
-    //Prefab 정보들
-    //현재 아래 방법 사용시 에러가 발생함. GameManager를 통해 prefab을 얻을것
-    private const string prefabPath = @"GamersUnited/Prefabs/";
-    public static readonly GameObject prefabShotGunBullet = Resources.Load<GameObject>($"{prefabPath}ShotGun Bullet");
-    public static readonly GameObject prefabGunBullet = Resources.Load<GameObject>($"{prefabPath}Gun Bullet");
+    //Prefab Instantiate를 위해 Prefab GameObject를 미리 Load해두는 부분
+    //Path 기준이 Assets/Resources이기 때문에, 아래에 추가하려 할 시 Prefab 저장 위치를 반드시 Resources로 변경하고 사용할것
+    public static readonly GameObject PrefabShotGunBullet = Resources.Load<GameObject>("ShotGun Bullet");
+    public static readonly GameObject PrefabGunBullet = Resources.Load<GameObject>("Gun Bullet");
+    public static readonly GameObject PrefabSwordAttackArea = Resources.Load<GameObject>("Sword AttackArea");
+    public static readonly GameObject PrefabLongSwordAttackArea = Resources.Load<GameObject>("LongSword AttackArea");
 
 
 }
