@@ -71,9 +71,7 @@ public class Player : GameUnit
         }
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            var instant = Instantiate(GameData.PrefabWarningArea, transform.position + transform.forward*2, transform.rotation);
-            var script = instant.GetComponent<InstantObject>();
-            script.IncreaseScale(4f, 1f, 5f, 1f);
+            GameManager.Instance.Effect.WarningAreaEffect(new Vector3(0, 0, 3), 5, 0.5f);
         }
     }
     public void EquipArmor(Armor armor)
