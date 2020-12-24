@@ -7,6 +7,9 @@ public class ShotGun : Weapon
     private int ammo;
     private const float BulletSpeed = 75f;
     private const float Angular = 15f;
+
+    public int Ammo { get => ammo; }
+
     public override void Init(ItemGrade grade)
     {
         base.Init(grade);
