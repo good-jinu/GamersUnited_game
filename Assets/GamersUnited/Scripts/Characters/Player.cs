@@ -9,6 +9,9 @@ public class Player : GameUnit
     private Armor[] equip;
     private Weapon weapon;
 
+    //테스트용 변수, 삭제하여도됨
+    private ItemGrade testGrade = ItemGrade.Common;
+
     public Weapon Weapon { get => weapon; }
     public Armor[] Equip { get => equip; }
     // Start is called before the first frame update
@@ -17,16 +20,6 @@ public class Player : GameUnit
         base.Start();
         GameManager.Instance.Player = this;
         equip = new Armor[3];
-
-        //테스트용, 삭제하여도됨
-        Invoke("Tmp", 0.5f);
-    }
-    //테스트용 임시 메소드, 삭제하여도됨
-    void Tmp()
-    {
-        weapon = GetComponentInChildren<ShotGun>();
-        weapon.Init(ItemGrade.Unique);
-        weapon.Unit = this;
     }
 
     // Update is called once per frame
@@ -36,7 +29,43 @@ public class Player : GameUnit
 
 
         //아래는 무기 테스트용 코드, 삭제하여도 됨
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            weapon = GetComponentInChildren<Gun>();
+            weapon.Unit = this;
+            weapon.Init(testGrade);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            weapon = GetComponentInChildren<ShotGun>();
+            weapon.Unit = this;
+            weapon.Init(testGrade);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            weapon = GetComponentInChildren<Sword>();
+            weapon.Unit = this;
+            weapon.Init(testGrade);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            weapon = GetComponentInChildren<LongSword>();
+            weapon.Unit = this;
+            weapon.Init(testGrade);
+        }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            testGrade = ItemGrade.Common;
+        }
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            testGrade = ItemGrade.Rare;
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            testGrade = ItemGrade.Unique;
+        }
+        if (Input.GetKey(KeyCode.A))
         {
             weapon.Attack();
         }

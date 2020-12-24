@@ -36,7 +36,7 @@ public class ShotGun : Weapon
             var script = bullet.GetComponent<AttackObject>();
             var bulletstat = GameData.GetWeaponExtensionStat(WeaponType.Shotgun, Grade);
             script.Init(damage, "Enemy", Unit.transform.position, Unit, bulletstat.Item3, HitEffect);
-            script.StartBullet(BulletSpeed, bulletstat.Item1);
+            script.BulletFire(BulletSpeed, bulletstat.Item1);
         }
         yield break;
     }

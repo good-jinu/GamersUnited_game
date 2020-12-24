@@ -4,9 +4,9 @@ using UnityEngine;
 //이 클래스는 이름이 바뀌거나 삭제될 수 있음
 public class AttackObject : MonoBehaviour
 {
-    public delegate void ObjectMoveMethod();
-    private ObjectMoveMethod updateMethod;
-    private ObjectMoveMethod fixedUpdateMethod;
+    private delegate void Method();
+    private Method updateMethod;
+    private Method fixedUpdateMethod;
 
     private float damage;
     private string targetTag;
@@ -81,7 +81,7 @@ public class AttackObject : MonoBehaviour
 
     //외부 호출용 public 함수들
 
-    public void StartBullet(float speed, float range)
+    public void BulletFire(float speed, float range)
     {
         this.speed = speed;
         this.range = range;
@@ -89,7 +89,13 @@ public class AttackObject : MonoBehaviour
         fixedUpdateMethod = BulletMoving;
     }
 
-    //delegate용 함수들
+    public IEnumerator SetTimer(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        Destroy(this.gameObject);
+    }
+
+    //Delegate 또는 Coroutine용 함수들
     private void BulletMoving()
     {
         Vector3 diff = startpos - transform.position;
