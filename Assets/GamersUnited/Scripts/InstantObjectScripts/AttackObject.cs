@@ -9,6 +9,7 @@ public class AttackObject : InstantObject
     private int enableHitCount;
     private EffectManager.EffectMethod hitEffect;
     private HashSet<GameObject> hitSet = new HashSet<GameObject>();
+    private bool isActive = false;
 
     public void Init(float damage, string targetTag, Vector3 pos, GameUnit caster, int enableHitCount, EffectManager.EffectMethod effect)
     {
@@ -18,16 +19,19 @@ public class AttackObject : InstantObject
         this.caster = caster;
         this.enableHitCount = enableHitCount;
         hitEffect = effect;
+        isActive = true;
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        //Init() 메소드 호출 전일시 충돌을 모두 무시한다.
+        if (!isActive) return;
         //충돌체가 공격 대상이고, 아직 공격하지 않았어야 함
         if (targetTag.Equals(other.tag) && !hitSet.Contains(other.gameObject))
         {
             hitSet.Add(other.gameObject);
             var hitscript = GameManager.Instance.Units[other.gameObject.name];
-            var validDamage = hitscript.hitbyAttack(damage, Startpos);
+            var validDamage = hitscript.HitbyAttack(damage, Startpos);
             //적용된 데미지가 0 초과일시 공격 성공으로 판정
             if (validDamage > 0.0f)
             {

@@ -91,6 +91,11 @@ public static class GameData
     public static readonly GameObject PrefabLongSwordAttackArea = Resources.Load<GameObject>("LongSword AttackArea");
     public static readonly GameObject PrefabMonsterMeleeAttackArea = Resources.Load<GameObject>("Monster MeleeAttackArea");
     public static readonly GameObject PrefabWarningArea = Resources.Load<GameObject>("Warning Area");
+    public static readonly GameObject PrefabPlayer = Resources.Load<GameObject>("Player");
+    public static readonly GameObject PrefabMonsterA = Resources.Load<GameObject>("Monster A");
+    public static readonly GameObject PrefabMonsterB = Resources.Load<GameObject>("Monster B");
+    public static readonly GameObject PrefabMonsterC = Resources.Load<GameObject>("Monster C");
+    public static readonly GameObject PrefabMonsterD = Resources.Load<GameObject>("Monster D");
 
 }
 public enum WeaponType { Sword, Longsword, Gun, Shotgun }
