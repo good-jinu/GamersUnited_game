@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Monster : GameUnit
+public abstract class Monster : GameUnit
 {
     //Monster 들이 공통적으로 사용할 컴포넌트 선언..
     private NavMeshAgent nav;
@@ -15,29 +15,26 @@ public class Monster : GameUnit
         base.Start();
     }
 
-    protected delegate void AttackMethodDelegate();
+    protected delegate IEnumerator AttackMethodDelegate();
     protected class Pattern
     {
         public AttackMethodDelegate attackMethod;
         public float patternCooldown;
         public int useRate;
         private System.DateTime cooldownEndTime;
-        private bool isCooldownEnd;
         public Pattern(AttackMethodDelegate attackMethod = null, float patternCooldown = 0f,int useRate = 0)
         {
             this.attackMethod = attackMethod;
             this.patternCooldown = patternCooldown;
             this.useRate = useRate;
+            cooldownEndTime = System.DateTime.MinValue;
         }
-        public bool IsCooldownEnd()
-        {
-            if (cooldownEndTime == null || isCooldownEnd) return true;
-            isCooldownEnd = cooldownEndTime >= System.DateTime.Now;
-            return isCooldownEnd;
+        public bool IsCooldownEnd() 
+        { 
+            return cooldownEndTime >= System.DateTime.Now;
         }
         public void SetCooldown()
         {
-            isCooldownEnd = false;
             cooldownEndTime = System.DateTime.Now.AddSeconds(patternCooldown);
         }
     }
