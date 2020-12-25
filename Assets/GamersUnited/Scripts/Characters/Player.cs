@@ -20,6 +20,10 @@ public class Player : GameUnit
         base.Start();
         GameManager.Instance.Player = this;
         equip = new Armor[3];
+
+        //테스트용 코드
+        GameManager.Instance.InstantiateUnit(GameUnitList.MonsterA, new Vector3(0, 0, 10), 9);
+        InitStat(100, 1, 1, 1);
     }
 
     // Update is called once per frame
@@ -68,12 +72,6 @@ public class Player : GameUnit
         if (Input.GetKey(KeyCode.A))
         {
             weapon.Attack();
-        }
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            var instant = Instantiate(GameData.PrefabWarningArea, transform.position + transform.forward*2, transform.rotation);
-            var script = instant.GetComponent<InstantObject>();
-            script.IncreaseScale(4f, 1f, 5f, 1f);
         }
     }
     public void EquipArmor(Armor armor)

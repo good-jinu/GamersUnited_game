@@ -45,6 +45,7 @@ public class InstantObject : MonoBehaviour
 
     public void BulletFire(float speed, float range, bool destroyAfterFire = true)
     {
+        if (startpos == null) startpos = transform.position;
         bulletFireSpeed = speed;
         bulletFireRange = range;
         if(rigid == null)
