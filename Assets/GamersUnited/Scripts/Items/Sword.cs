@@ -27,7 +27,7 @@ public class Sword : Weapon
         var area = Instantiate(GameData.PrefabSwordAttackArea, Unit.transform.position, Unit.transform.rotation);
         var script = area.GetComponent<AttackObject>();
         script.Init(damage, "Enemy", Unit.transform.position, Unit, int.MaxValue, HitEffect);
-        StartCoroutine(script.SetTimer(0.4f));
+        script.SetTimer(0.4f,TimerMethod.Destory);
         yield break;
     }
 }

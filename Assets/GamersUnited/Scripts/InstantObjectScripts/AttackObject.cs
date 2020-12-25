@@ -10,8 +10,10 @@ public class AttackObject : InstantObject
     private EffectManager.EffectMethod hitEffect;
     private HashSet<GameObject> hitSet = new HashSet<GameObject>();
     private bool isActive = false;
+    private AttackObjectIgnoreType ignore;
 
-    public void Init(float damage, string targetTag, Vector3 pos, GameUnit caster, int enableHitCount, EffectManager.EffectMethod effect)
+    public void Init(float damage, string targetTag, Vector3 pos, GameUnit caster, int enableHitCount,
+        EffectManager.EffectMethod effect, AttackObjectIgnoreType ignore = AttackObjectIgnoreType.IgnoreFloor)
     {
         Startpos = pos;
         this.damage = damage;
@@ -19,6 +21,7 @@ public class AttackObject : InstantObject
         this.caster = caster;
         this.enableHitCount = enableHitCount;
         hitEffect = effect;
+        this.ignore = ignore;
         isActive = true;
     }
 
@@ -53,11 +56,17 @@ public class AttackObject : InstantObject
                 DestoryThis();
             }
         }
-        //벽에 부딪힐 시
-        else if (false)
+        else if (IsHitWallOrFloor(other.tag))
         {
             DestoryThis();
         }
     }
-
+    private bool IsHitWallOrFloor(string tag)
+    {
+        if (ignore == AttackObjectIgnoreType.IgnoreWallAndFloor) return false;
+        else if (ignore == AttackObjectIgnoreType.IgnoreWall && tag.Equals("Wall")) return false;
+        else if (ignore == AttackObjectIgnoreType.IgnoreFloor && tag.Equals("Floor")) return false;
+        else return true;
+    }
 }
+public enum AttackObjectIgnoreType { None, IgnoreWall, IgnoreFloor , IgnoreWallAndFloor}
