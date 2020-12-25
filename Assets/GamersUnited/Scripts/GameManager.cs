@@ -39,15 +39,7 @@ public class GameManager : MonoBehaviour
         //Scene 재시작/이동시 마다 각종 초기화 작업을 이 함수에서 수행할 것.
 
         //플레이어를 생성
-        var playerScript = InstantiateUnit(GameUnitList.Player, GameObject.Find("PlayerSpawnPoint").GetComponent<Transform>().position);
-        if(units.ContainsKey("Player"))
-        {
-            units["Player"] = playerScript;
-        }
-        else
-        {
-            units.Add("Player", playerScript);
-        }
+        InstantiateUnit(GameUnitList.Player, GameObject.Find("PlayerSpawnPoint").GetComponent<Transform>().position);
     }
     public void OnUnitDead(string name, Vector3 point)
     {

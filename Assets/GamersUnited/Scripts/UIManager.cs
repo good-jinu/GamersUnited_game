@@ -8,8 +8,6 @@ public class UIManager : MonoBehaviour
     private bool GameIsPaused = false;
 
     //카메라위치 이동 관련
-    private Transform playerPos = null;
-    public Transform PlayerPos { get => playerPos; set => playerPos = value; }
     public Transform cameraPos;
     public Vector3 cameraPosOffset;
     //현재 플레이어 상태 관련
@@ -22,12 +20,11 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         GameManager.Instance.UI = this;
-        PlayerPos = GameManager.Instance.Units["Player"].gameObject.GetComponent<Transform>();
     }
 
     private void Update()
     {
-        cameraPos.position = playerPos.position + cameraPosOffset;
+        cameraPos.position = GameManager.Instance.Player.transform.position + cameraPosOffset;
         if(Input.GetButtonDown("Cancel"))
         {
             //Cancel("esc")버튼이 눌러졋을 때 일시정지
