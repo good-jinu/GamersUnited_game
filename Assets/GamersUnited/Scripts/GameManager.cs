@@ -17,10 +17,7 @@ public class GameManager : MonoBehaviour
     public Dictionary<string, GameUnit> Units { get => units; set => units = value; }
     public UIManager UI { get => ui; set => ui = value; }
     public EffectManager Effect { get => effect; set => effect = value; }
-    public Player Player { get => player; set => player = value; }
-
-    //플레이어 스폰지점
-    public Transform playerSpawnPos;
+    public Player Player { get => player; set => player = value; }  
 
     void Awake()
     {
@@ -30,9 +27,6 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(this);
             units = new Dictionary<string, GameUnit>();
             SceneManager.sceneLoaded += OnSceneLoaded;
-
-            //플레이어 저장
-            Player = GameData.PrefabPlayer.GetComponent<Player>();
         }
         else
         {
@@ -43,7 +37,17 @@ public class GameManager : MonoBehaviour
     {
         //Scene 이 Load될때 마다 호출되는 함수
         //Scene 재시작/이동시 마다 각종 초기화 작업을 이 함수에서 수행할 것.
-        InstantiateUnit(GameUnitList.Player, playerSpawnPos.position);
+
+        //플레이어를 생성
+        var playerScript = InstantiateUnit(GameUnitList.Player, GameObject.Find("PlayerSpawnPoint").GetComponent<Transform>().position);
+        if(units.ContainsKey("Player"))
+        {
+            units["Player"] = playerScript;
+        }
+        else
+        {
+            units.Add("Player", playerScript);
+        }
     }
     public void OnUnitDead(string name, Vector3 point)
     {
