@@ -63,10 +63,15 @@ public class AttackObject : InstantObject
     }
     private bool IsHitWallOrFloor(string tag)
     {
-        if (ignore == AttackObjectIgnoreType.IgnoreWallAndFloor) return false;
-        else if (ignore == AttackObjectIgnoreType.IgnoreWall && tag.Equals("Wall")) return false;
-        else if (ignore == AttackObjectIgnoreType.IgnoreFloor && tag.Equals("Floor")) return false;
-        else return true;
+        if (tag.Equals("Floor"))
+        {
+            return (ignore == AttackObjectIgnoreType.IgnoreWall || ignore == AttackObjectIgnoreType.None);
+        }
+        else if (tag.Equals("Wall"))
+        {
+            return (ignore == AttackObjectIgnoreType.IgnoreFloor || ignore == AttackObjectIgnoreType.None);
+        }
+        else return false;
     }
 }
 public enum AttackObjectIgnoreType { None, IgnoreWall, IgnoreFloor , IgnoreWallAndFloor}

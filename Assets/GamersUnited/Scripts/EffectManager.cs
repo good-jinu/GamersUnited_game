@@ -26,12 +26,12 @@ public class EffectManager : MonoBehaviour
         {
             if(script.gameObject == area)
             {
-                script.SetTimer(areaLifeTime,TimerMethod.Destory);
+                script.SetTimer(areaLifeTime,InstantObject.TimerAction.Destory);
                 returnValue = script;
             }
             else
             {
-                script.IncreaseScale(1f / areaLifeTime, 0, 1, IncreaseScaleMode.WithoutYAxis);
+                script.IncreaseScale(1f / areaLifeTime, 0, 1, InstantObject.IncreaseScaleMode.WithoutYAxis);
             }
         }
         return returnValue;

@@ -20,8 +20,8 @@ public class MonsterA : Monster
         //attack
         var area = Instantiate(GameData.PrefabMonsterMeleeAttackArea, transform.position, transform.rotation);
         var script = area.GetComponent<AttackObject>();
-        script.Init(Atk * MeleeAttackDamage, "Player", transform.position, this, int.MaxValue, null);
-        script.SetTimer(0.5f, TimerMethod.Destory);
+        script.Init(Atk * MeleeAttackDamage, "Player", transform.position, this, int.MaxValue, null, AttackObjectIgnoreType.IgnoreWallAndFloor);
+        script.SetTimer(0.5f, InstantObject.TimerAction.Destory);
         yield break;
     }
 }
