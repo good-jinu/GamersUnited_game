@@ -6,7 +6,7 @@ public class ShotGun : Weapon
 {
     private int ammo;
     private const float BulletSpeed = 75f;
-    private const float Angular = 15f;
+    private const float Angular = 11.25f;
 
     public int Ammo { get => ammo; }
 

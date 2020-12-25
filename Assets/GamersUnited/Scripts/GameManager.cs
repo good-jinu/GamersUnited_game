@@ -40,6 +40,10 @@ public class GameManager : MonoBehaviour
 
         //플레이어를 생성
         InstantiateUnit(GameUnitList.Player, GameObject.Find("PlayerSpawnPoint").GetComponent<Transform>().position);
+
+        //for test
+        InstantiateUnit(GameUnitList.MonsterD, new Vector3(0, 0, 0));
+        //test code end
     }
     public void OnUnitDead(string name, Vector3 point)
     {

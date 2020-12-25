@@ -4,7 +4,39 @@ using UnityEngine;
 
 public class MonsterD : Monster
 {
+
+    private void Update()
+    {
+        Vector3 target = GameManager.Instance.Player.transform.position;
+        if(Movespeed != 0)
+        {
+            transform.position = 
+                Vector3.MoveTowards(transform.position, new Vector3(target.x, transform.position.y, target.z), Movespeed * Time.deltaTime);
+        }
+
+        //for test
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            StartCoroutine(Taunt());
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            transform.position = new Vector3(0, 1, 0);
+        }
+        //test code end
+    }
+
     //override Part
+
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+    protected override void Start()
+    {
+        base.Start();
+        Movespeed = 0;
+    }
     protected override void OnDead(Vector3 dir)
     {
         StartCoroutine(Separation());
@@ -29,6 +61,32 @@ public class MonsterD : Monster
         {
             monster[i].AIActive = true;
         }
+    }
+    private IEnumerator Taunt()
+    {
+        float range = 40f;
+        float beforeDelay = 0.5f;
+        float jumpTime = 1f;
+        float afterDelay = 0.5f;
+        //공격 시작, 다른 행동 하지 않도록 처리하기
+        var target = GameManager.Instance.Player.transform.position;
+        target.y = 0;
+        var warningArea = GameManager.Instance.Effect.WarningAreaEffect(target, range, beforeDelay + jumpTime);
+        warningArea.SetAttackWhenDestory(range, 30f, "Player", this, null);
+        warningArea.SetSignalWhenDestory(TauntMoveEnd);
+        yield return new WaitForSeconds(beforeDelay);
+        //레이어를 벽/바닥에만 충돌하도록 변경한다.
+        Movespeed = Mathf.Sqrt(Mathf.Pow(target.x - transform.position.x, 2) + Mathf.Pow(target.z - transform.position.z, 2)) / jumpTime;
+        yield return new WaitForSeconds(jumpTime + afterDelay);
+        //레이어 복구
+
+    }
+
+    private void TauntMoveEnd(Transform objTransform)
+    {
+        Movespeed = 0;
+        transform.position = new Vector3(objTransform.position.x, transform.position.y, objTransform.position.z);
+        //충격파 이펙트 있을시 넣기
     }
 
 }

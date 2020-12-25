@@ -5,18 +5,16 @@ using UnityEngine;
 public class InstantObject : MonoBehaviour
 {
     protected delegate void Method();
+    public delegate void SignalMethod(Transform objTransform);
     private Method updateMethod;
     private Method fixedUpdateMethod;
-    private Method destoryMethod;
+    private SignalMethod destoryMethod;
     private Vector3 startpos;
     private Rigidbody rigid;
     public enum IncreaseScaleMode { WithoutYAxis, AllAxis }
     public enum TimerAction { Destory }
 
     public Vector3 Startpos { get => startpos; set => startpos = value; }
-    protected Method UpdateMethod { get => updateMethod; set => updateMethod = value; }
-    protected Method FixedUpdateMethod { get => fixedUpdateMethod; set => fixedUpdateMethod = value; }
-    protected Method DestoryMethod { get => destoryMethod; set => destoryMethod = value; }
 
     protected virtual void Update()
     {
@@ -32,7 +30,7 @@ public class InstantObject : MonoBehaviour
     protected void DestoryThis()
     {
         if (destoryMethod != null)
-            destoryMethod();
+            destoryMethod(transform);
         Destroy(this.gameObject);
     }
 
@@ -91,6 +89,16 @@ public class InstantObject : MonoBehaviour
         destoryMethod += DeathAttack(scale,damage, targetTag, caster, effect);
     }
 
+    //SetSignalWhenDestory : 이 오브젝트가 사라질 떄 SignalMethod method를 호출한다.
+    //호출 시 매개변수는 이 오브젝트의 transform.
+    //다른 Public Method로 오브젝트 내부에서 Destory 작업을 수행하도록 유도해야만 method 호출이 수행된다.
+    public void SetSignalWhenDestory(SignalMethod method)
+    {
+        if (method == null)
+            throw new System.ArgumentNullException();
+        destoryMethod += method;
+    }
+
     //Delegate 또는 Coroutine용 함수들
     private Method BulletMoving(float speed, float range, bool destroyAfterFire)
     {
@@ -140,9 +148,9 @@ public class InstantObject : MonoBehaviour
         yield return new WaitForSeconds(seconds);
         method();
     }
-    private Method DeathAttack(float scale, float damage, string targetTag, GameUnit caster, EffectManager.EffectMethod effect)
+    private SignalMethod DeathAttack(float scale, float damage, string targetTag, GameUnit caster, EffectManager.EffectMethod effect)
     {
-        return () =>
+        return (objTransform) =>
         {
             var instant = Instantiate(GameData.PrefabCapsuleAttackArea, transform.position, transform.rotation);
             var script = instant.GetComponent<AttackObject>();
