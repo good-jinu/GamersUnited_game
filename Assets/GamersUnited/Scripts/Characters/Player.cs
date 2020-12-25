@@ -11,12 +11,16 @@ public class Player : GameUnit
 
     public Weapon Weapon { get => weapon; }
     public Armor[] Equip { get => equip; }
-    // Start is called before the first frame update
+
+    protected override void Awake()
+    {
+        base.Awake();
+        equip = new Armor[3];
+    }
     override protected void Start()
     {
         base.Start();
         GameManager.Instance.Player = this;
-        equip = new Armor[3];
     }
 
     // Update is called once per frame
@@ -24,6 +28,16 @@ public class Player : GameUnit
     {
         //무기 없을 시 기본무기(단검,Common) 장착시키기
     }
+    protected override void OnDamaged(Vector3 dir)
+    {
+
+    }
+    protected override void OnDead(Vector3 dir)
+    {
+
+    }
+
+
     public void EquipArmor(Armor armor)
     {
         //방어구 습득시 호출, 방어구에 정해진 스탯만큼 Unit 스탯을 증가시킴

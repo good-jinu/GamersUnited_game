@@ -21,7 +21,7 @@ public abstract class Weapon : MonoBehaviour
     //Attack 입력시, Attack 작업을 수행할 method.
     //공격 수행시 true 반환, 실패시(탄환이 없다던가, 공격 쿨타임이 아직 안끝났다던가) false
     public abstract bool Attack();
-    protected virtual bool IsCanAttack()
+    public virtual bool IsCanAttack()
     {
         return System.DateTime.Now >= CooldownEndTime && Unit != null;
     }

@@ -16,21 +16,25 @@ public class EffectManager : MonoBehaviour
     //WarningAreaEffect() : pos 위치에 경고 장판 생성.
     //areaScale : 경고 장판의 크기
     //areaLifeTime : 경고 장판의 유지시간
-    public void WarningAreaEffect(Vector3 pos, float areaScale, float areaLifeTime)
+    //return value : WarningArea Prefab 중 부모의 InstantObject Class
+    public InstantObject WarningAreaEffect(Vector3 pos, float areaScale, float areaLifeTime)
     {
         var area = Instantiate(GameData.PrefabWarningArea, pos, new Quaternion());
+        InstantObject returnValue = null;
         area.transform.localScale = new Vector3(areaScale, 1, areaScale);
         foreach (var script in area.GetComponentsInChildren<InstantObject>())
         {
             if(script.gameObject == area)
             {
-                StartCoroutine(script.SetTimer(areaLifeTime));
+                script.SetTimer(areaLifeTime,InstantObject.TimerAction.Destory);
+                returnValue = script;
             }
             else
             {
-                script.IncreaseScale(1f / areaLifeTime, 0, 1, IncreaseScaleMode.WithoutYAxis);
+                script.IncreaseScale(1f / areaLifeTime, 0, 1, InstantObject.IncreaseScaleMode.WithoutYAxis);
             }
         }
+        return returnValue;
     }
 
     //선택 : 추가적인 각종 이펙트 구현, 필요한 에셋 직접 다운로드하여 사용하여도 됨.
