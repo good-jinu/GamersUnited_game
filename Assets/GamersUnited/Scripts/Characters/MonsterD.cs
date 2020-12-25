@@ -67,7 +67,7 @@ public class MonsterD : Monster
         float range = 40f;
         float beforeDelay = 0.5f;
         float jumpTime = 1f;
-        float afterDelay = 0.5f;
+        float afterDelay = 0.25f;
         //공격 시작, 다른 행동 하지 않도록 처리하기
         var target = GameManager.Instance.Player.transform.position;
         target.y = 0;
@@ -88,5 +88,4 @@ public class MonsterD : Monster
         transform.position = new Vector3(objTransform.position.x, transform.position.y, objTransform.position.z);
         //충격파 이펙트 있을시 넣기
     }
-
 }

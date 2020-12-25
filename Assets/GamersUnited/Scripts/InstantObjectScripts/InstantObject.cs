@@ -12,7 +12,7 @@ public class InstantObject : MonoBehaviour
     private Vector3 startpos;
     private Rigidbody rigid;
     public enum IncreaseScaleMode { WithoutYAxis, AllAxis }
-    public enum TimerAction { Destory }
+    public enum TimerAction { Destory, Stop }
 
     public Vector3 Startpos { get => startpos; set => startpos = value; }
 
@@ -37,17 +37,40 @@ public class InstantObject : MonoBehaviour
     //외부 호출용 public 함수들
 
     //BulletFire : 지정한 거리만큼 지정한 속도로 빠르게 이동한다.
+    //reservationDestory = true 일시 지정한 거리만큼 이동 후 Destory한다.
+    //이 함수 사용 시, 이동을 시작할 떄 startPos가 오브젝트 위치로 갱신된다. AttackObject/startPos 사용시 주의
     //FixedUpdate를 사용하며, 다른 FixedUpdate 사용 Method와 중복 사용할 시 어떻게 될 지 예측할 수 없음
-    public void BulletFire(float speed, float range, bool destroyAfterFire = true)
+    public void BulletFire(float speed, float range, bool reservationDestory = true)
     {
         if (startpos == null) startpos = transform.position;
         if(rigid == null)
             rigid = GetComponent<Rigidbody>();
-        fixedUpdateMethod = BulletMoving(speed, range, destroyAfterFire);
+        startpos = transform.position;
+        fixedUpdateMethod = BulletMoving(speed, range, reservationDestory);
     }
 
-    //SetTimer : 지정한 시간 이후 TimerMethod로 지정한 작업을 수행한다.
-    //현재는 Destory만 지원
+    //ChaseBulletFire : target을 목표로 지정한 이동속도/회전속도에 기반하여 계속 이동한다.
+    //time 매개변수를 사용 시 지정한 시간 경과 후 Destory한다.
+    //이 함수 사용시 매 FixedUpdate마다 startPos가 오브젝트 위치로 갱신된다. AttackObject/startPos 사용시 주의
+    //FixedUpdate를 사용하며, 다른 FixedUpdate 사용 Method와 중복 사용할 시 어떻게 될 지 예측할 수 없음
+    public void ChaseBulletFire(float moveSpeed, float rotateSpeed, Transform target)
+    {
+        if (moveSpeed < 0f || rotateSpeed < 0f || target == null)
+            throw new System.ArgumentException();
+        if (rigid == null)
+            rigid = GetComponent<Rigidbody>();
+        fixedUpdateMethod = ChaserMoving(moveSpeed, rotateSpeed, target);
+    }
+    public void ChaseBulletFire(float moveSpeed, float rotateSpeed, float time, Transform target)
+    {
+        ChaseBulletFire(moveSpeed, rotateSpeed, target);
+        SetTimer(time, TimerAction.Destory);
+    }
+
+    //SetTimer : 지정한 시간 이후 TimerAction 으로 지정한 작업을 수행한다.
+    //Destory : 이 오브젝트를 파괴한다.
+    //Stop : 오브젝트에 설정된 모든 동작들을 중지 또는 삭제 한다. AttackObject의 경우 충돌 이벤트도 포함된다.
+    //       주의 : 동작에 의해 이미 일어난 변화를 초기화 시키지 않음
     public void SetTimer(float seconds, TimerAction action)
     {
         Method timerMethod = null;
@@ -55,6 +78,9 @@ public class InstantObject : MonoBehaviour
         {
             case TimerAction.Destory:
                 timerMethod = DestoryThis;
+                break;
+            case TimerAction.Stop:
+                timerMethod = StopActions;
                 break;
         }
         StartCoroutine(Timer(seconds, timerMethod));
@@ -157,6 +183,28 @@ public class InstantObject : MonoBehaviour
             instant.transform.localScale = Vector3.one * scale;
             script.Init(damage, targetTag, instant.transform.position, caster, int.MaxValue, effect);
             script.SetTimer(0.25f, TimerAction.Destory);
+        };
+    }
+    protected virtual void StopActions()
+    {
+        updateMethod = null;
+        fixedUpdateMethod = null;
+        destoryMethod = null;
+        StopAllCoroutines();
+        if (rigid != null)
+            rigid.velocity = Vector3.zero;
+    }
+    private Method ChaserMoving(float moveSpeed, float rotateSpeed, Transform target)
+    {
+        return () =>
+        {
+            Vector2 bulletPos = new Vector2(transform.position.x, transform.position.z);
+            Vector2 targetPos = new Vector2(target.position.x, target.position.z);
+            Vector2 DirectionVec = (targetPos - bulletPos).normalized;
+            //Quaternion.Slerp()
+            //Slerp은 적합하지 않은것으로 보이므로 방향벡터간의 각도 차이 얻는 함수 찾아보기..
+            //없으면 직접 계산 구현
+            rigid.velocity = transform.forward * moveSpeed;
         };
     }
 }

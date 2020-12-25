@@ -75,4 +75,9 @@ public class AttackObject : InstantObject
         }
         else return false;
     }
+    protected override void StopActions()
+    {
+        base.StopActions();
+        isActive = false;
+    }
 }

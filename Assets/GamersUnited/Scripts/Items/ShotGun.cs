@@ -39,7 +39,7 @@ public class ShotGun : Weapon
             bullet.transform.Rotate(new Vector3(0, (i - 2) * Angular, 0));
             var script = bullet.GetComponent<AttackObject>();
             var bulletstat = GameData.GetWeaponExtensionStat(WeaponType.Shotgun, Grade);
-            script.Init(damage, "Enemy", Unit.transform.position, Unit, bulletstat.Item3, HitEffect);
+            script.Init(damage, "Enemy", bullet.transform.position, Unit, bulletstat.Item3, HitEffect);
             script.BulletFire(BulletSpeed, bulletstat.Item1);
         }
         yield break;

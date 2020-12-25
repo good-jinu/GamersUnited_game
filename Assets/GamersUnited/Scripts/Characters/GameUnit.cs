@@ -49,7 +49,7 @@ public abstract class GameUnit : MonoBehaviour
         if (invincible)
         {
             //테스트용 코드
-            Debug.Log($"Damaged GameUnit Name : {gameObject.name}\noriginalDamage : {damage}, Invincible : On, remainHp : {health}");
+            Debug.Log($"Damaged GameUnit Name : {gameObject.name}\nInvincible : On, remainHp : {health}");
 
             //테스트용 코드 끝
             return 0f;
