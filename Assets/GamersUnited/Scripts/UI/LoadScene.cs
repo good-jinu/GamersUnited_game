@@ -7,7 +7,7 @@ public class LoadScene : MonoBehaviour
 {
     public string sceneName;
 
-    public void PlayButtonDown()
+    public void LoadButtonDown()
     {
         SceneManager.LoadSceneAsync(sceneName);
     }
