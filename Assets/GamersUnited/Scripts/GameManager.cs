@@ -19,6 +19,9 @@ public class GameManager : MonoBehaviour
     public EffectManager Effect { get => effect; set => effect = value; }
     public Player Player { get => player; set => player = value; }
 
+    //플레이어 스폰지점
+    public Transform playerSpawnPos;
+
     void Awake()
     {
         if(instance == null)
@@ -27,6 +30,9 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(this);
             units = new Dictionary<string, GameUnit>();
             SceneManager.sceneLoaded += OnSceneLoaded;
+
+            //플레이어 저장
+            Player = GameData.PrefabPlayer.GetComponent<Player>();
         }
         else
         {
@@ -37,6 +43,7 @@ public class GameManager : MonoBehaviour
     {
         //Scene 이 Load될때 마다 호출되는 함수
         //Scene 재시작/이동시 마다 각종 초기화 작업을 이 함수에서 수행할 것.
+        InstantiateUnit(GameUnitList.Player, playerSpawnPos.position);
     }
     public void OnUnitDead(string name, Vector3 point)
     {
