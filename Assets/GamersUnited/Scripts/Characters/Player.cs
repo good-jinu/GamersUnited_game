@@ -22,7 +22,7 @@ public class Player : GameUnit
         equip = new Armor[3];
 
         //테스트용 코드
-        GameManager.Instance.InstantiateUnit(GameUnitList.MonsterA, new Vector3(0, 0, 10), 9);
+        GameManager.Instance.InstantiateUnit(GameUnitList.MonsterA, new Vector3(0, 3, 5), 9);
         InitStat(100, 1, 1, 1);
     }
 
