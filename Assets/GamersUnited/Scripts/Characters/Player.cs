@@ -14,15 +14,19 @@ public class Player : GameUnit
 
     public Weapon Weapon { get => weapon; }
     public Armor[] Equip { get => equip; }
-    // Start is called before the first frame update
+
+    protected override void Awake()
+    {
+        base.Awake();
+        equip = new Armor[3];
+    }
     override protected void Start()
     {
         base.Start();
         GameManager.Instance.Player = this;
-        equip = new Armor[3];
 
         //테스트용 코드
-        GameManager.Instance.InstantiateUnit(GameUnitList.MonsterA, new Vector3(0, 0, 10), 9);
+        GameManager.Instance.InstantiateUnit(GameUnitList.MonsterD, new Vector3(0, 0, 5), 1);
         InitStat(100, 1, 1, 1);
     }
 
@@ -74,6 +78,16 @@ public class Player : GameUnit
             weapon.Attack();
         }
     }
+    protected override void OnDamaged(Vector3 dir)
+    {
+
+    }
+    protected override void OnDead(Vector3 dir)
+    {
+
+    }
+
+
     public void EquipArmor(Armor armor)
     {
         //방어구 습득시 호출, 방어구에 정해진 스탯만큼 Unit 스탯을 증가시킴

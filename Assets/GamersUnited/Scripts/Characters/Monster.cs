@@ -7,12 +7,23 @@ public abstract class Monster : GameUnit
 {
     //Monster 들이 공통적으로 사용할 컴포넌트 선언..
     private NavMeshAgent nav;
+    private bool aiActive = true;
 
     protected NavMeshAgent Nav { get => nav; }
+    public bool AIActive { get => aiActive; set => aiActive = value; }
 
     protected override void Start()
     {
         base.Start();
+    }
+
+    protected override void OnDamaged(Vector3 dir)
+    {
+
+    }
+    protected override void OnDead(Vector3 dir)
+    {
+
     }
 
     protected delegate IEnumerator AttackMethodDelegate();

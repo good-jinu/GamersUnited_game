@@ -12,10 +12,10 @@ GameObject:
   - component: {fileID: 1670648820819204666}
   - component: {fileID: 3999034608204132220}
   - component: {fileID: 4571433147621320868}
-  - component: {fileID: 7079395301342521456}
-  - component: {fileID: -173711429622292052}
+  - component: {fileID: -5257107007722845531}
+  - component: {fileID: -259355103996526134}
   m_Layer: 0
-  m_Name: Monster A
+  m_Name: Monster B
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -95,7 +95,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7079395301342521456
+--- !u!114 &-5257107007722845531
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -104,10 +104,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8851653484474030454}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1065fc0a0e8830b4c9bc82438c1439ae, type: 3}
+  m_Script: {fileID: 11500000, guid: 1062bdf4c45087346aa2c003d5104d7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!54 &-173711429622292052
+--- !u!54 &-259355103996526134
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

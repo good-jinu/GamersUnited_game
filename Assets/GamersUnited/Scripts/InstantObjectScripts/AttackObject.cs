@@ -10,10 +10,12 @@ public class AttackObject : InstantObject
     private EffectManager.EffectMethod hitEffect;
     private HashSet<GameObject> hitSet = new HashSet<GameObject>();
     private bool isActive = false;
-    private AttackObjectIgnoreType ignore;
+    private IgnoreType ignore;
+
+    public enum IgnoreType { None, IgnoreWall, IgnoreFloor, IgnoreWallAndFloor }
 
     public void Init(float damage, string targetTag, Vector3 pos, GameUnit caster, int enableHitCount,
-        EffectManager.EffectMethod effect, AttackObjectIgnoreType ignore = AttackObjectIgnoreType.IgnoreFloor)
+        EffectManager.EffectMethod effect, IgnoreType ignore = IgnoreType.IgnoreFloor)
     {
         Startpos = pos;
         this.damage = damage;
@@ -65,13 +67,12 @@ public class AttackObject : InstantObject
     {
         if (tag.Equals("Floor"))
         {
-            return (ignore == AttackObjectIgnoreType.IgnoreWall || ignore == AttackObjectIgnoreType.None);
+            return (ignore == IgnoreType.IgnoreWall || ignore == IgnoreType.None);
         }
         else if (tag.Equals("Wall"))
         {
-            return (ignore == AttackObjectIgnoreType.IgnoreFloor || ignore == AttackObjectIgnoreType.None);
+            return (ignore == IgnoreType.IgnoreFloor || ignore == IgnoreType.None);
         }
         else return false;
     }
 }
-public enum AttackObjectIgnoreType { None, IgnoreWall, IgnoreFloor , IgnoreWallAndFloor}

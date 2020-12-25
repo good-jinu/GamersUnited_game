@@ -11,6 +11,7 @@ public abstract class GameUnit : MonoBehaviour
     private float atk;
     private bool invincible;
     private System.DateTime invincibleEndTime;
+    private Rigidbody rigid;
 
     public int MaxHp { get => maxHp; protected set => maxHp = value; }
     public float Health { get => health; protected set => health = value; }
@@ -18,13 +19,17 @@ public abstract class GameUnit : MonoBehaviour
     public float Movespeed { get => movespeed; protected set => movespeed = value; }
     public float Atk { get => atk; protected set => atk = value; }
     public bool Invincible { get => invincible; }
-   
+    public Rigidbody Rigid { get => rigid; }
+    protected virtual void Awake()
+    {
+        invincible = false;
+        invincibleEndTime = System.DateTime.MinValue;
+        rigid = GetComponent<Rigidbody>();
+    }
     protected virtual void Start()
     {
         gameObject.name += gameObject.GetInstanceID().ToString();
         GameManager.Instance.Units.Add(gameObject.name,this);
-        invincible = false;
-        invincibleEndTime = System.DateTime.MinValue;
     }
     //스탯 초기화용 함수, 매개변수로 넣은 스탯 값으로 스탯 정보를 초기화한다.
     public void InitStat(int hp, float atk, float speed, int armor)
@@ -68,35 +73,32 @@ public abstract class GameUnit : MonoBehaviour
     }
     //피격 후 hp가 0이되면 호출할 함수
     //dir : 사망 애니메이션을 수행할 방향
-    public virtual void OnDead(Vector3 dir)
-    {
-        //사망 애니메이션(모션) 수행
-        //더 이상 공격 투사체나 다른 Unit에 충돌되지 않도록 함
-        //사망 애니메이션 종료 후 비활성화 또는 Destory 처리
-        //GameManager의 OnUnitDead 호출
-    }
+    //TODO : 
+    //사망 애니메이션(모션) 수행
+    //더 이상 공격 투사체나 다른 Unit에 충돌되지 않도록 함
+    //사망 애니메이션 종료 후 비활성화 또는 Destory 처리
+    //GameManager의 OnUnitDead 호출
+    protected abstract void OnDead(Vector3 dir);
     //피격 후 hp가 0 초과일때 호출할 함수
-    public virtual void OnDamaged(Vector3 dir)
-    {
-        //경직 애니메이션(모션) 수행
-        //경직 도중에는 다른 행동을 수행하지 않도록 처리할 것
-    }
+    //TODO:
+    //경직 애니메이션(모션) 수행
+    //경직 도중에는 다른 행동을 수행하지 않도록 처리할 것
+    protected abstract void OnDamaged(Vector3 dir);
     //매개변수로 지정한 시간 동안 무적상태로 만든다.
-    protected void SetInvincible(float seconds)
+    public void SetInvincible(float seconds)
     {
         System.DateTime newEndTime = System.DateTime.Now.AddSeconds(seconds);
         if (invincibleEndTime < newEndTime)
         {
             invincibleEndTime = newEndTime;
-        }
-        if (!invincible)
-        {
+            invincible = true;
+            StopCoroutine(InvincibleTimer());
             StartCoroutine(InvincibleTimer());
         }
+    
     }
     private IEnumerator InvincibleTimer()
     {
-        invincible = true;
         while(System.DateTime.Now < invincibleEndTime) yield return null;
         invincible = false;
     }
