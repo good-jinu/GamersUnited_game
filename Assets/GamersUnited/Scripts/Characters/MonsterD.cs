@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class MonsterD : Monster
 {
-    private const float TauntDamage = 30f;
+    private const float TauntDamage = 40f;
     private const float MissileDamage = 8f;
+    private const float ExplosionDamage = 30f;
     public Transform[] Ports = new Transform[2];
 
     private void Update()
@@ -80,8 +81,8 @@ public class MonsterD : Monster
         var target = GameManager.Instance.Player.transform.position;
         target.y = 0;
         var warningArea = GameManager.Instance.Effect.WarningAreaEffect(target, range, 1.9f);
-        warningArea.SetAttackWhenDestory(range, TauntDamage * Atk, 30, "Player", this, null);
-        warningArea.SetAttackWhenDestory(range/2, 0, 20, "Monster", this, null);
+        warningArea.SetAttackWhenDestory(range-1, TauntDamage * Atk, 30, "Player", this, null);
+        warningArea.SetAttackWhenDestory(15, 0, 20, "Monster", this, null);
         warningArea.SetSignalWhenDestory(TauntMoveEnd);
         yield return new WaitForSeconds(0.4f);
         gameObject.layer = 9;
@@ -108,9 +109,19 @@ public class MonsterD : Monster
         yield return new WaitForSeconds(0.15f);
         for (int i = 0; i < 2; ++i) {
             var missile = Instantiate(GameData.PrefabMissileBoss, Ports[i].position, transform.rotation);
-            var script = missile.GetComponent<AttackObject>();
-            script.Init(Atk * MissileDamage, "Player", 0, missile.transform.position, this, 1, null);
-            script.ChaseBulletFire(15, 360, 4f, GameManager.Instance.Player.transform);
+            var scripts = missile.GetComponentsInChildren<InstantObject>();
+            foreach(InstantObject script in scripts)
+            {
+                if(script as AttackObject)
+                {
+                    ((AttackObject)script).Init(Atk * MissileDamage, "Player", 0, missile.transform.position, this, 1, null);
+                    script.ChaseBulletFire(15, 360, 4f, GameManager.Instance.Player.transform);
+                }
+                else
+                {
+                    script.SelfRotate(90f, true, false, false);
+                }
+            }
             yield return new WaitForSeconds(0.1f);
         }
         yield return new WaitForSeconds(0.7f);
@@ -119,32 +130,37 @@ public class MonsterD : Monster
 
     private IEnumerator ExplosionParty()
     {
-        float skillMinRange = 15f;
-        float skillMaxRange = 50f;
-        float explosionRange = 10f;
+        float skillMinRange = 2.5f;
+        float skillMaxRange = 30f;
+        float explosionRange = 11f;
+        int stage = 4;
+        int explosionPerStage = 5;
         //TODO : 공격 시작
         Ani.SetTrigger("doBigShot");
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.75f);
         float minRange = skillMinRange;
-        float rangeInterval = (skillMaxRange - skillMinRange) / 6;
-        for (int i = 0; i < 6; ++i)
+        float rangeInterval = (skillMaxRange - skillMinRange) / stage;
+        var hashSet = new HashSet<GameObject>();
+        for (int i = 0; i < stage; ++i)
         {
             float maxRange = minRange += rangeInterval;
-            for (int j = 0; j < 8; ++j)
+            float angleInterval = 360f / ((i + 1) * explosionPerStage);
+            for (int j = 0; j < (i + 1) * explosionPerStage; ++j)
             {
-                var angle = (j - 4) * 45 + Random.Range(-22.5f, 22.5f) * Mathf.Deg2Rad;
+                var angle = j * angleInterval + Random.Range(-angleInterval / 2, angleInterval / 2) * Mathf.Deg2Rad;
                 var distance = Random.Range(minRange, maxRange);
                 //Covert angle to dirVec
                 float cos = Mathf.Cos(angle);
                 float sin = Mathf.Sin(angle);
                 Vector3 effectivePos = new Vector3(cos, 0, sin);
                 effectivePos *= distance;
-                GameManager.Instance.Effect.WarningAreaEffect(effectivePos, explosionRange, 1f);
+                var instant = GameManager.Instance.Effect.WarningAreaEffect(effectivePos, explosionRange, 1.5f);
+                instant.SetAttackWhenDestory(explosionRange-1, ExplosionDamage * Atk, 10f, "Player", this, hashSet, null);
             }
-            yield return new WaitForSeconds(0.15f);
+            yield return new WaitForSeconds(0.1f);
             minRange = maxRange;
         }
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.25f - 0.1f * stage);
         //TODO : 공격 끝
     }
 }

@@ -8,12 +8,17 @@ public class AttackObject : InstantObject
     private GameUnit caster;
     private int enableHitCount;
     private EffectManager.EffectMethod hitEffect;
-    private HashSet<GameObject> hitSet = new HashSet<GameObject>();
+    private HashSet<GameObject> hitSet;
     private bool isActive = false;
     private IgnoreType ignore;
     private float pushPower;
 
     public enum IgnoreType { None, IgnoreWall, IgnoreFloor, IgnoreWallAndFloor }
+
+    //HitSet은 공격체가 동일한 대상을 여러번 공격하지 않도록 체크하는 역할을 수행하는 HashSet으로,
+    //HitSet을 초기화 함으로써 동일한 대상을 여러번 공격하거나
+    //HitSet을 여러개의 AttackObject가 공유하게 함으로써 AttackObject들이 동일한 공격체로 인식되게 처리 할 수 있다.
+    public HashSet<GameObject> HitSet { set => hitSet = value; }
 
     public void Init(float damage,
                      string targetTag,
@@ -32,6 +37,8 @@ public class AttackObject : InstantObject
         hitEffect = effect;
         this.ignore = ignore;
         this.pushPower = pushPower;
+        if (hitSet == null)
+            hitSet = new HashSet<GameObject>();
         isActive = true;
     }
 

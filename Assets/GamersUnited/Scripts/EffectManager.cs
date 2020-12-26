@@ -19,7 +19,7 @@ public class EffectManager : MonoBehaviour
     //return value : WarningArea Prefab 중 부모의 InstantObject Class
     public InstantObject WarningAreaEffect(Vector3 pos, float areaScale, float areaLifeTime)
     {
-        var area = Instantiate(GameData.PrefabWarningArea, pos, new Quaternion());
+        var area = Instantiate(GameData.PrefabWarningArea, pos, new Quaternion(), transform);
         InstantObject returnValue = null;
         area.transform.localScale = new Vector3(areaScale, 1, areaScale);
         foreach (var script in area.GetComponentsInChildren<InstantObject>())

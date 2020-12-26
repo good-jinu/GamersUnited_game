@@ -1,24 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!95 &1508642778
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 450728958704119817}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: af7f6e84f951b474e95741658aa1653a, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!54 &2018872476
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -45,10 +26,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 1.75
+  m_Radius: 0.8
   m_Height: 4.5
   m_Direction: 1
-  m_Center: {x: 0, y: 2.1, z: 0}
+  m_Center: {x: 0, y: 2, z: 0.24}
 --- !u!114 &1679396052694873616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,6 +42,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72d8bc95e2a428d4e8a8dc4d2daf306e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &1508642778
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 450728958704119817}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: af7f6e84f951b474e95741658aa1653a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &2988339927039883636
 PrefabInstance:
   m_ObjectHideFlags: 0

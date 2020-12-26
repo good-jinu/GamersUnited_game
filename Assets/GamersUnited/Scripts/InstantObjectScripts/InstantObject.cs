@@ -112,14 +112,25 @@ public class InstantObject : MonoBehaviour
     }
 
     //SetAttackWhenDestory : 이 오브젝트가 사라질 때 공격판정을 가지도록 한다.
+    //hitSet 매개변수 사용시 생성되는 AttackObject.HitSet을 해당 변수로 설정한다.
     //공격 판정이 생기는 위치는 오브젝트의 transform과 동일함, 판정 범위는 Capsule 형태이며 scale에 비례한다.
     //이 Method를 수행하더라도, 외부에서 Destroy() 등을 통해 오브젝트를 파괴하면 공격 판정이 발동하지 않는다.
     //다른 Public Method로 오브젝트 내부에서 Destory 작업을 수행하도록 유도해야만 공격 판정이 발동한다.(ex : SetTimer Method 사용(TimerAction.Destory로 지정))
     public void SetAttackWhenDestory(float scale, float damage, float pushPower, string targetTag, GameUnit caster, EffectManager.EffectMethod effect = null)
     {
-        if (targetTag == null||caster == null)
+        SetAttackWhenDestory(scale, damage, pushPower, targetTag, caster, null, effect);
+    }
+    public void SetAttackWhenDestory(float scale,
+                                     float damage,
+                                     float pushPower,
+                                     string targetTag,
+                                     GameUnit caster,
+                                     HashSet<GameObject> hitSet,
+                                     EffectManager.EffectMethod effect = null)
+    {
+        if (targetTag == null || caster == null)
             throw new System.ArgumentNullException();
-        destoryMethod += DeathAttack(scale, damage, pushPower, targetTag, caster, effect);
+        destoryMethod += DeathAttack(scale, damage, pushPower, targetTag, caster, hitSet, effect);
     }
 
     //SetSignalWhenDestory : 이 오브젝트가 사라질 떄 SignalMethod method를 호출한다.
@@ -193,13 +204,14 @@ public class InstantObject : MonoBehaviour
         yield return new WaitForSeconds(seconds);
         method();
     }
-    private SignalMethod DeathAttack(float scale, float damage, float pushPower, string targetTag, GameUnit caster, EffectManager.EffectMethod effect)
+    private SignalMethod DeathAttack(float scale, float damage, float pushPower, string targetTag, GameUnit caster, HashSet<GameObject> hitSet, EffectManager.EffectMethod effect)
     {
         return (objTransform) =>
         {
             var instant = Instantiate(GameData.PrefabCapsuleAttackArea, transform.position, transform.rotation);
             var script = instant.GetComponent<AttackObject>();
             instant.transform.localScale = Vector3.one * scale;
+            script.HitSet = hitSet;
             script.Init(damage, targetTag, pushPower, instant.transform.position, caster, int.MaxValue, effect);
             script.SetTimer(0.25f, TimerAction.Destory);
         };

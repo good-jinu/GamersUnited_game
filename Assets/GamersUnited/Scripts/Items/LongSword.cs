@@ -31,7 +31,7 @@ public class LongSword : Weapon
         var area = Instantiate(GameData.PrefabLongSwordAttackArea, Unit.transform.position, Unit.transform.rotation);
         var script = area.GetComponent<AttackObject>();
         script.Init(damage, "Enemy", 0, Unit.transform.position, Unit, int.MaxValue, HitEffect, AttackObject.IgnoreType.IgnoreWallAndFloor);
-        script.SetTimer(0.6f, InstantObject.TimerAction.Destory);
+        script.SetTimer(0.25f, InstantObject.TimerAction.Destory);
         yield break;
     }
 }
