@@ -48,8 +48,8 @@ public abstract class Monster : GameUnit
             cooldownEndTime = System.DateTime.MinValue;
         }
         public bool IsCooldownEnd() 
-        { 
-            return cooldownEndTime >= System.DateTime.Now;
+        {
+            return cooldownEndTime <= System.DateTime.Now;
         }
         public void SetCooldown()
         {
@@ -71,12 +71,11 @@ public abstract class Monster : GameUnit
                 validPatternList.Add(pattern);
             }
         }
-        if (totalRate <= 0) throw new System.Exception();
         int random = Random.Range(0, totalRate);
         int rangeBegin = 0;
         foreach (Pattern pattern in validPatternList)
         {
-            if(rangeBegin<=random&& random < rangeBegin + pattern.useRate)
+            if (rangeBegin <= random && random < rangeBegin + pattern.useRate)
             {
                 result = pattern;
                 break;

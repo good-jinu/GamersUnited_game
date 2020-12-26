@@ -10,34 +10,51 @@ public class MonsterD : Monster
     public Transform[] Ports = new Transform[2];
 
     private Pattern taunt, shotMissile, explosion;
+    private bool isAttack;
 
     private void Update()
     {
+        //for Taunt Pattern
         Vector3 target = GameManager.Instance.Player.transform.position;
-        if(Movespeed != 0)
+        if (Movespeed != 0)
         {
             transform.position = 
                 Vector3.MoveTowards(transform.position, new Vector3(target.x, transform.position.y, target.z), Movespeed * Time.deltaTime);
         }
-
-        //for test
-        if (Input.GetKeyDown(KeyCode.T))
+        if (!isAttack)
         {
-            StartCoroutine(Taunt());
+            transform.LookAt(target);
         }
-        if (Input.GetKeyDown(KeyCode.R))
+    }
+    private IEnumerator AI()
+    {
+        //Start delay
+        yield return new WaitForSeconds(5f);
+        while (true)
         {
-            transform.position = new Vector3(0, 1, 0);
+            if (GameManager.Instance.Player != null && AIActive && !isAttack)
+            {
+                //Select Pattern
+                float distance = Vector2.Distance(new Vector2(transform.position.x, transform.position.z), 
+                    new Vector2(GameManager.Instance.Player.transform.position.x, GameManager.Instance.Player.transform.position.z));
+                Pattern pattern;
+                if (distance < 20f)
+                {
+                    pattern = SelectRandomPattern(taunt, explosion);
+                }
+                else
+                {
+                    pattern = SelectRandomPattern(taunt, shotMissile);
+                }
+                //Do Pattern
+                if(pattern != null)
+                {
+                    StartCoroutine(pattern.attackMethod());
+                    pattern.SetCooldown();
+                }
+            }
+            yield return new WaitForSeconds(0.25f);
         }
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            StartCoroutine(ShotMissile());
-        }
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            StartCoroutine(Explosion());
-        }
-        //test code end
     }
 
     //override Part
@@ -45,14 +62,15 @@ public class MonsterD : Monster
     protected override void Awake()
     {
         base.Awake();
-        taunt = new Pattern(Taunt, 8f, 2);
-        shotMissile = new Pattern(ShotMissile, 3f, 2);
-        explosion = new Pattern(Explosion, 8f, 1);
+        taunt = new Pattern(Taunt, 8f, 1);
+        shotMissile = new Pattern(ShotMissile, 3.5f, 3);
+        explosion = new Pattern(Explosion, 6f, 2);
     }
     protected override void Start()
     {
         base.Start();
         Movespeed = 0;
+        StartCoroutine(AI());
     }
     protected override void OnDead(Vector3 dir)
     {
@@ -82,7 +100,7 @@ public class MonsterD : Monster
     private IEnumerator Taunt()
     {
         float range = 40f;
-        //TODO : 공격 시작, 다른 행동 하지 않도록 처리하기
+        isAttack = true;
         var target = GameManager.Instance.Player.transform.position;
         target.y = 0;
         var warningArea = GameManager.Instance.Effect.WarningAreaEffect(target, range, 1.9f);
@@ -97,7 +115,7 @@ public class MonsterD : Monster
         SetInvincible(1.4f);
         yield return new WaitForSeconds(1.75f);
         gameObject.layer = 8;
-        //TODO : 공격 끝
+        isAttack = false;
     }
 
     private void TauntMoveEnd(Transform objTransform)
@@ -109,7 +127,7 @@ public class MonsterD : Monster
 
     private IEnumerator ShotMissile()
     {
-        //TODO : 공격 시작
+        isAttack = true;
         Ani.SetTrigger("doShot");
         yield return new WaitForSeconds(0.15f);
         for (int i = 0; i < 2; ++i) {
@@ -130,7 +148,7 @@ public class MonsterD : Monster
             yield return new WaitForSeconds(0.1f);
         }
         yield return new WaitForSeconds(0.7f);
-        //TODO : 공격 끝
+        isAttack = false;
     }
 
     private IEnumerator Explosion()
@@ -140,7 +158,7 @@ public class MonsterD : Monster
         float explosionRange = 11f;
         int stage = 4;
         int explosionPerStage = 5;
-        //TODO : 공격 시작
+        isAttack = true;
         Ani.SetTrigger("doBigShot");
         yield return new WaitForSeconds(0.75f);
         float minRange = skillMinRange;
@@ -159,6 +177,8 @@ public class MonsterD : Monster
                 float sin = Mathf.Sin(angle);
                 Vector3 effectivePos = new Vector3(cos, 0, sin);
                 effectivePos *= distance;
+                effectivePos.x += transform.position.x;
+                effectivePos.z += transform.position.z;
                 var instant = GameManager.Instance.Effect.WarningAreaEffect(effectivePos, explosionRange, 1.5f);
                 instant.SetAttackWhenDestory(explosionRange-1, ExplosionDamage * Atk, 10f, "Player", this, hashSet, null);
             }
@@ -166,6 +186,6 @@ public class MonsterD : Monster
             minRange = maxRange;
         }
         yield return new WaitForSeconds(1.25f - 0.1f * stage);
-        //TODO : 공격 끝
+        isAttack = false;
     }
 }
