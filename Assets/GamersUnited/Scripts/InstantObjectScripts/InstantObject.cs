@@ -104,6 +104,13 @@ public class InstantObject : MonoBehaviour
         SetTimer(destroyTime, TimerAction.Destory);
     }
 
+    //SelfRotate : speed에 기반하여 지정한 축들을 계속 회전시킨다.
+    //Update를 사용하며, 다른 Update 사용 Method와 중복 사용할 시 어떻게 될 지 예측할 수 없음
+    public void SelfRotate(float speed, bool xAxis, bool yAxis, bool zAxis)
+    {
+        updateMethod = Rotating(speed, new Vector3(xAxis ? 1 : 0, yAxis ? 1 : 0, zAxis ? 1 : 0));
+    }
+
     //SetAttackWhenDestory : 이 오브젝트가 사라질 때 공격판정을 가지도록 한다.
     //공격 판정이 생기는 위치는 오브젝트의 transform과 동일함, 판정 범위는 Capsule 형태이며 scale에 비례한다.
     //이 Method를 수행하더라도, 외부에서 Destroy() 등을 통해 오브젝트를 파괴하면 공격 판정이 발동하지 않는다.
@@ -123,6 +130,18 @@ public class InstantObject : MonoBehaviour
         if (method == null)
             throw new System.ArgumentNullException();
         destoryMethod += method;
+    }
+
+    //오브젝트에 설정된 모든 동작들을 중지 또는 삭제 한다. AttackObject의 경우 충돌 이벤트도 포함된다.
+    //       주의 : 동작에 의해 이미 일어난 변화를 초기화 시키지 않음
+    public virtual void StopActions()
+    {
+        updateMethod = null;
+        fixedUpdateMethod = null;
+        destoryMethod = null;
+        StopAllCoroutines();
+        if (rigid != null)
+            rigid.velocity = Vector3.zero;
     }
 
     //Delegate 또는 Coroutine용 함수들
@@ -185,15 +204,7 @@ public class InstantObject : MonoBehaviour
             script.SetTimer(0.25f, TimerAction.Destory);
         };
     }
-    protected virtual void StopActions()
-    {
-        updateMethod = null;
-        fixedUpdateMethod = null;
-        destoryMethod = null;
-        StopAllCoroutines();
-        if (rigid != null)
-            rigid.velocity = Vector3.zero;
-    }
+    
     private Method ChaserMoving(float moveSpeed, float rotateSpeed, Transform target)
     {
         return () =>
@@ -201,10 +212,22 @@ public class InstantObject : MonoBehaviour
             Vector2 bulletPos = new Vector2(transform.position.x, transform.position.z);
             Vector2 targetPos = new Vector2(target.position.x, target.position.z);
             Vector2 DirectionVec = (targetPos - bulletPos).normalized;
-            //Quaternion.Slerp()
-            //Slerp은 적합하지 않은것으로 보이므로 방향벡터간의 각도 차이 얻는 함수 찾아보기..
-            //없으면 직접 계산 구현
+            Vector2 forward = new Vector2(transform.forward.x, transform.forward.z);
+            float angle = Vector2.SignedAngle(forward, DirectionVec);
+            int anglesign = angle < 0 ? -1 : 1;
+            angle *= anglesign;
+            float rotateangle = rotateSpeed * Time.fixedDeltaTime;
+            if (angle < rotateangle)
+                rotateangle = angle;
+            transform.Rotate(Vector3.up * rotateangle * -anglesign);
             rigid.velocity = transform.forward * moveSpeed;
+        };
+    }
+    private Method Rotating(float speed, Vector3 axis)
+    {
+        return () =>
+        {
+            transform.Rotate(axis * speed * Time.deltaTime);
         };
     }
 }
