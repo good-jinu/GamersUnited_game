@@ -30,6 +30,10 @@ public class MonsterD : Monster
         {
             StartCoroutine(ShotMissile());
         }
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            StartCoroutine(ExplosionParty());
+        }
         //test code end
     }
 
@@ -106,10 +110,41 @@ public class MonsterD : Monster
             var missile = Instantiate(GameData.PrefabMissileBoss, Ports[i].position, transform.rotation);
             var script = missile.GetComponent<AttackObject>();
             script.Init(Atk * MissileDamage, "Player", 0, missile.transform.position, this, 1, null);
-            script.ChaseBulletFire(10, 360, GameManager.Instance.Player.transform);
+            script.ChaseBulletFire(15, 360, 4f, GameManager.Instance.Player.transform);
             yield return new WaitForSeconds(0.1f);
         }
         yield return new WaitForSeconds(0.7f);
+        //TODO : 공격 끝
+    }
+
+    private IEnumerator ExplosionParty()
+    {
+        float skillMinRange = 15f;
+        float skillMaxRange = 50f;
+        float explosionRange = 10f;
+        //TODO : 공격 시작
+        Ani.SetTrigger("doBigShot");
+        yield return new WaitForSeconds(0.1f);
+        float minRange = skillMinRange;
+        float rangeInterval = (skillMaxRange - skillMinRange) / 6;
+        for (int i = 0; i < 6; ++i)
+        {
+            float maxRange = minRange += rangeInterval;
+            for (int j = 0; j < 8; ++j)
+            {
+                var angle = (j - 4) * 45 + Random.Range(-22.5f, 22.5f) * Mathf.Deg2Rad;
+                var distance = Random.Range(minRange, maxRange);
+                //Covert angle to dirVec
+                float cos = Mathf.Cos(angle);
+                float sin = Mathf.Sin(angle);
+                Vector3 effectivePos = new Vector3(cos, 0, sin);
+                effectivePos *= distance;
+                GameManager.Instance.Effect.WarningAreaEffect(effectivePos, explosionRange, 1f);
+            }
+            yield return new WaitForSeconds(0.15f);
+            minRange = maxRange;
+        }
+        yield return new WaitForSeconds(1f);
         //TODO : 공격 끝
     }
 }

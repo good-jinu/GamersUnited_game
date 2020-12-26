@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class LongSword : Weapon
 {
+    private void Awake()
+    {
+        Type = WeaponType.Longsword;
+    }
     public override void Init(ItemGrade grade)
     {
         base.Init(grade);

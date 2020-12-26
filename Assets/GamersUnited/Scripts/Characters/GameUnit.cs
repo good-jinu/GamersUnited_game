@@ -66,7 +66,6 @@ public abstract class GameUnit : MonoBehaviour
             dir.z = Random.Range(0.1f, 1f);
         }
         dir = dir.normalized;
-        Debug.Log($"HitbyAttack Dir : {dir}");
         //남은 체력에 따라 처리
         if (health > 0)
         {

@@ -8,6 +8,10 @@ public class Gun : Weapon
     private const float BulletSpeed = 40f;
 
     public int Ammo { get => ammo; }
+    private void Awake()
+    {
+        Type = WeaponType.Gun;
+    }
 
     public override void Init(ItemGrade grade)
     {

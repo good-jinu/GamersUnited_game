@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Sword : Weapon
 {
+    private void Awake()
+    {
+        Type = WeaponType.Sword;
+    }
     public override void Init(ItemGrade grade)
     {
         base.Init(grade);

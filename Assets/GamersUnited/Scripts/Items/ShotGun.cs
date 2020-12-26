@@ -10,6 +10,10 @@ public class ShotGun : Weapon
 
     public int Ammo { get => ammo; }
 
+    private void Awake()
+    {
+        Type = WeaponType.Shotgun;
+    }
     public override void Init(ItemGrade grade)
     {
         base.Init(grade);

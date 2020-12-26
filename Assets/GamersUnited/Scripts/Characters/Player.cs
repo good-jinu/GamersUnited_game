@@ -32,7 +32,6 @@ public class Player : GameUnit
     }
     protected override void OnDamaged( Vector3 dir, float pushPower)
     {
-        Debug.Log($"OnDamaged : {dir} / {pushPower}");
         Rigid.AddForce(dir * pushPower, ForceMode.Impulse);
         //TODO : 경직애니메이션이 없음.....
         //TODO : 경직 포함일시 일정시간동안 행동 막기
