@@ -7,11 +7,6 @@ public class MonsterC : Monster
     const float MissileDamage = 15f;
     const float MissileSpeed = 40f;
     const float MissileRange = 40f;
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-            StartCoroutine(Shot());
-    }
     private IEnumerator Shot()
     {
         //TODO : 공격시작
