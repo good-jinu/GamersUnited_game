@@ -60,16 +60,17 @@ public abstract class GameUnit : MonoBehaviour
         //피격 방향 계산
         Vector3 dir = transform.position - pos;
         dir.y = 0;
-        if (dir.x == 0 && dir.z == 0)
+        if (dir == Vector3.zero)
         {
             dir.x = Random.Range(0.1f, 1f);
             dir.z = Random.Range(0.1f, 1f);
         }
         dir = dir.normalized;
+        Debug.Log($"HitbyAttack Dir : {dir}");
         //남은 체력에 따라 처리
         if (health > 0)
         {
-            OnDamaged(dir, pushPower);
+            OnDamaged( dir, pushPower);
         }
         else
         {
@@ -88,11 +89,8 @@ public abstract class GameUnit : MonoBehaviour
     //사망 애니메이션 종료 후 비활성화 또는 Destory 처리
     //GameManager의 OnUnitDead 호출
     protected abstract void OnDead(Vector3 dir);
-    
-    protected virtual void OnDamaged(Vector3 dir, float pushPower)
-    {
 
-    }
+    protected abstract void OnDamaged( Vector3 dir, float pushPower);
 
 
     //매개변수로 지정한 시간 동안 무적상태로 만든다.
