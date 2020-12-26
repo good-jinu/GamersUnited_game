@@ -4,5 +4,21 @@ using UnityEngine;
 
 public class MonsterB : Monster
 {
+    private const float AssaultDamage = 12f;
 
+    private IEnumerator Assault()
+    {
+        //TODO : 공격상태 확인 방법 확인하고 그거에 맞게 적용할 것
+        Ani.SetBool("isAttack", true);
+        yield return new WaitForSeconds(0.15f);
+        var area = Instantiate(GameData.PrefabMonsterMeleeAttackArea, transform.position + transform.forward * 2, transform.rotation, transform);
+        var script = area.GetComponent<AttackObject>();
+        script.Init(Atk * AssaultDamage, "Player", 0, transform.position, this, int.MaxValue, null, AttackObject.IgnoreType.IgnoreWallAndFloor);
+        script.SetTimer(0.25f, InstantObject.TimerAction.Destory);
+        yield return new WaitForSeconds(1.85f);
+        Ani.SetBool("isAttack", false);
+        //공격 후딜레이
+        yield return new WaitForSeconds(0.25f);
+        //TODO : 공격 끝
+    }
 }
