@@ -63,13 +63,14 @@ public class GameManager : MonoBehaviour
     //    
 
 
-    //InstantiateUnit(GameUnitList unit, vector3 pos,int unitLevel)
-    //: pos 위치에 unit으로 지정한 GameUnit Prefab을 생성하고, GameUnit Class를 반환한다.
-    //unitLevel은 GameData.multiple 배열의 인덱스로 사용되어 기본 Stat의 Hp/Atk에 곱해진다.
-    //unitLevel은 반드시 0~9 사이의 정수여야 한다.
-    public GameUnit InstantiateUnit(GameUnitList unit, Vector3 pos, int unitLevel = 0)
+    //InstantiateUnit
+    //pos 위치에 unit으로 지정한 GameUnit Prefab을 생성하고, GameUnit Class를 반환한다.
+    //multiple 변수들은 GameData.multiple 배열의 인덱스로 사용되어 기본 Stat의 Hp/Atk에 곱해진다.
+    //multiple 변수들은 반드시 0~9 사이의 정수여야 한다.
+    public GameUnit InstantiateUnit(GameUnitList unit, Vector3 pos, int hpMultiple = 0, int atkMultiple = 0)
     {
-        if (unitLevel < 0 || unitLevel > 9) throw new System.ArgumentOutOfRangeException();
+        if (hpMultiple < 0 || hpMultiple > 9 || atkMultiple < 0 || atkMultiple > 9)
+            throw new System.ArgumentOutOfRangeException();
         GameObject target = null;
         (int, float, float, int) stat = (0,0,0,0);
         switch (unit)
@@ -97,8 +98,7 @@ public class GameManager : MonoBehaviour
         }
         var instant = Instantiate(target, pos, new Quaternion());
         var script = instant.GetComponent<GameUnit>();
-        float multiple = GameData.multiple[unitLevel];
-        script.InitStat((int)(stat.Item1*multiple), stat.Item2*multiple, stat.Item3, stat.Item4);
+        script.InitStat((int)(stat.Item1 * GameData.multiple[hpMultiple]), stat.Item2 * GameData.multiple[atkMultiple], stat.Item3, stat.Item4);
         return script;
     }
 }

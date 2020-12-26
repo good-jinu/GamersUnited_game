@@ -42,13 +42,15 @@ public class AttackObject : InstantObject
             {
                 //타격 이펙트
                 //hitpos 식을 타격 위치로 얻어오도록 변경..
-                var hitpos = Vector3.zero;
-         
-                var hitdir = hitpos - Startpos;
-                hitdir.y = 0;
-                hitdir = hitdir.normalized;
                 if (hitEffect != null)
-                    hitEffect(hitpos,hitdir);
+                {
+                    var hitpos = Vector3.zero;
+
+                    var hitdir = hitpos - Startpos;
+                    hitdir.y = 0;
+                    hitdir = hitdir.normalized;
+                    hitEffect(hitpos, hitdir);
+                }
                 //데미지 이펙트
                 GameManager.Instance.UI.PrintDamage(validDamage, hitscript.transform.position);
                 //그외 공격 성공 후 처리 필요할 시 작성

@@ -209,6 +209,7 @@ public class InstantObject : MonoBehaviour
     {
         return () =>
         {
+            startpos = transform.position;
             Vector2 bulletPos = new Vector2(transform.position.x, transform.position.z);
             Vector2 targetPos = new Vector2(target.position.x, target.position.z);
             Vector2 DirectionVec = (targetPos - bulletPos).normalized;
