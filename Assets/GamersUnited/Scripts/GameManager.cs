@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
         InstantiateUnit(GameUnitList.Player, GameObject.Find("PlayerSpawnPoint").GetComponent<Transform>().position);
 
         //for test
-        InstantiateUnit(GameUnitList.MonsterD, new Vector3(0, 0, 0));
+        InstantiateUnit(GameUnitList.MonsterA, new Vector3(0, 0, 0));
         //test code end
     }
     public void OnUnitDead(string name, Vector3 point)
