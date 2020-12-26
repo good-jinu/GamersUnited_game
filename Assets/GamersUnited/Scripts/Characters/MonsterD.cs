@@ -69,13 +69,13 @@ public class MonsterD : Monster
         var target = GameManager.Instance.Player.transform.position;
         target.y = 0;
         var warningArea = GameManager.Instance.Effect.WarningAreaEffect(target, range, 1.6f);
-        warningArea.SetAttackWhenDestory(range, TauntDamage * Atk, 0, "Player", this, null);
-        warningArea.SetAttackWhenDestory(range, 0, 0, "Monster", this, null);
+        warningArea.SetAttackWhenDestory(range, TauntDamage * Atk, 20, "Player", this, null);
+        warningArea.SetAttackWhenDestory(range/2, 0, 10, "Monster", this, null);
         warningArea.SetSignalWhenDestory(TauntMoveEnd);
-        yield return new WaitForSeconds(0.45f);
+        yield return new WaitForSeconds(0.4f);
         gameObject.layer = 9;
         Ani.SetTrigger("doTaunt");
-        yield return new WaitForSeconds(0.05f);
+        yield return new WaitForSeconds(0.1f);
         Movespeed = Mathf.Sqrt(Mathf.Pow(target.x - transform.position.x, 2) + Mathf.Pow(target.z - transform.position.z, 2)) / 1.1f;
         yield return new WaitForSeconds(1.35f);
         gameObject.layer = 8;

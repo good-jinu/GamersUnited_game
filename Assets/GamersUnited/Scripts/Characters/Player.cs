@@ -8,6 +8,7 @@ public class Player : GameUnit
     //인덱스 0 : 투구, 1 : 갑옷, 2 : 신발
     private Armor[] equip;
     private Weapon weapon;
+    private Animator ani;
 
     public Weapon Weapon { get => weapon; }
     public Armor[] Equip { get => equip; }
@@ -16,6 +17,7 @@ public class Player : GameUnit
     {
         base.Awake();
         equip = new Armor[3];
+        ani = GetComponentInChildren<Animator>();
     }
     override protected void Start()
     {

@@ -68,7 +68,7 @@ public abstract class GameUnit : MonoBehaviour
         //테스트용 코드
         Debug.Log($"Damaged GameUnit Name : {gameObject.name}\noriginalDamage : {damage}, validDamage : {validDamage}, remainHp : {health}");
         //테스트용 코드 끝
-        return validDamage;
+        return validDamage < 0 ? 0 : validDamage;
     }
     //피격 후 hp가 0이되면 호출할 함수
     //dir : 사망 애니메이션을 수행할 방향
@@ -78,11 +78,10 @@ public abstract class GameUnit : MonoBehaviour
     //사망 애니메이션 종료 후 비활성화 또는 Destory 처리
     //GameManager의 OnUnitDead 호출
     protected abstract void OnDead(Vector3 dir);
-    //피격 후 hp가 0 초과일때 호출할 함수
-    //TODO:
-    //경직 애니메이션(모션) 수행
-    //경직 도중에는 다른 행동을 수행하지 않도록 처리할 것
+    
     protected abstract void OnDamaged(Vector3 dir, float pushPower);
+
+
     //매개변수로 지정한 시간 동안 무적상태로 만든다.
     public void SetInvincible(float seconds)
     {
