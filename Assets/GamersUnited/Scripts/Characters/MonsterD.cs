@@ -9,6 +9,8 @@ public class MonsterD : Monster
     private const float ExplosionDamage = 30f;
     public Transform[] Ports = new Transform[2];
 
+    private Pattern taunt, shotMissile, explosion;
+
     private void Update()
     {
         Vector3 target = GameManager.Instance.Player.transform.position;
@@ -33,7 +35,7 @@ public class MonsterD : Monster
         }
         if (Input.GetKeyDown(KeyCode.W))
         {
-            StartCoroutine(ExplosionParty());
+            StartCoroutine(Explosion());
         }
         //test code end
     }
@@ -43,6 +45,9 @@ public class MonsterD : Monster
     protected override void Awake()
     {
         base.Awake();
+        taunt = new Pattern(Taunt, 8f, 2);
+        shotMissile = new Pattern(ShotMissile, 3f, 2);
+        explosion = new Pattern(Explosion, 8f, 1);
     }
     protected override void Start()
     {
@@ -128,7 +133,7 @@ public class MonsterD : Monster
         //TODO : 공격 끝
     }
 
-    private IEnumerator ExplosionParty()
+    private IEnumerator Explosion()
     {
         float skillMinRange = 2.5f;
         float skillMaxRange = 30f;
