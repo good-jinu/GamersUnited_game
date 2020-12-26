@@ -54,9 +54,19 @@ public abstract class GameUnit : MonoBehaviour
             //테스트용 코드 끝
             return 0f;
         }
+        //Damage 적용
         float validDamage = damage - armor;
         health -= validDamage;
-        Vector3 dir = (transform.position - pos).normalized;
+        //피격 방향 계산
+        Vector3 dir = transform.position - pos;
+        dir.y = 0;
+        if (dir.x == 0 && dir.z == 0)
+        {
+            dir.x = Random.Range(0.1f, 1f);
+            dir.z = Random.Range(0.1f, 1f);
+        }
+        dir = dir.normalized;
+        //남은 체력에 따라 처리
         if (health > 0)
         {
             OnDamaged(dir, pushPower);
@@ -79,7 +89,10 @@ public abstract class GameUnit : MonoBehaviour
     //GameManager의 OnUnitDead 호출
     protected abstract void OnDead(Vector3 dir);
     
-    protected abstract void OnDamaged(Vector3 dir, float pushPower);
+    protected virtual void OnDamaged(Vector3 dir, float pushPower)
+    {
+
+    }
 
 
     //매개변수로 지정한 시간 동안 무적상태로 만든다.

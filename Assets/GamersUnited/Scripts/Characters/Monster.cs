@@ -25,7 +25,8 @@ public abstract class Monster : GameUnit
 
     protected override void OnDamaged(Vector3 dir, float pushPower)
     {
-
+        Rigid.AddForce(dir * pushPower, ForceMode.Impulse);
+        //애니메이션/경직으로인한 패턴 차단 추가
     }
     protected override void OnDead(Vector3 dir)
     {

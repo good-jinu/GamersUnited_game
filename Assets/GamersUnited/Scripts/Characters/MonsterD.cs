@@ -77,7 +77,7 @@ public class MonsterD : Monster
         Ani.SetTrigger("doTaunt");
         yield return new WaitForSeconds(0.1f);
         Movespeed = Mathf.Sqrt(Mathf.Pow(target.x - transform.position.x, 2) + Mathf.Pow(target.z - transform.position.z, 2)) / 1.1f;
-        yield return new WaitForSeconds(1.35f);
+        yield return new WaitForSeconds(1.6f);
         gameObject.layer = 8;
 
     }
