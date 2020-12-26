@@ -16,7 +16,7 @@ public class MonsterA : Monster
         //TODO : 공격상태 확인 방법 확인하고 그거에 맞게 적용할 것
         Ani.SetBool("isAttack",true);
         yield return new WaitForSeconds(0.15f);
-        var area = Instantiate(GameData.PrefabMonsterMeleeAttackArea, transform.position + transform.forward * 2, transform.rotation);
+        var area = Instantiate(GameData.PrefabMonsterMeleeAttackArea, transform.position + transform.forward * 2, transform.rotation, transform);
         var script = area.GetComponent<AttackObject>();
         script.Init(Atk * MeleeAttackDamage, "Player", 0, transform.position, this, int.MaxValue, null, AttackObject.IgnoreType.IgnoreWallAndFloor);
         script.SetTimer(0.25f, InstantObject.TimerAction.Destory);

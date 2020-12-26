@@ -103,7 +103,7 @@ public class MonsterD : Monster
         isAttack = true;
         var target = GameManager.Instance.Player.transform.position;
         target.y = 0;
-        var warningArea = GameManager.Instance.Effect.WarningAreaEffect(target, range, 1.9f);
+        var warningArea = GameManager.Instance.Effect.WarningAreaEffect(target, range, 2f);
         warningArea.SetAttackWhenDestory(range-1, TauntDamage * Atk, 30, "Player", this, null);
         warningArea.SetAttackWhenDestory(15, 0, 20, "Monster", this, null);
         warningArea.SetSignalWhenDestory(TauntMoveEnd);
@@ -112,7 +112,7 @@ public class MonsterD : Monster
         Ani.SetTrigger("doTaunt");
         yield return new WaitForSeconds(0.1f);
         Movespeed = Mathf.Sqrt(Mathf.Pow(target.x - transform.position.x, 2) + Mathf.Pow(target.z - transform.position.z, 2)) / 1.1f;
-        SetInvincible(1.4f);
+        SetInvincible(1.5f);
         yield return new WaitForSeconds(1.75f);
         gameObject.layer = 8;
         isAttack = false;
