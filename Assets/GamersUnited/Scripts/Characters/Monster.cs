@@ -8,10 +8,16 @@ public abstract class Monster : GameUnit
     //Monster 들이 공통적으로 사용할 컴포넌트 선언..
     private NavMeshAgent nav;
     private bool aiActive = true;
+    private Animator ani;
 
     protected NavMeshAgent Nav { get => nav; }
+    protected Animator Ani { get => ani; }
     public bool AIActive { get => aiActive; set => aiActive = value; }
-
+    protected override void Awake()
+    {
+        base.Awake();
+        ani = GetComponentInChildren<Animator>();
+    }
     protected override void Start()
     {
         base.Start();

@@ -47,7 +47,7 @@ public class MonsterD : Monster
     private IEnumerator Separation()
     {
         Monster[] monster = new Monster[2];
-        //Layer를 "Dead" 로 임시로 변경하여 벽/바닥에만 충돌이 되도록 할것
+        //TODO : Layer를 "Dead" 로 임시로 변경하여 벽/바닥에만 충돌이 되도록 할것
         for(int i = 0; i < 2; ++i)
         {
             monster[i] = GameManager.Instance.InstantiateUnit((GameUnitList)Random.Range(1, 4), transform.position) as Monster;
@@ -65,20 +65,19 @@ public class MonsterD : Monster
     private IEnumerator Taunt()
     {
         float range = 40f;
-        float beforeDelay = 0.5f;
-        float jumpTime = 1f;
-        float afterDelay = 0.25f;
-        //공격 시작, 다른 행동 하지 않도록 처리하기
+        //TODO : 공격 시작, 다른 행동 하지 않도록 처리하기
         var target = GameManager.Instance.Player.transform.position;
         target.y = 0;
-        var warningArea = GameManager.Instance.Effect.WarningAreaEffect(target, range, beforeDelay + jumpTime);
+        var warningArea = GameManager.Instance.Effect.WarningAreaEffect(target, range, 1.6f);
         warningArea.SetAttackWhenDestory(range, 30f, "Player", this, null);
         warningArea.SetSignalWhenDestory(TauntMoveEnd);
-        yield return new WaitForSeconds(beforeDelay);
-        //레이어를 벽/바닥에만 충돌하도록 변경한다.
-        Movespeed = Mathf.Sqrt(Mathf.Pow(target.x - transform.position.x, 2) + Mathf.Pow(target.z - transform.position.z, 2)) / jumpTime;
-        yield return new WaitForSeconds(jumpTime + afterDelay);
-        //레이어 복구
+        yield return new WaitForSeconds(0.45f);
+        gameObject.layer = 9;
+        Ani.SetTrigger("doTaunt");
+        yield return new WaitForSeconds(0.05f);
+        Movespeed = Mathf.Sqrt(Mathf.Pow(target.x - transform.position.x, 2) + Mathf.Pow(target.z - transform.position.z, 2)) / 1.1f;
+        yield return new WaitForSeconds(1.35f);
+        gameObject.layer = 8;
 
     }
 
@@ -86,6 +85,6 @@ public class MonsterD : Monster
     {
         Movespeed = 0;
         transform.position = new Vector3(objTransform.position.x, transform.position.y, objTransform.position.z);
-        //충격파 이펙트 있을시 넣기
+        //TODO : 충격파 이펙트 있을시 넣기
     }
 }
