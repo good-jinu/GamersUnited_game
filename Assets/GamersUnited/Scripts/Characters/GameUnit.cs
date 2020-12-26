@@ -42,9 +42,9 @@ public abstract class GameUnit : MonoBehaviour
 
     }
     
-    //공격 투사체에 피격됬을 때 호출될 함수, damage는 데미지, pos는 공격자의 위치
+    //공격 투사체에 피격됬을 때 호출될 함수, damage는 데미지, pos는 공격자의 위치, pushPower : 미는 힘
     //반환값 : 실제 적용된 데미지
-    public virtual float HitbyAttack(float damage, Vector3 pos)
+    public virtual float HitbyAttack(float damage, Vector3 pos, float pushPower)
     {
         if (invincible)
         {
@@ -59,7 +59,7 @@ public abstract class GameUnit : MonoBehaviour
         Vector3 dir = (transform.position - pos).normalized;
         if (health > 0)
         {
-            OnDamaged(dir);
+            OnDamaged(dir, pushPower);
         }
         else
         {
@@ -68,8 +68,7 @@ public abstract class GameUnit : MonoBehaviour
         //테스트용 코드
         Debug.Log($"Damaged GameUnit Name : {gameObject.name}\noriginalDamage : {damage}, validDamage : {validDamage}, remainHp : {health}");
         //테스트용 코드 끝
-        //무적이 아닐 시 최소 데미지 1을 받음
-        return validDamage >= 1 ? validDamage : 1;
+        return validDamage;
     }
     //피격 후 hp가 0이되면 호출할 함수
     //dir : 사망 애니메이션을 수행할 방향
@@ -83,7 +82,7 @@ public abstract class GameUnit : MonoBehaviour
     //TODO:
     //경직 애니메이션(모션) 수행
     //경직 도중에는 다른 행동을 수행하지 않도록 처리할 것
-    protected abstract void OnDamaged(Vector3 dir);
+    protected abstract void OnDamaged(Vector3 dir, float pushPower);
     //매개변수로 지정한 시간 동안 무적상태로 만든다.
     public void SetInvincible(float seconds)
     {

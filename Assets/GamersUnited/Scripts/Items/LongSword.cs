@@ -26,7 +26,7 @@ public class LongSword : Weapon
         //AttackArea instance 생성, 2/3번째 매개변수인 pos와 dir는 플레이어 Prefab과 무기 위치를 보고 변경..
         var area = Instantiate(GameData.PrefabLongSwordAttackArea, Unit.transform.position, Unit.transform.rotation);
         var script = area.GetComponent<AttackObject>();
-        script.Init(damage, "Enemy", Unit.transform.position, Unit, int.MaxValue, HitEffect, AttackObject.IgnoreType.IgnoreWallAndFloor);
+        script.Init(damage, "Enemy", 0, Unit.transform.position, Unit, int.MaxValue, HitEffect, AttackObject.IgnoreType.IgnoreWallAndFloor);
         script.SetTimer(0.6f, InstantObject.TimerAction.Destory);
         yield break;
     }

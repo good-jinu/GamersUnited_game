@@ -23,7 +23,7 @@ public abstract class Monster : GameUnit
         base.Start();
     }
 
-    protected override void OnDamaged(Vector3 dir)
+    protected override void OnDamaged(Vector3 dir, float pushPower)
     {
 
     }

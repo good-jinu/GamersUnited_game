@@ -11,11 +11,18 @@ public class AttackObject : InstantObject
     private HashSet<GameObject> hitSet = new HashSet<GameObject>();
     private bool isActive = false;
     private IgnoreType ignore;
+    private float pushPower;
 
     public enum IgnoreType { None, IgnoreWall, IgnoreFloor, IgnoreWallAndFloor }
 
-    public void Init(float damage, string targetTag, Vector3 pos, GameUnit caster, int enableHitCount,
-        EffectManager.EffectMethod effect, IgnoreType ignore = IgnoreType.IgnoreFloor)
+    public void Init(float damage,
+                     string targetTag,
+                     float pushPower,
+                     Vector3 pos,
+                     GameUnit caster,
+                     int enableHitCount,
+                     EffectManager.EffectMethod effect,
+                     IgnoreType ignore = IgnoreType.IgnoreFloor)
     {
         Startpos = pos;
         this.damage = damage;
@@ -24,6 +31,7 @@ public class AttackObject : InstantObject
         this.enableHitCount = enableHitCount;
         hitEffect = effect;
         this.ignore = ignore;
+        this.pushPower = pushPower;
         isActive = true;
     }
 
@@ -36,7 +44,7 @@ public class AttackObject : InstantObject
         {
             hitSet.Add(other.gameObject);
             var hitscript = GameManager.Instance.Units[other.gameObject.name];
-            var validDamage = hitscript.HitbyAttack(damage, Startpos);
+            var validDamage = hitscript.HitbyAttack(damage, Startpos, pushPower);
             //적용된 데미지가 0 초과일시 공격 성공으로 판정
             if (validDamage > 0.0f)
             {

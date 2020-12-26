@@ -28,7 +28,7 @@ public class Player : GameUnit
     {
         //무기 없을 시 기본무기(단검,Common) 장착시키기
     }
-    protected override void OnDamaged(Vector3 dir)
+    protected override void OnDamaged(Vector3 dir, float pushPower)
     {
 
     }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MonsterD : Monster
 {
-
+    private const float TauntDamage = 30f;
     private void Update()
     {
         Vector3 target = GameManager.Instance.Player.transform.position;
@@ -69,7 +69,8 @@ public class MonsterD : Monster
         var target = GameManager.Instance.Player.transform.position;
         target.y = 0;
         var warningArea = GameManager.Instance.Effect.WarningAreaEffect(target, range, 1.6f);
-        warningArea.SetAttackWhenDestory(range, 30f, "Player", this, null);
+        warningArea.SetAttackWhenDestory(range, TauntDamage * Atk, 0, "Player", this, null);
+        warningArea.SetAttackWhenDestory(range, 0, 0, "Monster", this, null);
         warningArea.SetSignalWhenDestory(TauntMoveEnd);
         yield return new WaitForSeconds(0.45f);
         gameObject.layer = 9;
