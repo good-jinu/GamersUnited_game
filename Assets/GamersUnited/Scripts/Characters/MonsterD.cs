@@ -68,7 +68,7 @@ public class MonsterD : Monster
         //TODO : 공격 시작, 다른 행동 하지 않도록 처리하기
         var target = GameManager.Instance.Player.transform.position;
         target.y = 0;
-        var warningArea = GameManager.Instance.Effect.WarningAreaEffect(target, range, 1.6f);
+        var warningArea = GameManager.Instance.Effect.WarningAreaEffect(target, range, 1.9f);
         warningArea.SetAttackWhenDestory(range, TauntDamage * Atk, 30, "Player", this, null);
         warningArea.SetAttackWhenDestory(range/2, 0, 20, "Monster", this, null);
         warningArea.SetSignalWhenDestory(TauntMoveEnd);
@@ -77,7 +77,7 @@ public class MonsterD : Monster
         Ani.SetTrigger("doTaunt");
         yield return new WaitForSeconds(0.1f);
         Movespeed = Mathf.Sqrt(Mathf.Pow(target.x - transform.position.x, 2) + Mathf.Pow(target.z - transform.position.z, 2)) / 1.1f;
-        yield return new WaitForSeconds(1.6f);
+        yield return new WaitForSeconds(1.75f);
         gameObject.layer = 8;
 
     }
