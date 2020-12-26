@@ -5,6 +5,9 @@ using UnityEngine;
 public class MonsterD : Monster
 {
     private const float TauntDamage = 30f;
+    private const float MissileDamage = 8f;
+    public Transform[] Ports = new Transform[2];
+
     private void Update()
     {
         Vector3 target = GameManager.Instance.Player.transform.position;
@@ -22,6 +25,10 @@ public class MonsterD : Monster
         if (Input.GetKeyDown(KeyCode.R))
         {
             transform.position = new Vector3(0, 1, 0);
+        }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            StartCoroutine(ShotMissile());
         }
         //test code end
     }
@@ -77,9 +84,10 @@ public class MonsterD : Monster
         Ani.SetTrigger("doTaunt");
         yield return new WaitForSeconds(0.1f);
         Movespeed = Mathf.Sqrt(Mathf.Pow(target.x - transform.position.x, 2) + Mathf.Pow(target.z - transform.position.z, 2)) / 1.1f;
+        SetInvincible(1.4f);
         yield return new WaitForSeconds(1.75f);
         gameObject.layer = 8;
-
+        //TODO : 공격 끝
     }
 
     private void TauntMoveEnd(Transform objTransform)
@@ -87,5 +95,21 @@ public class MonsterD : Monster
         Movespeed = 0;
         transform.position = new Vector3(objTransform.position.x, transform.position.y, objTransform.position.z);
         //TODO : 충격파 이펙트 있을시 넣기
+    }
+
+    private IEnumerator ShotMissile()
+    {
+        //TODO : 공격 시작
+        Ani.SetTrigger("doShot");
+        yield return new WaitForSeconds(0.15f);
+        for (int i = 0; i < 2; ++i) {
+            var missile = Instantiate(GameData.PrefabMissileBoss, Ports[i].position, transform.rotation);
+            var script = missile.GetComponent<AttackObject>();
+            script.Init(Atk * MissileDamage, "Player", 0, missile.transform.position, this, 1, null);
+            script.ChaseBulletFire(10, 360, GameManager.Instance.Player.transform);
+            yield return new WaitForSeconds(0.1f);
+        }
+        yield return new WaitForSeconds(0.7f);
+        //TODO : 공격 끝
     }
 }
