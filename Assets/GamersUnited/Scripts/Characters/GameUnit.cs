@@ -67,29 +67,27 @@ public abstract class GameUnit : MonoBehaviour
         }
         dir = dir.normalized;
         //남은 체력에 따라 처리
-        if (health > 0)
+        OnDamaged(dir, pushPower);
+        if(health <= 0f)
         {
-            OnDamaged( dir, pushPower);
-        }
-        else
-        {
-            OnDead(dir);
+            OnDead();
         }
         //테스트용 코드
         Debug.Log($"Damaged GameUnit Name : {gameObject.name}\noriginalDamage : {damage}, validDamage : {validDamage}, remainHp : {health}");
         //테스트용 코드 끝
         return validDamage < 0 ? 0 : validDamage;
     }
-    //피격 후 hp가 0이되면 호출할 함수
-    //dir : 사망 애니메이션을 수행할 방향
-    //TODO : 
-    //사망 애니메이션(모션) 수행
-    //더 이상 공격 투사체나 다른 Unit에 충돌되지 않도록 함
-    //사망 애니메이션 종료 후 비활성화 또는 Destory 처리
-    //GameManager의 OnUnitDead 호출
-    protected abstract void OnDead(Vector3 dir);
+    protected virtual void OnDead()
+    {
+        //TODO : 레이어 변경 추가
+        GameManager.Instance.OnUnitDead(gameObject.name, transform.position);
+        //Destroy(gameObject, 5f);
+    }
 
-    protected abstract void OnDamaged( Vector3 dir, float pushPower);
+    protected virtual void OnDamaged(in Vector3 dir, in float pushPower)
+    {
+        Rigid.AddForce(dir * pushPower, ForceMode.Impulse);
+    }
 
 
     //매개변수로 지정한 시간 동안 무적상태로 만든다.

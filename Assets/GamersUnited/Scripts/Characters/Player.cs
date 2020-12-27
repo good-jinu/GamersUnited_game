@@ -30,14 +30,15 @@ public class Player : GameUnit
     {
         //무기 없을 시 기본무기(단검,Common) 장착시키기
     }
-    protected override void OnDamaged( Vector3 dir, float pushPower)
+    protected override void OnDamaged(in Vector3 dir, in float pushPower)
     {
-        Rigid.AddForce(dir * pushPower, ForceMode.Impulse);
+        base.OnDamaged(dir, pushPower);
         //TODO : 경직애니메이션이 없음.....
         //TODO : 경직 포함일시 일정시간동안 행동 막기
     }
-    protected override void OnDead(Vector3 dir)
+    protected override void OnDead()
     {
+        base.OnDead();
         //TODO : 마찬가지로 사망 애니메이션이 없음.....
     }
 

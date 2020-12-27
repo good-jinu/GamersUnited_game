@@ -23,14 +23,14 @@ public abstract class Monster : GameUnit
         base.Start();
     }
 
-    protected override void OnDamaged( Vector3 dir, float pushPower)
+    protected override void OnDamaged(in Vector3 dir,in float pushPower)
     {
-        Rigid.AddForce(dir * pushPower, ForceMode.Impulse);
-        //애니메이션/경직으로인한 패턴 차단 추가
+        base.OnDamaged(dir, pushPower);
     }
-    protected override void OnDead(Vector3 dir)
+    protected override void OnDead()
     {
-
+        Ani.SetTrigger("doDead");
+        base.OnDead();
     }
 
     protected delegate IEnumerator AttackMethodDelegate();
