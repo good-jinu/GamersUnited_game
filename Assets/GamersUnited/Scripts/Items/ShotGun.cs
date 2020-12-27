@@ -6,10 +6,14 @@ public class ShotGun : Weapon
 {
     private int ammo;
     private const float BulletSpeed = 75f;
-    private const float Angular = 15f;
+    private const float Angle = 11.25f;
 
     public int Ammo { get => ammo; }
 
+    private void Awake()
+    {
+        Type = WeaponType.Shotgun;
+    }
     public override void Init(ItemGrade grade)
     {
         base.Init(grade);
@@ -36,10 +40,10 @@ public class ShotGun : Weapon
         for(int i = 0; i < 5; ++i)
         { 
             var bullet = Instantiate(GameData.PrefabShotGunBullet, Unit.transform.position, Unit.transform.rotation);
-            bullet.transform.Rotate(new Vector3(0, (i - 2) * Angular, 0));
+            bullet.transform.Rotate(new Vector3(0, (i - 2) * Angle, 0));
             var script = bullet.GetComponent<AttackObject>();
             var bulletstat = GameData.GetWeaponExtensionStat(WeaponType.Shotgun, Grade);
-            script.Init(damage, "Enemy", Unit.transform.position, Unit, bulletstat.Item3, HitEffect);
+            script.Init(damage, "Enemy", 0, bullet.transform.position, Unit, bulletstat.Item3, HitEffect);
             script.BulletFire(BulletSpeed, bulletstat.Item1);
         }
         yield break;

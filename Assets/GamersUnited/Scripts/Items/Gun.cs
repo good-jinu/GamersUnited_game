@@ -8,6 +8,10 @@ public class Gun : Weapon
     private const float BulletSpeed = 40f;
 
     public int Ammo { get => ammo; }
+    private void Awake()
+    {
+        Type = WeaponType.Gun;
+    }
 
     public override void Init(ItemGrade grade)
     {
@@ -35,7 +39,7 @@ public class Gun : Weapon
         var bullet = Instantiate(GameData.PrefabGunBullet, Unit.transform.position, Unit.transform.rotation);
         var script = bullet.GetComponent<AttackObject>();
         var bulletstat = GameData.GetWeaponExtensionStat(WeaponType.Gun, Grade);
-        script.Init(damage, "Enemy", Unit.transform.position, Unit, bulletstat.Item3,HitEffect);
+        script.Init(damage, "Enemy", 0, bullet.transform.position, Unit, bulletstat.Item3, HitEffect);
         script.BulletFire(BulletSpeed, bulletstat.Item1);
         yield break;
     }

@@ -8,18 +8,25 @@ public abstract class Monster : GameUnit
     //Monster 들이 공통적으로 사용할 컴포넌트 선언..
     private NavMeshAgent nav;
     private bool aiActive = true;
+    private Animator ani;
 
     protected NavMeshAgent Nav { get => nav; }
+    protected Animator Ani { get => ani; }
     public bool AIActive { get => aiActive; set => aiActive = value; }
-
+    protected override void Awake()
+    {
+        base.Awake();
+        ani = GetComponentInChildren<Animator>();
+    }
     protected override void Start()
     {
         base.Start();
     }
 
-    protected override void OnDamaged(Vector3 dir)
+    protected override void OnDamaged( Vector3 dir, float pushPower)
     {
-
+        Rigid.AddForce(dir * pushPower, ForceMode.Impulse);
+        //애니메이션/경직으로인한 패턴 차단 추가
     }
     protected override void OnDead(Vector3 dir)
     {
@@ -41,8 +48,8 @@ public abstract class Monster : GameUnit
             cooldownEndTime = System.DateTime.MinValue;
         }
         public bool IsCooldownEnd() 
-        { 
-            return cooldownEndTime >= System.DateTime.Now;
+        {
+            return cooldownEndTime <= System.DateTime.Now;
         }
         public void SetCooldown()
         {
@@ -64,12 +71,11 @@ public abstract class Monster : GameUnit
                 validPatternList.Add(pattern);
             }
         }
-        if (totalRate <= 0) throw new System.Exception();
         int random = Random.Range(0, totalRate);
         int rangeBegin = 0;
         foreach (Pattern pattern in validPatternList)
         {
-            if(rangeBegin<=random&& random < rangeBegin + pattern.useRate)
+            if (rangeBegin <= random && random < rangeBegin + pattern.useRate)
             {
                 result = pattern;
                 break;

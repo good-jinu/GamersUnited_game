@@ -8,6 +8,7 @@ public class Player : GameUnit
     //인덱스 0 : 투구, 1 : 갑옷, 2 : 신발
     private Armor[] equip;
     private Weapon weapon;
+    private Animator ani;
 
     public Weapon Weapon { get => weapon; }
     public Armor[] Equip { get => equip; }
@@ -16,6 +17,7 @@ public class Player : GameUnit
     {
         base.Awake();
         equip = new Armor[3];
+        ani = GetComponentInChildren<Animator>();
     }
     override protected void Start()
     {
@@ -28,13 +30,15 @@ public class Player : GameUnit
     {
         //무기 없을 시 기본무기(단검,Common) 장착시키기
     }
-    protected override void OnDamaged(Vector3 dir)
+    protected override void OnDamaged( Vector3 dir, float pushPower)
     {
-
+        Rigid.AddForce(dir * pushPower, ForceMode.Impulse);
+        //TODO : 경직애니메이션이 없음.....
+        //TODO : 경직 포함일시 일정시간동안 행동 막기
     }
     protected override void OnDead(Vector3 dir)
     {
-
+        //TODO : 마찬가지로 사망 애니메이션이 없음.....
     }
 
 
