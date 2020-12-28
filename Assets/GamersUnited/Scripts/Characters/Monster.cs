@@ -16,6 +16,9 @@ public abstract class Monster : GameUnit
     protected NavMeshAgent Nav { get => nav; }
     protected Animator Ani { get => ani; }
     public bool AIActive { get => aiActive; set => aiActive = value; }
+    protected bool IsAttack { get => isAttack; set => isAttack = value; }
+    protected bool IsChase { get => isChase; set => isChase = value; }
+
     protected override void Awake()
     {
         base.Awake();
@@ -31,6 +34,16 @@ public abstract class Monster : GameUnit
         StartCoroutine(OnDamagedMeshEffect());
         base.OnDamaged(dir, pushPower);
     }
+    protected override void DamagedPhysic(in Vector3 dir, in float pushPower)
+    {
+        base.DamagedPhysic(dir, pushPower);
+        isChase = false;
+    }
+    protected override void DamagedPhysicEnd()
+    {
+        base.DamagedPhysicEnd();
+        isChase = true;
+    }
     protected override void OnDead(Vector3 dir)
     {
         foreach (var mesh in meshes)
@@ -39,15 +52,15 @@ public abstract class Monster : GameUnit
         base.OnDead(dir);
         Destroy(gameObject, 4f);
         AIActive = false;
-        if(nav != null)
-            nav.isStopped = true;
+        if (nav != null)
+            nav.enabled = false;
     }
     protected virtual void Update()
     {
         if (IsDead || !AIActive)
             return;
-        if(isChase)
-            nav.SetDestination(GameManager.Instance.Player.transform.position);
+        nav.SetDestination(GameManager.Instance.Player.transform.position);
+        nav.isStopped = !IsChase;
     }
     protected virtual void FixedUpdate()
     {
@@ -60,10 +73,7 @@ public abstract class Monster : GameUnit
     {
         Rigid.angularVelocity = Vector3.zero;
     }
-    protected virtual void Targeting()
-    {
-
-    }
+    protected abstract void Targeting();
     protected IEnumerator OnDamagedMeshEffect()
     {
         foreach(var mesh in meshes)

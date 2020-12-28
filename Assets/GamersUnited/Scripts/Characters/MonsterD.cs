@@ -10,7 +10,6 @@ public class MonsterD : Monster
     public Transform[] Ports = new Transform[2];
 
     private Pattern taunt, shotMissile, explosion;
-    private bool isAttack;
     private bool doTaunt;
     private Vector2 tauntTarget;
 
@@ -24,7 +23,7 @@ public class MonsterD : Monster
             transform.position = 
                 Vector3.MoveTowards(transform.position, new Vector3(tauntTarget.x, transform.position.y, tauntTarget.y), Movespeed * Time.deltaTime);
         }
-        if (!isAttack && GameManager.Instance.Player != null)
+        if (!IsAttack && GameManager.Instance.Player != null)
         {
             transform.LookAt(GameManager.Instance.Player.transform);
         }
@@ -35,7 +34,7 @@ public class MonsterD : Monster
         yield return new WaitForSeconds(5f);
         while (true)
         {
-            if (GameManager.Instance.Player != null && AIActive && !isAttack && !IsDead)
+            if (GameManager.Instance.Player != null && AIActive && !IsAttack && !IsDead)
             {
                 //Select Pattern
                 float distance = Vector2.Distance(new Vector2(transform.position.x, transform.position.z), 
@@ -111,12 +110,13 @@ public class MonsterD : Monster
         for(int i = 0; i < 2; ++i)
         {
             monster[i].AIActive = true;
+            monster[i].Rigid.velocity = Vector3.zero;
         }
     }
     private IEnumerator Taunt()
     {
         float range = 40f;
-        isAttack = true;
+        IsAttack = true;
         var target = GameManager.Instance.Player.transform.position;
         target.y = 0;
         var warningArea = GameManager.Instance.Effect.WarningAreaEffect(target, range, 2f);
@@ -133,7 +133,7 @@ public class MonsterD : Monster
         SetInvincible(1.5f);
         yield return new WaitForSeconds(1.75f);
         gameObject.layer = 8;
-        isAttack = false;
+        IsAttack = false;
     }
 
     private void TauntMoveEnd(Transform objTransform)
@@ -146,7 +146,7 @@ public class MonsterD : Monster
 
     private IEnumerator ShotMissile()
     {
-        isAttack = true;
+        IsAttack = true;
         Ani.SetTrigger("doShot");
         yield return new WaitForSeconds(0.15f);
         for (int i = 0; i < 2; ++i) {
@@ -167,7 +167,7 @@ public class MonsterD : Monster
             yield return new WaitForSeconds(0.1f);
         }
         yield return new WaitForSeconds(0.7f);
-        isAttack = false;
+        IsAttack = false;
     }
 
     private IEnumerator Explosion()
@@ -177,7 +177,7 @@ public class MonsterD : Monster
         float explosionRange = 11f;
         int stage = 4;
         int explosionPerStage = 5;
-        isAttack = true;
+        IsAttack = true;
         Ani.SetTrigger("doBigShot");
         yield return new WaitForSeconds(0.75f);
         float minRange = skillMinRange;
@@ -205,6 +205,6 @@ public class MonsterD : Monster
             minRange = maxRange;
         }
         yield return new WaitForSeconds(1.25f - 0.1f * stage);
-        isAttack = false;
+        IsAttack = false;
     }
 }

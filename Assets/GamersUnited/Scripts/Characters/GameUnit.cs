@@ -53,10 +53,10 @@ public abstract class GameUnit : MonoBehaviour
     //반환값 : 실제 적용된 데미지
     public virtual float HitbyAttack(float damage, Vector3 pos, float pushPower)
     {
-        if (invincible)
+        if (invincible || IsDead)
         {
             //테스트용 코드
-            Debug.Log($"Damaged GameUnit Name : {gameObject.name}\nInvincible : On, remainHp : {health}");
+            Debug.Log($"Damaged GameUnit Name : {gameObject.name}\nInvincible : {Invincible}, IsDead : {IsDead}, remainHp : {health}");
 
             //테스트용 코드 끝
             return 0f;
@@ -100,13 +100,17 @@ public abstract class GameUnit : MonoBehaviour
     {
         if (pushPower > 0f)
         {
-            isDamaged = true;
-            Rigid.AddForce(dir * pushPower, ForceMode.Impulse);
-            transform.LookAt(transform.position - dir);
-            Invoke("DamagedEnd", 0.5f + (pushPower / (pushPower + 20f)) * 2f);
+            DamagedPhysic(dir, pushPower);
         }
     }
-    private void DamagedEnd()
+    protected virtual void DamagedPhysic(in Vector3 dir, in float pushPower)
+    {
+        isDamaged = true;
+        Rigid.AddForce(dir * pushPower, ForceMode.Impulse);
+        transform.LookAt(transform.position - dir);
+        Invoke("DamagedPhysicEnd", 0.5f + (pushPower / (pushPower + 20f)) * 2f);
+    }
+    protected virtual void DamagedPhysicEnd()
     {
         isDamaged = false;
         Rigid.velocity = Vector3.zero;
