@@ -5,7 +5,7 @@ using UnityEngine;
 public class MonsterC : Monster
 {
     const float MissileDamage = 15f;
-    const float MissileSpeed = 40f;
+    const float MissileSpeed = 30f;
     const float MissileRange = 40f;
     protected override void Awake()
     {
@@ -15,7 +15,7 @@ public class MonsterC : Monster
     protected override void Targeting()
     {
         var hits = Physics.SphereCastAll(transform.position, 0.5f, transform.forward, 30f, LayerMask.GetMask("Player"));
-        if (hits.Length > 0 && !IsAttack)
+        if (hits.Length > 0 && !IsAttack && IsChase)
         {
             StartCoroutine(Shot());
         }

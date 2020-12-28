@@ -33,7 +33,7 @@ public static class GameData
     //Player Stat
     private static readonly int playerBaseHp = 100;
     private static readonly float playerBaseAtk = 1.0f;
-    private static readonly float playerBaseSpeed = 20;
+    private static readonly float playerBaseSpeed = 15f;
     private static readonly int playerBaseArmor = 0;
     //Player의 기본적인 스탯 : 최대 체력/공격력 계수/이동속도/방어력 을 반환한다.
     public static (int,float,float,int) GetPlayerStat() { return (playerBaseHp, playerBaseAtk, playerBaseSpeed, playerBaseArmor); }
@@ -43,7 +43,7 @@ public static class GameData
     //층 수에 따른 Hp, Atk 차이는 multiple[] 배열의 값과 곱하여 구현한다.
     private static readonly int[] monsterBaseHp = { 150, 300, 100, 500 };
     private static readonly float monsterBaseAtk = 1.0f;
-    private static readonly float[] monsterBaseSpeed = { 12, 8, 8, 6 };
+    private static readonly float[] monsterBaseSpeed = { 10, 7.5f, 5f, 6 };
     private static readonly int[] monsterBaseArmor = { 0, 2, -2, 10 };
     //매개변수 type으로 지정한 종류의 Monster 기본 스탯 : 최대 체력/공격력 계수/이동속도/방어력 을 반환한다.
     public static (int,float,float,int) GetMonsterStat(MonsterType type) 

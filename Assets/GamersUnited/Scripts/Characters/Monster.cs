@@ -26,7 +26,9 @@ public abstract class Monster : GameUnit
         nav = GetComponent<NavMeshAgent>();
         meshes = GetComponentsInChildren<MeshRenderer>();
         if (nav != null)
+        {
             Invoke("StartChase", 2.5f);
+        }
     }
 
     protected override void OnDamaged(in Vector3 dir,in float pushPower)
@@ -37,12 +39,14 @@ public abstract class Monster : GameUnit
     protected override void DamagedPhysic(in Vector3 dir, in float pushPower)
     {
         base.DamagedPhysic(dir, pushPower);
+        ani.SetBool("isWalk", false);
         isChase = false;
     }
     protected override void DamagedPhysicEnd()
     {
         base.DamagedPhysicEnd();
         isChase = true;
+        ani.SetBool("isWalk", true);
     }
     protected override void OnDead(Vector3 dir)
     {
@@ -72,6 +76,10 @@ public abstract class Monster : GameUnit
     private void FreezeRotation()
     {
         Rigid.angularVelocity = Vector3.zero;
+        if (isChase && !IsDamaged)
+        {
+            Rigid.velocity = Vector3.zero;
+        }
     }
     protected abstract void Targeting();
     protected IEnumerator OnDamagedMeshEffect()
@@ -85,6 +93,7 @@ public abstract class Monster : GameUnit
     private void StartChase()
     {
         isChase = true;
+        nav.speed = Movespeed;
         ani.SetBool("isWalk", true);
     }
 

@@ -14,7 +14,7 @@ public class MonsterB : Monster
     protected override void Targeting()
     {
         var hits = Physics.SphereCastAll(transform.position, 1f, transform.forward, 12f, LayerMask.GetMask("Player"));
-        if (hits.Length > 0 && !IsAttack)
+        if (hits.Length > 0 && !IsAttack && IsChase)
         {
             StartCoroutine(Assault());
         }
@@ -25,7 +25,7 @@ public class MonsterB : Monster
         IsChase = false;
         Ani.SetBool("isAttack", true);
         yield return new WaitForSeconds(0.2f);
-        var area = Instantiate(GameData.PrefabMonsterMeleeAttackArea, transform.position + transform.forward * 2, transform.rotation, transform);
+        var area = Instantiate(GameData.PrefabMonsterMeleeAttackArea, transform);
         var script = area.GetComponent<AttackObject>();
         script.Init(Atk * AssaultDamage, "Player", 5, transform.position, this, int.MaxValue, null, AttackObject.IgnoreType.IgnoreWallAndFloor);
         Rigid.AddForce(transform.forward * AssaultForce, ForceMode.Impulse);

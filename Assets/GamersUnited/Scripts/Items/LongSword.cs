@@ -26,7 +26,7 @@ public class LongSword : Weapon
     }
     private IEnumerator Slash(float damage)
     {
-        var area = Instantiate(GameData.PrefabLongSwordAttackArea, transform);
+        var area = Instantiate(GameData.PrefabLongSwordAttackArea, Unit.transform);
         var script = area.GetComponent<AttackObject>();
         script.Init(damage, "Enemy", 0, Unit.transform.position, Unit, int.MaxValue, HitEffect, AttackObject.IgnoreType.IgnoreWallAndFloor);
         script.SetTimer(0.25f, InstantObject.TimerAction.Destory);

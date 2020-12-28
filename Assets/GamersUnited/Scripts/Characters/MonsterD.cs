@@ -157,7 +157,7 @@ public class MonsterD : Monster
                 if(script as AttackObject)
                 {
                     ((AttackObject)script).Init(Atk * MissileDamage, "Player", 0, missile.transform.position, this, 1, null);
-                    script.ChaseBulletFire(10f, 90, 8f, GameManager.Instance.Player.transform);
+                    script.ChaseBulletFire(7.5f, 90, 8f, GameManager.Instance.Player.transform);
                 }
                 else
                 {
