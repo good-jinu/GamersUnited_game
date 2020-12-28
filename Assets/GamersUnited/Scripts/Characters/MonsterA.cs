@@ -6,9 +6,10 @@ public class MonsterA : Monster
 {
     private const float MeleeAttackDamage = 10f;
 
-    protected override void Start()
+    protected override void Awake()
     {
-        base.Start();
+        base.Awake();
+        Type = GameUnitList.MonsterA;
     }
 
     private IEnumerator MeleeAttack()

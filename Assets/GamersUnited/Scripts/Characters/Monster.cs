@@ -9,6 +9,9 @@ public abstract class Monster : GameUnit
     private NavMeshAgent nav;
     private bool aiActive = true;
     private Animator ani;
+    private MeshRenderer[] meshes;
+    private bool isChase;
+    private bool isAttack;
 
     protected NavMeshAgent Nav { get => nav; }
     protected Animator Ani { get => ani; }
@@ -18,20 +21,61 @@ public abstract class Monster : GameUnit
         base.Awake();
         ani = GetComponentInChildren<Animator>();
         nav = GetComponent<NavMeshAgent>();
-    }
-    protected override void Start()
-    {
-        base.Start();
+        meshes = GetComponentsInChildren<MeshRenderer>();
+        if (nav != null)
+            Invoke("StartChase", 2.5f);
     }
 
     protected override void OnDamaged(in Vector3 dir,in float pushPower)
     {
+        StartCoroutine(OnDamagedMeshEffect());
         base.OnDamaged(dir, pushPower);
     }
-    protected override void OnDead()
+    protected override void OnDead(Vector3 dir)
     {
-        Ani.SetTrigger("doDead");
-        base.OnDead();
+        foreach (var mesh in meshes)
+            mesh.material.color = Color.gray;
+        Ani.SetTrigger("doDie");
+        base.OnDead(dir);
+        Destroy(gameObject, 4f);
+        AIActive = false;
+        if(nav != null)
+            nav.isStopped = true;
+    }
+    protected virtual void Update()
+    {
+        if (IsDead || !AIActive)
+            return;
+        if(isChase)
+            nav.SetDestination(GameManager.Instance.Player.transform.position);
+    }
+    protected virtual void FixedUpdate()
+    {
+        if (IsDead || !AIActive)
+            return;
+        Targeting();
+        FreezeRotation();
+    }
+    private void FreezeRotation()
+    {
+        Rigid.angularVelocity = Vector3.zero;
+    }
+    protected virtual void Targeting()
+    {
+
+    }
+    protected IEnumerator OnDamagedMeshEffect()
+    {
+        foreach(var mesh in meshes)
+            mesh.material.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        foreach (var mesh in meshes)
+            mesh.material.color = Color.white;
+    }
+    private void StartChase()
+    {
+        isChase = true;
+        ani.SetBool("isWalk", true);
     }
 
     protected delegate IEnumerator AttackMethodDelegate();

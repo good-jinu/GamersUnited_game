@@ -6,7 +6,11 @@ public class MonsterB : Monster
 {
     private const float AssaultDamage = 12f;
     private const float AssaultForce = 20f;
-    
+    protected override void Awake()
+    {
+        base.Awake();
+        Type = GameUnitList.MonsterB;
+    }
     private IEnumerator Assault()
     {
         //TODO : 공격상태 확인 방법 확인하고 그거에 맞게 적용할 것

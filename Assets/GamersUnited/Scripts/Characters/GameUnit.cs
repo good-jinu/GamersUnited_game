@@ -14,6 +14,7 @@ public abstract class GameUnit : MonoBehaviour
     private Rigidbody rigid;
     private bool isDamaged;
     private bool isDead;
+    private GameUnitList type;
 
     public int MaxHp { get => maxHp; protected set => maxHp = value; }
     public float Health { get => health; protected set => health = value; }
@@ -24,6 +25,7 @@ public abstract class GameUnit : MonoBehaviour
     public Rigidbody Rigid { get => rigid; }
     protected bool IsDamaged { get => isDamaged; }
     public bool IsDead { get => isDead; }
+    public GameUnitList Type { get => type; protected set => type = value; }
 
     protected virtual void Awake()
     {
@@ -72,20 +74,25 @@ public abstract class GameUnit : MonoBehaviour
         }
         dir = dir.normalized;
         //남은 체력에 따라 처리
-        OnDamaged(dir, pushPower);
         if(health <= 0f)
         {
-            OnDead();
+            OnDead(dir);
+        }
+        else
+        {
+            OnDamaged(dir, pushPower);
         }
         //테스트용 코드
         Debug.Log($"Damaged GameUnit Name : {gameObject.name}\noriginalDamage : {damage}, validDamage : {validDamage}, remainHp : {health}");
         //테스트용 코드 끝
         return validDamage < 0 ? 0 : validDamage;
     }
-    protected virtual void OnDead()
+    protected virtual void OnDead(Vector3 dir)
     {
         //TODO : 레이어 변경 추가
         GameManager.Instance.OnUnitDead(gameObject.name, transform.position);
+        Rigid.AddForce(dir * 10 + Vector3.up * 5, ForceMode.Impulse);
+        transform.LookAt(transform.position - dir);
         isDead = true;
     }
 

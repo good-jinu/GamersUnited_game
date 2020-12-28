@@ -14,7 +14,7 @@ public class MonsterD : Monster
     private bool doTaunt;
     private Vector2 tauntTarget;
 
-    private void Update()
+    protected override void Update()
     {
         if (IsDead)
             return;
@@ -35,7 +35,7 @@ public class MonsterD : Monster
         yield return new WaitForSeconds(5f);
         while (true)
         {
-            if (GameManager.Instance.Player != null && AIActive && !isAttack)
+            if (GameManager.Instance.Player != null && AIActive && !isAttack && !IsDead)
             {
                 //Select Pattern
                 float distance = Vector2.Distance(new Vector2(transform.position.x, transform.position.z), 
@@ -72,6 +72,7 @@ public class MonsterD : Monster
         taunt = new Pattern(Taunt, 8f, 1);
         shotMissile = new Pattern(ShotMissile, 3.5f, 3);
         explosion = new Pattern(Explosion, 6f, 2);
+        Type = GameUnitList.MonsterD;
     }
     protected override void Start()
     {
@@ -79,15 +80,18 @@ public class MonsterD : Monster
         Movespeed = 0;
         StartCoroutine(AI());
     }
-    protected override void OnDead()
+    protected override void OnDead(Vector3 dir)
     {
-        StopAllCoroutines();
+        base.OnDead(dir);
         StartCoroutine(Separation());
-        base.OnDead();
     }
     protected override void OnDamaged(in Vector3 dir, in float pushPower)
     {
         
+    }
+    protected override void Targeting()
+    {
+
     }
 
     //Pattern Method

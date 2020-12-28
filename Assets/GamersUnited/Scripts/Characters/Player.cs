@@ -31,6 +31,7 @@ public class Player : GameUnit
         base.Awake();
         equip = new Armor[3];
         ani = GetComponentInChildren<Animator>();
+        Type = GameUnitList.Player;
     }
     override protected void Start()
     {
@@ -53,7 +54,6 @@ public class Player : GameUnit
         Attack();
 
         //for test
-        /*
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             EquipWeapon(WeaponType.Sword, ItemGrade.Common);
@@ -70,7 +70,6 @@ public class Player : GameUnit
         {
             EquipWeapon(WeaponType.Shotgun, ItemGrade.Common);
         }
-        */
     }
 
     private void FixedUpdate()
@@ -85,9 +84,9 @@ public class Player : GameUnit
         base.OnDamaged(dir, pushPower);
         //TODO : 경직애니메이션이 없음.....
     }
-    protected override void OnDead()
+    protected override void OnDead(Vector3 dir)
     {
-        base.OnDead();
+        base.OnDead(dir);
         //TODO : 마찬가지로 사망 애니메이션이 없음.....
     }
 
