@@ -12,6 +12,8 @@ public abstract class GameUnit : MonoBehaviour
     private bool invincible;
     private System.DateTime invincibleEndTime;
     private Rigidbody rigid;
+    private bool isDamaged;
+    private bool isDead;
 
     public int MaxHp { get => maxHp; protected set => maxHp = value; }
     public float Health { get => health; protected set => health = value; }
@@ -20,6 +22,9 @@ public abstract class GameUnit : MonoBehaviour
     public float Atk { get => atk; protected set => atk = value; }
     public bool Invincible { get => invincible; }
     public Rigidbody Rigid { get => rigid; }
+    protected bool IsDamaged { get => isDamaged; }
+    public bool IsDead { get => isDead; }
+
     protected virtual void Awake()
     {
         invincible = false;
@@ -81,12 +86,23 @@ public abstract class GameUnit : MonoBehaviour
     {
         //TODO : 레이어 변경 추가
         GameManager.Instance.OnUnitDead(gameObject.name, transform.position);
-        //Destroy(gameObject, 5f);
+        isDead = true;
     }
 
     protected virtual void OnDamaged(in Vector3 dir, in float pushPower)
     {
-        Rigid.AddForce(dir * pushPower, ForceMode.Impulse);
+        if (pushPower > 0f)
+        {
+            isDamaged = true;
+            Rigid.AddForce(dir * pushPower, ForceMode.Impulse);
+            transform.LookAt(transform.position - dir);
+            Invoke("DamagedEnd", 0.5f + (pushPower / (pushPower + 20f)) * 2f);
+        }
+    }
+    private void DamagedEnd()
+    {
+        isDamaged = false;
+        Rigid.velocity = Vector3.zero;
     }
 
 

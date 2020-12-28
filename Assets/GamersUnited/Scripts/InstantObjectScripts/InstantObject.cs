@@ -213,7 +213,7 @@ public class InstantObject : MonoBehaviour
             instant.transform.localScale = Vector3.one * scale;
             script.HitSet = hitSet;
             script.Init(damage, targetTag, pushPower, instant.transform.position, caster, int.MaxValue, effect);
-            script.SetTimer(0.25f, TimerAction.Destory);
+            script.SetTimer(0.1f, TimerAction.Destory);
         };
     }
     

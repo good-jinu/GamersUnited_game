@@ -16,6 +16,8 @@ public class MonsterD : Monster
 
     private void Update()
     {
+        if (IsDead)
+            return;
         //for Taunt Pattern
         if (doTaunt)
         {
@@ -38,14 +40,18 @@ public class MonsterD : Monster
                 //Select Pattern
                 float distance = Vector2.Distance(new Vector2(transform.position.x, transform.position.z), 
                     new Vector2(GameManager.Instance.Player.transform.position.x, GameManager.Instance.Player.transform.position.z));
-                Pattern pattern;
-                if (distance < 20f)
+                Pattern pattern = null;
+                if (distance < 25f)
                 {
                     pattern = SelectRandomPattern(taunt, explosion);
                 }
+                else if (distance < 40f)
+                {
+                    pattern = SelectRandomPattern(taunt, explosion,shotMissile);
+                }
                 else
                 {
-                    pattern = SelectRandomPattern(taunt, shotMissile);
+                    SelectRandomPattern(taunt, shotMissile);
                 }
                 //Do Pattern
                 if(pattern != null)
@@ -75,8 +81,13 @@ public class MonsterD : Monster
     }
     protected override void OnDead()
     {
+        StopAllCoroutines();
         StartCoroutine(Separation());
         base.OnDead();
+    }
+    protected override void OnDamaged(in Vector3 dir, in float pushPower)
+    {
+        
     }
 
     //Pattern Method
@@ -142,7 +153,7 @@ public class MonsterD : Monster
                 if(script as AttackObject)
                 {
                     ((AttackObject)script).Init(Atk * MissileDamage, "Player", 0, missile.transform.position, this, 1, null);
-                    script.ChaseBulletFire(25f, 360, 4f, GameManager.Instance.Player.transform);
+                    script.ChaseBulletFire(10f, 90, 8f, GameManager.Instance.Player.transform);
                 }
                 else
                 {

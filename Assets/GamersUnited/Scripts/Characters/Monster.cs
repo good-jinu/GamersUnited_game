@@ -17,6 +17,7 @@ public abstract class Monster : GameUnit
     {
         base.Awake();
         ani = GetComponentInChildren<Animator>();
+        nav = GetComponent<NavMeshAgent>();
     }
     protected override void Start()
     {

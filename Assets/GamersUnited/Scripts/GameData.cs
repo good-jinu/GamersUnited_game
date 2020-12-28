@@ -33,7 +33,7 @@ public static class GameData
     //Player Stat
     private static readonly int playerBaseHp = 100;
     private static readonly float playerBaseAtk = 1.0f;
-    private static readonly float playerBaseSpeed = 10;
+    private static readonly float playerBaseSpeed = 20;
     private static readonly int playerBaseArmor = 0;
     //Player의 기본적인 스탯 : 최대 체력/공격력 계수/이동속도/방어력 을 반환한다.
     public static (int,float,float,int) GetPlayerStat() { return (playerBaseHp, playerBaseAtk, playerBaseSpeed, playerBaseArmor); }
@@ -53,9 +53,9 @@ public static class GameData
 
 
     //Weapon Data
-    private static readonly int[,] weaponAtk = { { 30, 40, 50 }, { 40, 55, 70 }, { 25, 30, 35 }, { 15, 18, 22 } };
-    private static readonly float[,] weaponCooldown = { { 1.4f, 1.3f, 1.2f }, { 1.6f, 1.55f, 1.5f }, { 0.8f, 0.7f, 0.6f }, { 1.25f, 1.15f, 1.05f } };
-    private static readonly int[,] weaponRange = { { 14, 17, 20 }, { 10, 11, 12 } };
+    private static readonly int[,] weaponAtk = { { 30, 40, 55 }, { 40, 55, 75 }, { 25, 30, 35 }, { 18, 22, 27 } };
+    private static readonly float[,] weaponCooldown = { { 1f, 0.85f, 0.7f }, { 1.3f, 1.2f, 1.1f }, { 0.6f, 0.5f, 0.4f }, { 0.95f, 0.85f, 0.75f } };
+    private static readonly int[,] weaponRange = { { 30, 40, 50 }, { 14, 17, 20 } };
     private static readonly int[,] weaponAmmo = { { 60, 80, 100 }, { 20, 30, 40 } };
     private static readonly int[,] weaponMultiHit = { { 1, 1, 2 }, { 1, 2, 3 } };
     //Get Method 사용 방법 : 첫번째 매개변수는 Weapon 종류 지정(Enum WeaponType), 두번째 매개변수는 Weapon 등급 지정(Enum ItemGrade)
@@ -100,6 +100,10 @@ public static class GameData
     public static readonly GameObject PrefabMissile = Resources.Load<GameObject>("Missile");
     public static readonly GameObject PrefabMissileBoss = Resources.Load<GameObject>("Missile Boss");
     public static readonly GameObject PrefabRock = Resources.Load<GameObject>("Rock");
+    public static readonly GameObject PrefabGunEquipped = Resources.Load<GameObject>("EquippedWeapon/GunEquipped");
+    public static readonly GameObject PrefabShotGunEquipped = Resources.Load<GameObject>("EquippedWeapon/ShotGunEquipped");
+    public static readonly GameObject PrefabSwordEquipped = Resources.Load<GameObject>("EquippedWeapon/SwordEquipped");
+    public static readonly GameObject PrefabLongSwordEquipped = Resources.Load<GameObject>("EquippedWeapon/LongSwordEquipped");
 
 }
 public enum WeaponType { Sword, Longsword, Gun, Shotgun }
