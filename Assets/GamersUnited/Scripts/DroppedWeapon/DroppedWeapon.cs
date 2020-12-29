@@ -12,31 +12,51 @@ namespace DW
         private Color gradeColor;
         private Light wlight = null;
         private ParticleSystem particle = null;
+        private Rigidbody rigid;
+        private SphereCollider sphereC;
 
         private void Start()
         {
+            rigid = GetComponent<Rigidbody>();
+            sphereC = GetComponent<SphereCollider>();
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if(collision.gameObject.CompareTag("Floor"))
+            {
+                rigid.isKinematic = true;
+                sphereC.enabled = false;
+            }
         }
 
         private void InitType(WeaponType type)
         {
             GameObject meshObj = null;
+            GameObject meshObjE = null;
+            //meshObjE는 플레이어에게 장착된 무기의 메쉬오브젝트
+            weaponForPlayer = new GameObject("WeaponEquipped");
             switch (type)
             {
                 case WeaponType.Gun:
-                    weaponForPlayer = Resources.Load<GameObject>("EquippedWeapon/GunEquipped");
+                    weaponForPlayer.AddComponent<Gun>();
                     meshObj = Resources.Load<GameObject>("DroppedWeapon/GunMesh");
+                    meshObjE = Resources.Load<GameObject>("DroppedWeapon/GunMesh");
                     break;
                 case WeaponType.Shotgun:
-                    weaponForPlayer = Resources.Load<GameObject>("EquippedWeapon/ShotGunEquipped");
+                    weaponForPlayer.AddComponent<ShotGun>();
                     meshObj = Resources.Load<GameObject>("DroppedWeapon/ShotGunMesh");
+                    meshObjE = Resources.Load<GameObject>("DroppedWeapon/ShotGunMesh");
                     break;
                 case WeaponType.Sword:
-                    weaponForPlayer = Resources.Load<GameObject>("EquippedWeapon/SwordEquipped");
+                    weaponForPlayer.AddComponent<Sword>();
                     meshObj = Resources.Load<GameObject>("DroppedWeapon/SwordMesh");
+                    meshObjE = Resources.Load<GameObject>("DroppedWeapon/SwordMesh");
                     break;
                 case WeaponType.Longsword:
-                    weaponForPlayer = Resources.Load<GameObject>("EquippedWeapon/LongSwordEquipped");
+                    weaponForPlayer.AddComponent<LongSword>();
                     meshObj = Resources.Load<GameObject>("DroppedWeapon/LongSwordMesh");
+                    meshObjE = Resources.Load<GameObject>("DroppedWeapon/LongSwordMesh");
                     break;
             }//type에 따라 다른 오브젝트 참조
 
@@ -46,6 +66,9 @@ namespace DW
             meshObj.transform.SetParent(transform, false);
             //메쉬오브젝트 자식오브젝트로 추가
 
+            weaponForPlayer.gameObject.SetActive(false);
+            Instantiate(meshObjE, weaponForPlayer.transform, false);
+            //weaponForPlayer에 메쉬오브젝트 자식오브젝트로 추가
         }
 
         private void InitGrade(ItemGrade grade)

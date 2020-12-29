@@ -30,6 +30,15 @@ public class Player : GameUnit
     {
         //무기 없을 시 기본무기(단검,Common) 장착시키기
     }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if(other.GetComponent<DW.DroppedWeapon>() && Input.GetKeyDown(KeyCode.E))
+        {
+            EquipWeapon(other.GetComponent<DW.DroppedWeapon>().GetWeapon());
+            other.GetComponent<DW.DroppedWeapon>().DestroyObject();
+        }
+    }
     protected override void OnDamaged( Vector3 dir, float pushPower)
     {
         Rigid.AddForce(dir * pushPower, ForceMode.Impulse);
@@ -75,6 +84,10 @@ public class Player : GameUnit
         //무기 습득시 호출, 무기 종류에 맞는 그래픽 불러오기
         equipWeapon.Unit = this;
         weapon = equipWeapon;
+        //무기 Right hand 쪽에 장착
+        weapon.transform.SetParent(transform.GetChild(0).GetChild(0).GetChild(3).GetChild(0).GetChild(1), false);
+        //weapon 오브젝트 활성화
+        weapon.gameObject.SetActive(true);
     }
     public void UnequipWeapon()
     {
