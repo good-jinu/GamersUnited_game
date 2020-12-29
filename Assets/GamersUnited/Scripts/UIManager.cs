@@ -6,10 +6,6 @@ using TMPro;
 public class UIManager : MonoBehaviour
 {
     private bool GameIsPaused = false;
-
-    //카메라위치 이동 관련
-    public Transform cameraPos;
-    public Vector3 cameraPosOffset;
     //현재 플레이어 상태 관련
     public TextMeshProUGUI hp_bar;
     public TextMeshProUGUI ammo_bar;
@@ -24,7 +20,6 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        cameraPos.position = GameManager.Instance.Player.transform.position + cameraPosOffset;
         if(Input.GetButtonDown("Cancel"))
         {
             //Cancel("esc")버튼이 눌러졋을 때 일시정지

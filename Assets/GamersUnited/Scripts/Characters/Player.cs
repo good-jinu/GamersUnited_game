@@ -23,6 +23,8 @@ public class Player : GameUnit
     {
         base.Start();
         GameManager.Instance.Player = this;
+        //메인카메라가 본인 쫓아오게조정
+        GameManager.Instance.MainCamera.SetObjectToFollow(transform);
     }
 
     // Update is called once per frame
