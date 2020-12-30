@@ -102,6 +102,7 @@ public class Player : GameUnit
         if (MaxHp < Health)
             Health = MaxHp;
     }
+    //TODO : 아래 함수 삭제할 때, Player.cs Update() 내 EquipWeapon() 호출 부분을 Sword/Common 장착하도록 변경해주고 삭제할것
     public void EquipWeapon(WeaponType equipWeapon, ItemGrade grade)
     {
         if (weapon != null)
