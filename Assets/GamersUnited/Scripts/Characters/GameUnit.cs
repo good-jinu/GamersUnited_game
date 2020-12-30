@@ -12,6 +12,9 @@ public abstract class GameUnit : MonoBehaviour
     private bool invincible;
     private System.DateTime invincibleEndTime;
     private Rigidbody rigid;
+    private bool isDamaged;
+    private bool isDead;
+    private GameUnitList type;
 
     public int MaxHp { get => maxHp; protected set => maxHp = value; }
     public float Health { get => health; protected set => health = value; }
@@ -20,6 +23,10 @@ public abstract class GameUnit : MonoBehaviour
     public float Atk { get => atk; protected set => atk = value; }
     public bool Invincible { get => invincible; }
     public Rigidbody Rigid { get => rigid; }
+    protected bool IsDamaged { get => isDamaged; }
+    public bool IsDead { get => isDead; }
+    public GameUnitList Type { get => type; protected set => type = value; }
+
     protected virtual void Awake()
     {
         invincible = false;
@@ -46,10 +53,10 @@ public abstract class GameUnit : MonoBehaviour
     //반환값 : 실제 적용된 데미지
     public virtual float HitbyAttack(float damage, Vector3 pos, float pushPower)
     {
-        if (invincible)
+        if (invincible || IsDead)
         {
             //테스트용 코드
-            Debug.Log($"Damaged GameUnit Name : {gameObject.name}\nInvincible : On, remainHp : {health}");
+            Debug.Log($"Damaged GameUnit Name : {gameObject.name}\nInvincible : {Invincible}, IsDead : {IsDead}, remainHp : {health}");
 
             //테스트용 코드 끝
             return 0f;
@@ -67,29 +74,47 @@ public abstract class GameUnit : MonoBehaviour
         }
         dir = dir.normalized;
         //남은 체력에 따라 처리
-        if (health > 0)
+        if(health <= 0f)
         {
-            OnDamaged( dir, pushPower);
+            OnDead(dir);
         }
         else
         {
-            OnDead(dir);
+            OnDamaged(dir, pushPower);
         }
         //테스트용 코드
         Debug.Log($"Damaged GameUnit Name : {gameObject.name}\noriginalDamage : {damage}, validDamage : {validDamage}, remainHp : {health}");
         //테스트용 코드 끝
         return validDamage < 0 ? 0 : validDamage;
     }
-    //피격 후 hp가 0이되면 호출할 함수
-    //dir : 사망 애니메이션을 수행할 방향
-    //TODO : 
-    //사망 애니메이션(모션) 수행
-    //더 이상 공격 투사체나 다른 Unit에 충돌되지 않도록 함
-    //사망 애니메이션 종료 후 비활성화 또는 Destory 처리
-    //GameManager의 OnUnitDead 호출
-    protected abstract void OnDead(Vector3 dir);
+    protected virtual void OnDead(Vector3 dir)
+    {
+        //TODO : 레이어 변경 추가
+        GameManager.Instance.OnUnitDead(gameObject.name, transform.position);
+        Rigid.AddForce(dir * 10 + Vector3.up * 5, ForceMode.Impulse);
+        transform.LookAt(transform.position - dir);
+        isDead = true;
+    }
 
-    protected abstract void OnDamaged( Vector3 dir, float pushPower);
+    protected virtual void OnDamaged(in Vector3 dir, in float pushPower)
+    {
+        if (pushPower > 0f)
+        {
+            DamagedPhysic(dir, pushPower);
+        }
+    }
+    protected virtual void DamagedPhysic(in Vector3 dir, in float pushPower)
+    {
+        isDamaged = true;
+        Rigid.AddForce(dir * pushPower, ForceMode.Impulse);
+        transform.LookAt(transform.position - dir);
+        Invoke("DamagedPhysicEnd", 0.5f + (pushPower / (pushPower + 20f)) * 2f);
+    }
+    protected virtual void DamagedPhysicEnd()
+    {
+        isDamaged = false;
+        Rigid.velocity = Vector3.zero;
+    }
 
 
     //매개변수로 지정한 시간 동안 무적상태로 만든다.

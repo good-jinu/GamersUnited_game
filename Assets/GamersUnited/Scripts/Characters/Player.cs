@@ -4,11 +4,24 @@ using UnityEngine;
 
 public class Player : GameUnit
 {
-
+    public Transform weaponPoint;
     //인덱스 0 : 투구, 1 : 갑옷, 2 : 신발
     private Armor[] equip;
     private Weapon weapon;
     private Animator ani;
+
+    //Input variables
+    private float horizontal;
+    private float vertical;
+    private bool attackDown;
+    private bool dodgeDown;
+
+    //private method variables
+    private Vector3 moveVec;
+    private Vector3 dodgeVec;
+    private bool isDodge;
+    private bool isAttack;
+    private bool isBorder;
 
     public Weapon Weapon { get => weapon; }
     public Armor[] Equip { get => equip; }
@@ -18,6 +31,7 @@ public class Player : GameUnit
         base.Awake();
         equip = new Armor[3];
         ani = GetComponentInChildren<Animator>();
+        Type = GameUnitList.Player;
     }
     override protected void Start()
     {
@@ -25,19 +39,37 @@ public class Player : GameUnit
         GameManager.Instance.Player = this;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //무기 없을 시 기본무기(단검,Common) 장착시키기
+        if (IsDead)
+            return;
+        if(weapon == null)
+        {
+            EquipWeapon(WeaponType.Sword, ItemGrade.Common);
+        }
+        GetInput();
+        Move();
+        Look();
+        Dodge();
+        Attack();
+
     }
-    protected override void OnDamaged( Vector3 dir, float pushPower)
+
+    private void FixedUpdate()
     {
-        Rigid.AddForce(dir * pushPower, ForceMode.Impulse);
+        if (IsDead)
+            return;
+        FreezeRotation();
+        StopToWall();
+    }
+    protected override void OnDamaged(in Vector3 dir, in float pushPower)
+    {
+        base.OnDamaged(dir, pushPower);
         //TODO : 경직애니메이션이 없음.....
-        //TODO : 경직 포함일시 일정시간동안 행동 막기
     }
     protected override void OnDead(Vector3 dir)
     {
+        base.OnDead(dir);
         //TODO : 마찬가지로 사망 애니메이션이 없음.....
     }
 
@@ -70,14 +102,145 @@ public class Player : GameUnit
         if (MaxHp < Health)
             Health = MaxHp;
     }
-    public void EquipWeapon(Weapon equipWeapon)
+    public void EquipWeapon(WeaponType equipWeapon, ItemGrade grade)
     {
-        //무기 습득시 호출, 무기 종류에 맞는 그래픽 불러오기
-        equipWeapon.Unit = this;
-        weapon = equipWeapon;
+        if (weapon != null)
+            UnequipWeapon();
+        GameObject prefab = null;
+        switch (equipWeapon)
+        {
+            case WeaponType.Gun:
+                prefab = GameData.PrefabGunEquipped;
+                break;
+            case WeaponType.Shotgun:
+                prefab = GameData.PrefabShotGunEquipped;
+                break;
+            case WeaponType.Sword:
+                prefab = GameData.PrefabSwordEquipped;
+                break;
+            case WeaponType.Longsword:
+                prefab = GameData.PrefabLongSwordEquipped;
+                break;
+        }
+        var instant = Instantiate(prefab, weaponPoint);
+        var script = instant.GetComponent<Weapon>();
+        script.Init(grade);
+        script.Unit = this;
+        weapon = script;
     }
     public void UnequipWeapon()
     {
-        //무기 해제시 호출, 그래픽 해제/기본 무기로 변경시키기
+        Destroy(weapon.gameObject);
+        weapon = null;
+    }
+
+    //private Part
+    private void GetInput()
+    {
+        horizontal = Input.GetAxisRaw("Horizontal");
+        vertical = Input.GetAxisRaw("Vertical");
+        attackDown = Input.GetButton("Fire1");
+        dodgeDown = Input.GetButtonDown("Dodge");
+    }
+
+    private void Look()
+    {
+        if (IsDamaged)
+            return;
+        if(!isAttack)
+            transform.LookAt(transform.position + moveVec);
+        /*
+        if (attackDown)
+        {
+            Ray ray = //(Camera Component).ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit, 100))
+            {
+                Vector3 nextVec = hit.point - transform.position;
+                nextVec.y = 0;
+                transform.LookAt(transform.position + nextVec);
+            }
+        }
+        */
+    }
+    private void Move()
+    {
+        moveVec = isDodge ? dodgeVec : new Vector3(horizontal, 0, vertical).normalized;
+        if (isAttack || IsDamaged || moveVec == Vector3.zero)
+        {
+            ani.SetBool("isRun", false);
+        }
+        else
+        {
+            if(!isBorder)
+            transform.position += moveVec * Movespeed * Time.deltaTime * (isDodge ? 2f : 1f);
+            ani.SetBool("isRun", true);
+        }
+    }
+    private void Dodge()
+    {
+        if (!dodgeDown || isAttack || IsDamaged || isDodge || moveVec == Vector3.zero)
+            return;
+        dodgeVec = moveVec;
+        isDodge = true;
+        ani.SetTrigger("doDodge");
+        Invoke("DodgeEnd", 0.5f);
+    }
+    private void DodgeEnd()
+    {
+        isDodge = false;
+    }
+    private void Attack()
+    {
+        if (!attackDown || weapon == null || IsDamaged || isAttack || isDodge)
+            return;
+        if (Weapon.Attack())
+        {
+            string animationName = null;
+            float animationTime = 0f;
+            isAttack = true;
+            switch (Weapon.Type)
+            {
+                case WeaponType.Gun:
+                case WeaponType.Shotgun:
+                    animationName = "doShot";
+                    animationTime = 0.3f;
+                    CheckAmmo();
+                    break;
+                case WeaponType.Sword:
+                case WeaponType.Longsword:
+                    animationName = "doSwing";
+                    animationTime = 0.4f;
+                    break;
+            }
+            ani.SetBool("isRun", false);
+            ani.SetTrigger(animationName);
+            Invoke("AttackEnd", animationTime);
+        }
+    }
+    private void CheckAmmo()
+    {
+        if(weapon is Gun)
+        {
+            if (((Gun)weapon).Ammo <= 0)
+                UnequipWeapon();
+        }
+        else if (weapon is ShotGun)
+        {
+            if (((ShotGun)weapon).Ammo <= 0)
+                UnequipWeapon();
+        }
+    }
+    private void AttackEnd()
+    {
+        isAttack = false;
+    }
+
+    private void FreezeRotation()
+    {
+        Rigid.angularVelocity = Vector3.zero;
+    }
+    private void StopToWall()
+    {
+        isBorder = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall"));
     }
 }

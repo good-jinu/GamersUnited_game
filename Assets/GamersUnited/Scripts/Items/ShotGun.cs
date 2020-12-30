@@ -35,8 +35,6 @@ public class ShotGun : Weapon
 
     IEnumerator BulletFire(float damage)
     {
-        //Player Animation 호출
-        //bullet instance 생성, 2/3번째 매개변수인 pos와 dir는 플레이어 Prefab과 무기 위치를 보고 변경..
         for(int i = 0; i < 5; ++i)
         { 
             var bullet = Instantiate(GameData.PrefabShotGunBullet, Unit.transform.position, Unit.transform.rotation);

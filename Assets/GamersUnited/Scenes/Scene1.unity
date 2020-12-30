@@ -121,7 +121,7 @@ NavMeshSettings:
     accuratePlacement: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: 394fa6ffd23c23f43bdc16186c09857d, type: 2}
 --- !u!1 &10910876
 GameObject:
   m_ObjectHideFlags: 0
@@ -1842,6 +1842,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: WorldField
+      objectReference: {fileID: 0}
+    - target: {fileID: 8266580445848551114, guid: 0c2d00084feb6994796ddf301872190a,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 8266580446207098552, guid: 0c2d00084feb6994796ddf301872190a,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 8266580446528293473, guid: 0c2d00084feb6994796ddf301872190a,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 8266580446741105591, guid: 0c2d00084feb6994796ddf301872190a,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 8266580446756774224, guid: 0c2d00084feb6994796ddf301872190a,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 8266580446936060065, guid: 0c2d00084feb6994796ddf301872190a,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c2d00084feb6994796ddf301872190a, type: 3}

@@ -10,20 +10,22 @@ public class MonsterD : Monster
     public Transform[] Ports = new Transform[2];
 
     private Pattern taunt, shotMissile, explosion;
-    private bool isAttack;
+    private bool doTaunt;
+    private Vector2 tauntTarget;
 
-    private void Update()
+    protected override void Update()
     {
+        if (IsDead)
+            return;
         //for Taunt Pattern
-        Vector3 target = GameManager.Instance.Player.transform.position;
-        if (Movespeed != 0)
+        if (doTaunt)
         {
             transform.position = 
-                Vector3.MoveTowards(transform.position, new Vector3(target.x, transform.position.y, target.z), Movespeed * Time.deltaTime);
+                Vector3.MoveTowards(transform.position, new Vector3(tauntTarget.x, transform.position.y, tauntTarget.y), Movespeed * Time.deltaTime);
         }
-        if (!isAttack)
+        if (!IsAttack && GameManager.Instance.Player != null)
         {
-            transform.LookAt(target);
+            transform.LookAt(GameManager.Instance.Player.transform);
         }
     }
     private IEnumerator AI()
@@ -32,19 +34,23 @@ public class MonsterD : Monster
         yield return new WaitForSeconds(5f);
         while (true)
         {
-            if (GameManager.Instance.Player != null && AIActive && !isAttack)
+            if (GameManager.Instance.Player != null && AIActive && !IsAttack && !IsDead)
             {
                 //Select Pattern
                 float distance = Vector2.Distance(new Vector2(transform.position.x, transform.position.z), 
                     new Vector2(GameManager.Instance.Player.transform.position.x, GameManager.Instance.Player.transform.position.z));
-                Pattern pattern;
-                if (distance < 20f)
+                Pattern pattern = null;
+                if (distance < 25f)
                 {
                     pattern = SelectRandomPattern(taunt, explosion);
                 }
+                else if (distance < 40f)
+                {
+                    pattern = SelectRandomPattern(taunt, explosion,shotMissile);
+                }
                 else
                 {
-                    pattern = SelectRandomPattern(taunt, shotMissile);
+                    SelectRandomPattern(taunt, shotMissile);
                 }
                 //Do Pattern
                 if(pattern != null)
@@ -65,6 +71,7 @@ public class MonsterD : Monster
         taunt = new Pattern(Taunt, 8f, 1);
         shotMissile = new Pattern(ShotMissile, 3.5f, 3);
         explosion = new Pattern(Explosion, 6f, 2);
+        Type = GameUnitList.MonsterD;
     }
     protected override void Start()
     {
@@ -74,8 +81,16 @@ public class MonsterD : Monster
     }
     protected override void OnDead(Vector3 dir)
     {
-        StartCoroutine(Separation());
         base.OnDead(dir);
+        StartCoroutine(Separation());
+    }
+    protected override void OnDamaged(in Vector3 dir, in float pushPower)
+    {
+        
+    }
+    protected override void Targeting()
+    {
+
     }
 
     //Pattern Method
@@ -95,39 +110,43 @@ public class MonsterD : Monster
         for(int i = 0; i < 2; ++i)
         {
             monster[i].AIActive = true;
+            monster[i].Rigid.velocity = Vector3.zero;
         }
     }
     private IEnumerator Taunt()
     {
         float range = 40f;
-        isAttack = true;
+        IsAttack = true;
         var target = GameManager.Instance.Player.transform.position;
         target.y = 0;
         var warningArea = GameManager.Instance.Effect.WarningAreaEffect(target, range, 2f);
-        warningArea.SetAttackWhenDestory(range-1, TauntDamage * Atk, 30, "Player", this, null);
-        warningArea.SetAttackWhenDestory(15, 0, 20, "Monster", this, null);
+        warningArea.SetAttackWhenDestory(range-1, TauntDamage * Atk, 15, "Player", this, null);
+        warningArea.SetAttackWhenDestory(15, 0, 10, "Monster", this, null);
         warningArea.SetSignalWhenDestory(TauntMoveEnd);
         yield return new WaitForSeconds(0.4f);
         gameObject.layer = 9;
         Ani.SetTrigger("doTaunt");
         yield return new WaitForSeconds(0.1f);
         Movespeed = Mathf.Sqrt(Mathf.Pow(target.x - transform.position.x, 2) + Mathf.Pow(target.z - transform.position.z, 2)) / 1.1f;
+        tauntTarget = new Vector2(target.x, target.z);
+        doTaunt = true;
         SetInvincible(1.5f);
         yield return new WaitForSeconds(1.75f);
         gameObject.layer = 8;
-        isAttack = false;
+        IsAttack = false;
     }
 
     private void TauntMoveEnd(Transform objTransform)
     {
         Movespeed = 0;
         transform.position = new Vector3(objTransform.position.x, transform.position.y, objTransform.position.z);
+        doTaunt = false;
         //TODO : 충격파 이펙트 있을시 넣기
     }
 
     private IEnumerator ShotMissile()
     {
-        isAttack = true;
+        IsAttack = true;
         Ani.SetTrigger("doShot");
         yield return new WaitForSeconds(0.15f);
         for (int i = 0; i < 2; ++i) {
@@ -138,7 +157,7 @@ public class MonsterD : Monster
                 if(script as AttackObject)
                 {
                     ((AttackObject)script).Init(Atk * MissileDamage, "Player", 0, missile.transform.position, this, 1, null);
-                    script.ChaseBulletFire(15, 360, 4f, GameManager.Instance.Player.transform);
+                    script.ChaseBulletFire(7.5f, 90, 8f, GameManager.Instance.Player.transform);
                 }
                 else
                 {
@@ -148,7 +167,7 @@ public class MonsterD : Monster
             yield return new WaitForSeconds(0.1f);
         }
         yield return new WaitForSeconds(0.7f);
-        isAttack = false;
+        IsAttack = false;
     }
 
     private IEnumerator Explosion()
@@ -158,7 +177,7 @@ public class MonsterD : Monster
         float explosionRange = 11f;
         int stage = 4;
         int explosionPerStage = 5;
-        isAttack = true;
+        IsAttack = true;
         Ani.SetTrigger("doBigShot");
         yield return new WaitForSeconds(0.75f);
         float minRange = skillMinRange;
@@ -180,12 +199,12 @@ public class MonsterD : Monster
                 effectivePos.x += transform.position.x;
                 effectivePos.z += transform.position.z;
                 var instant = GameManager.Instance.Effect.WarningAreaEffect(effectivePos, explosionRange, 1.5f);
-                instant.SetAttackWhenDestory(explosionRange-1, ExplosionDamage * Atk, 10f, "Player", this, hashSet, null);
+                instant.SetAttackWhenDestory(explosionRange-1, ExplosionDamage * Atk, 5f, "Player", this, hashSet, null);
             }
             yield return new WaitForSeconds(0.1f);
             minRange = maxRange;
         }
         yield return new WaitForSeconds(1.25f - 0.1f * stage);
-        isAttack = false;
+        IsAttack = false;
     }
 }

@@ -10,7 +10,7 @@ Animator:
   m_GameObject: {fileID: 3689324935448883471}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 7403aa8bd3976344a9a7e54fac3e282c, type: 2}
+  m_Controller: {fileID: 9100000, guid: 5abfece5b0c86624aa3b05f30c957d02, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -93,8 +93,8 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 2
-  m_Acceleration: 10
+  m_Speed: 0
+  m_Acceleration: 100
   avoidancePriority: 50
   m_AngularSpeed: 360
   m_StoppingDistance: 0

@@ -5,11 +5,25 @@ using UnityEngine;
 public class MonsterC : Monster
 {
     const float MissileDamage = 15f;
-    const float MissileSpeed = 40f;
+    const float MissileSpeed = 30f;
     const float MissileRange = 40f;
+    protected override void Awake()
+    {
+        base.Awake();
+        Type = GameUnitList.MonsterC;
+    }
+    protected override void Targeting()
+    {
+        var hits = Physics.SphereCastAll(transform.position, 0.5f, transform.forward, 30f, LayerMask.GetMask("Player"));
+        if (hits.Length > 0 && !IsAttack && IsChase)
+        {
+            StartCoroutine(Shot());
+        }
+    }
     private IEnumerator Shot()
     {
-        //TODO : 공격시작
+        IsAttack = true;
+        IsChase = false;
         Ani.SetBool("isAttack", true);
         yield return new WaitForSeconds(0.4f);
         var missile = Instantiate(GameData.PrefabMissile, transform.position, transform.rotation);
@@ -27,9 +41,10 @@ public class MonsterC : Monster
             }
         }
         yield return new WaitForSeconds(0.7f);
-        Ani.SetBool("isAttack", false);
         //공격 후딜레이
         yield return new WaitForSeconds(1f);
-        //TODO : 공격끝
+        Ani.SetBool("isAttack", false);
+        IsAttack = false;
+        IsChase = true;
     }
 }
