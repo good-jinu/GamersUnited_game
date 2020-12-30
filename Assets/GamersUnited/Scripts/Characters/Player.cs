@@ -37,6 +37,8 @@ public class Player : GameUnit
     {
         base.Start();
         GameManager.Instance.Player = this;
+        //메인카메라가 본인 쫓아오게조정
+        GameManager.Instance.MainCamera.SetObjectToFollow(transform);
     }
 
     void Update()
@@ -61,6 +63,14 @@ public class Player : GameUnit
             return;
         FreezeRotation();
         StopToWall();
+    }
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.GetComponent<DW.DroppedWeapon>() && Input.GetKeyDown(KeyCode.E))
+        {
+            EquipWeapon(other.GetComponent<DW.DroppedWeapon>().GetWeapon());
+            other.GetComponent<DW.DroppedWeapon>().DestroyObject();
+        }
     }
     protected override void OnDamaged(in Vector3 dir, in float pushPower)
     {
@@ -127,6 +137,16 @@ public class Player : GameUnit
         script.Init(grade);
         script.Unit = this;
         weapon = script;
+    }
+    public void EquipWeapon(Weapon equipWeapon)
+    {
+        //Weapon을 매개변수로 받는 오버로드
+        equipWeapon.Unit = this;
+        weapon = equipWeapon;
+        //무기 Right hand 쪽에 장착
+        weapon.transform.SetParent(transform.GetChild(0).GetChild(0).GetChild(3).GetChild(0).GetChild(1), false);
+        //weapon 오브젝트 활성화
+        weapon.gameObject.SetActive(true);
     }
     public void UnequipWeapon()
     {
