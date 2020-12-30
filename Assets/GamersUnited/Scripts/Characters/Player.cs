@@ -53,23 +53,6 @@ public class Player : GameUnit
         Dodge();
         Attack();
 
-        //for test
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            EquipWeapon(WeaponType.Sword, ItemGrade.Common);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            EquipWeapon(WeaponType.Longsword, ItemGrade.Common);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            EquipWeapon(WeaponType.Gun, ItemGrade.Common);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            EquipWeapon(WeaponType.Shotgun, ItemGrade.Common);
-        }
     }
 
     private void FixedUpdate()
