@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8675827405860770961}
   - component: {fileID: 1236395685068390145}
   - component: {fileID: 5283062561699627630}
-  m_Layer: 15
+  m_Layer: 11
   m_Name: Mesh Object
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 3154065153409300258}
   - component: {fileID: 5660919625606310033}
   - component: {fileID: 3261475203238647007}
-  m_Layer: 15
+  m_Layer: 11
   m_Name: Rock
   m_TagString: EnemyBullet
   m_Icon: {fileID: 0}

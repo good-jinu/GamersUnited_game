@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8796968018936214008}
   - component: {fileID: 2568336927298439979}
   - component: {fileID: 7989810320822100419}
-  m_Layer: 15
+  m_Layer: 11
   m_Name: Missile Boss
   m_TagString: EnemyBullet
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 1835879136217429257}
   - component: {fileID: 3547610240449926292}
   - component: {fileID: 3171026471123652715}
-  m_Layer: 15
+  m_Layer: 11
   m_Name: Mesh Object
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -179,7 +179,7 @@ GameObject:
   - component: {fileID: 6895567095623474289}
   - component: {fileID: 6987202991070676759}
   - component: {fileID: 1224120041729180939}
-  m_Layer: 15
+  m_Layer: 11
   m_Name: Effect
   m_TagString: Untagged
   m_Icon: {fileID: 0}

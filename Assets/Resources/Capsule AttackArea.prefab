@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 405783165246572930}
   - component: {fileID: 1979921689282496428}
   - component: {fileID: 4963629994868821289}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Capsule AttackArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}

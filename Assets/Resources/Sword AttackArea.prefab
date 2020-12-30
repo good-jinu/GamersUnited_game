@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4028931683613849791}
   - component: {fileID: 5752608360709286857}
   - component: {fileID: 218404055512097989}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Sword AttackArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
