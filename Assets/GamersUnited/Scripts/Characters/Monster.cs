@@ -87,8 +87,9 @@ public abstract class Monster : GameUnit
         foreach(var mesh in meshes)
             mesh.material.color = Color.red;
         yield return new WaitForSeconds(0.1f);
-        foreach (var mesh in meshes)
-            mesh.material.color = Color.white;
+        if(!IsDead)
+            foreach (var mesh in meshes)
+                mesh.material.color = Color.white;
     }
     private void StartChase()
     {
