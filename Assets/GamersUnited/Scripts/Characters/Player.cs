@@ -124,7 +124,7 @@ public class Player : GameUnit
     }
     public void EquipWeapon(Weapon equipWeapon)
     {
-        if (weapon == null)
+        if (weapon != null)
             UnequipWeapon();
         //Weapon을 매개변수로 받는 오버로드
         equipWeapon.Unit = this;
