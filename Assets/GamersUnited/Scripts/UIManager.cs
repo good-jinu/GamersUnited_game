@@ -6,9 +6,12 @@ using TMPro;
 public class UIManager : MonoBehaviour
 {
     private bool GameIsPaused = false;
+    [Header("Player State")]
     //현재 플레이어 상태 관련
     public TextMeshProUGUI hp_bar;
     public TextMeshProUGUI ammo_bar;
+    public TextMeshProUGUI weaponType_bar;
+    [Header("Pause Menu")]
     //일시정지 메뉴
     public GameObject PauseMenu;
 
@@ -47,7 +50,7 @@ public class UIManager : MonoBehaviour
         GameIsPaused = false;
     }
 
-    void Pause()
+    private void Pause()
     {
         //게임을 일시정지 시킬 때 사용
         PauseMenu.SetActive(true);
@@ -55,12 +58,47 @@ public class UIManager : MonoBehaviour
         GameIsPaused = true;
     }
 
-    void ShowCurrentState()
+    private void ShowCurrentState()
     {
-        //현재 체력과 총알 상태 텍스트로 업데이트
-        hp_bar.text = "Hi";
-        ammo_bar.text = "ss";
-        //위는 테스트 용
+        Player player = GameManager.Instance.Player;
+
+        hp_bar.text = player.Health.ToString() + "/" + player.MaxHp.ToString();
+        if(player.Weapon is Gun)
+        {
+            ammo_bar.text = ((Gun)player.Weapon).Ammo.ToString();
+            weaponType_bar.text = "Gun";
+        }
+        else if(player.Weapon is ShotGun)
+        {
+            ammo_bar.text = ((ShotGun)player.Weapon).Ammo.ToString();
+            weaponType_bar.text = "ShotGun";
+        }
+        else if(player.Weapon is Sword)
+        {
+            ammo_bar.text = "INF";
+            weaponType_bar.text = "Sword";
+        }
+        else if(player.Weapon is LongSword)
+        {
+            ammo_bar.text = "INF";
+            weaponType_bar.text = "Long Sword";
+        }
+
+        if(player.Weapon!=null)
+        {
+            switch(player.Weapon.Grade)
+            {
+                case ItemGrade.Common:
+                    weaponType_bar.color = Color.white;
+                    break;
+                case ItemGrade.Rare:
+                    weaponType_bar.color = Color.blue;
+                    break;
+                case ItemGrade.Unique:
+                    weaponType_bar.color = new Color(1f, 0.75f, 0.125f);
+                    break;
+            }
+        }
     }
     
     public void PrintDamage(float damage, Vector3 pos)
