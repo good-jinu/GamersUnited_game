@@ -102,7 +102,7 @@ public class MonsterD : Monster
             monster[i] = GameManager.Instance.InstantiateUnit((GameUnitList)Random.Range(1, 4), transform.position) as Monster;
             monster[i].AIActive = false;
             monster[i].transform.Rotate(Vector3.up * Random.Range(0,360));
-            monster[i].Rigid.AddForce((Vector3.up + monster[i].transform.forward) * 30, ForceMode.Impulse);
+            monster[i].Rigid.AddForce((Vector3.up + monster[i].transform.forward) * 10, ForceMode.Impulse);
             monster[i].SetInvincible(1f);
             monster[i].gameObject.layer = 12;
         }

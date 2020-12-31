@@ -62,15 +62,21 @@ public class Player : GameUnit
         FreezeRotation();
         StopToWall();
     }
-    protected override void OnDamaged(in Vector3 dir, in float pushPower)
+    protected override void DamagedPhysic(in Vector3 dir, in float pushPower)
     {
-        base.OnDamaged(dir, pushPower);
-        //TODO : 경직애니메이션이 없음.....
+        base.DamagedPhysic(dir, pushPower);
+        ani.SetBool("isDamaged", true);
+        ani.SetBool("doDamaged", true);
+    }
+    protected override void DamagedPhysicEnd()
+    {
+        base.DamagedPhysicEnd();
+        ani.SetBool("isDamaged", false);
     }
     protected override void OnDead(Vector3 dir)
     {
         base.OnDead(dir);
-        //TODO : 마찬가지로 사망 애니메이션이 없음.....
+        ani.SetTrigger("doDead");
     }
 
 
