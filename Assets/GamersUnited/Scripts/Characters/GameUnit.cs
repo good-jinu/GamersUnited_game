@@ -41,14 +41,19 @@ public abstract class GameUnit : MonoBehaviour
     //스탯 초기화용 함수, 매개변수로 넣은 스탯 값으로 스탯 정보를 초기화한다.
     public void InitStat(int hp, float atk, float speed, int armor)
     {
-        maxHp = hp;
-        health = (float)hp;
+        InitStat(hp, hp, atk, speed, armor);
+    }
+    public void InitStat(int maxHp, float currentHp, float atk, float speed, int armor)
+    {
+        if (maxHp < currentHp)
+            throw new System.ArgumentException("Set to (currentHp > maxHp) is unable");
+        this.maxHp = maxHp;
+        health = currentHp;
         this.atk = atk;
         movespeed = speed;
         this.armor = armor;
-
     }
-    
+
     //공격 투사체에 피격됬을 때 호출될 함수, damage는 데미지, pos는 공격자의 위치, pushPower : 미는 힘
     //반환값 : 실제 적용된 데미지
     public virtual float HitbyAttack(float damage, Vector3 pos, float pushPower)
@@ -90,7 +95,7 @@ public abstract class GameUnit : MonoBehaviour
     protected virtual void OnDead(Vector3 dir)
     {
         //TODO : 레이어 변경 추가
-        GameManager.Instance.OnUnitDead(gameObject.name, transform.position);
+        GameManager.Instance.OnUnitDead(gameObject.name, transform.position, type);
         Rigid.AddForce(dir * 10 + Vector3.up * 5, ForceMode.Impulse);
         transform.LookAt(transform.position - dir);
         isDead = true;

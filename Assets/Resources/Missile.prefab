@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8343549596512219359}
   - component: {fileID: 6014389906300273877}
   - component: {fileID: 3720030236722482537}
-  m_Layer: 15
+  m_Layer: 11
   m_Name: Effect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4766,7 +4766,7 @@ GameObject:
   - component: {fileID: 4954804665781808284}
   - component: {fileID: 7819091697641147649}
   - component: {fileID: 9032417950057977574}
-  m_Layer: 15
+  m_Layer: 11
   m_Name: Mesh Object
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4858,7 +4858,7 @@ GameObject:
   - component: {fileID: 5303427624898003928}
   - component: {fileID: 3925318637750554954}
   - component: {fileID: 8985097030218003113}
-  m_Layer: 15
+  m_Layer: 11
   m_Name: Missile
   m_TagString: EnemyBullet
   m_Icon: {fileID: 0}

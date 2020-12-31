@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
         InstantiateUnit(GameUnitList.Player, GameObject.Find("PlayerSpawnPoint").transform.position);
 
     }
-    public void OnUnitDead(string name, Vector3 point)
+    public void OnUnitDead(string name, Vector3 point, GameUnitList type)
     {
         //option : 매개변수를 사망한 Unit의 이름과 사망 위치(Vector 3)으로 받을지, GameUnit 객체로 받을 지 선택
 

@@ -32,7 +32,7 @@ GameObject:
   - component: {fileID: 8816950236486906742}
   - component: {fileID: 4204220580141814737}
   - component: {fileID: 5847652753983910187}
-  m_Layer: 13
+  m_Layer: 8
   m_Name: Monster A
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -187,22 +187,22 @@ PrefabInstance:
     - target: {fileID: -8057993917985369370, guid: 98a47f1cd28823f4b8ab7f52d3d506fb,
         type: 3}
       propertyPath: m_Layer
-      value: 13
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -7176337870821086748, guid: 98a47f1cd28823f4b8ab7f52d3d506fb,
         type: 3}
       propertyPath: m_Layer
-      value: 13
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -5045207663242508877, guid: 98a47f1cd28823f4b8ab7f52d3d506fb,
         type: 3}
       propertyPath: m_Layer
-      value: 13
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4389696416909246161, guid: 98a47f1cd28823f4b8ab7f52d3d506fb,
         type: 3}
       propertyPath: m_Layer
-      value: 13
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -3818824636959225221, guid: 98a47f1cd28823f4b8ab7f52d3d506fb,
         type: 3}
@@ -212,7 +212,7 @@ PrefabInstance:
     - target: {fileID: -2917561728969970577, guid: 98a47f1cd28823f4b8ab7f52d3d506fb,
         type: 3}
       propertyPath: m_Layer
-      value: 13
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -2298401190775492070, guid: 98a47f1cd28823f4b8ab7f52d3d506fb,
         type: 3}
@@ -222,12 +222,12 @@ PrefabInstance:
     - target: {fileID: -2282220337652264415, guid: 98a47f1cd28823f4b8ab7f52d3d506fb,
         type: 3}
       propertyPath: m_Layer
-      value: 13
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -171236336171421805, guid: 98a47f1cd28823f4b8ab7f52d3d506fb,
         type: 3}
       propertyPath: m_Layer
-      value: 13
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 98a47f1cd28823f4b8ab7f52d3d506fb,
         type: 3}
@@ -237,27 +237,27 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 98a47f1cd28823f4b8ab7f52d3d506fb,
         type: 3}
       propertyPath: m_Layer
-      value: 13
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1870707945040428115, guid: 98a47f1cd28823f4b8ab7f52d3d506fb,
         type: 3}
       propertyPath: m_Layer
-      value: 13
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5886355748265891111, guid: 98a47f1cd28823f4b8ab7f52d3d506fb,
         type: 3}
       propertyPath: m_Layer
-      value: 13
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7576795381658739945, guid: 98a47f1cd28823f4b8ab7f52d3d506fb,
         type: 3}
       propertyPath: m_Layer
-      value: 13
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8053166739325691023, guid: 98a47f1cd28823f4b8ab7f52d3d506fb,
         type: 3}
       propertyPath: m_Layer
-      value: 13
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98a47f1cd28823f4b8ab7f52d3d506fb, type: 3}

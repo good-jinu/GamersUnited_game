@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8802060703900410418}
   - component: {fileID: 4259569594310410538}
   - component: {fileID: 7190165853871681212}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: ShotGun Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}

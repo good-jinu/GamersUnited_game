@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -9214781083063328206}
   - component: {fileID: 8556199785261497639}
   - component: {fileID: 4263186294034442646}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LongSword AttackArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
