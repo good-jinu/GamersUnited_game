@@ -40,6 +40,7 @@ namespace DW
                     break;
             }
             Object.Instantiate(meshObj, weaponObj.transform, false);
+            weaponObj.transform.localScale = new Vector3(3, 3, 3);
 
             //무기 등급에 따른 처리
             weapon.Init(grade);
