@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LoadScene : MonoBehaviour
+namespace UIMan
 {
-    public string sceneName;
-
-    public void LoadButtonDown()
+    public class LoadScene : MonoBehaviour
     {
-        SceneManager.LoadSceneAsync(sceneName);
+        public string sceneName;
+
+        public void LoadButtonDown()
+        {
+            SceneManager.LoadSceneAsync(sceneName);
+        }
     }
 }
