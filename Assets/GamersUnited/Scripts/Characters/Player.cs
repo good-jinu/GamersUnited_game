@@ -39,6 +39,8 @@ public class Player : GameUnit
         GameManager.Instance.Player = this;
         //메인카메라가 본인 쫓아오게조정
         GameManager.Instance.MainCamera.SetObjectToFollow(transform);
+        //weaponPoint 오른손으로 초기화
+        weaponPoint = transform.GetChild(0).GetChild(0).GetChild(3).GetChild(0).GetChild(1);
     }
 
     void Update()
@@ -116,35 +118,19 @@ public class Player : GameUnit
     {
         if (weapon != null)
             UnequipWeapon();
-        GameObject prefab = null;
-        switch (equipWeapon)
-        {
-            case WeaponType.Gun:
-                prefab = GameData.PrefabGunEquipped;
-                break;
-            case WeaponType.Shotgun:
-                prefab = GameData.PrefabShotGunEquipped;
-                break;
-            case WeaponType.Sword:
-                prefab = GameData.PrefabSwordEquipped;
-                break;
-            case WeaponType.Longsword:
-                prefab = GameData.PrefabLongSwordEquipped;
-                break;
-        }
-        var instant = Instantiate(prefab, weaponPoint);
-        var script = instant.GetComponent<Weapon>();
-        script.Init(grade);
-        script.Unit = this;
-        weapon = script;
+
+        //무기생성 함수 호출
+        weapon = DW.WeaponGenerator.GetWeapon(equipWeapon, grade, weaponPoint);
     }
     public void EquipWeapon(Weapon equipWeapon)
     {
+        if (weapon == null)
+            UnequipWeapon();
         //Weapon을 매개변수로 받는 오버로드
         equipWeapon.Unit = this;
         weapon = equipWeapon;
         //무기 Right hand 쪽에 장착
-        weapon.transform.SetParent(transform.GetChild(0).GetChild(0).GetChild(3).GetChild(0).GetChild(1), false);
+        weapon.transform.SetParent(weaponPoint, false);
         //weapon 오브젝트 활성화
         weapon.gameObject.SetActive(true);
     }

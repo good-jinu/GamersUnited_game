@@ -100,10 +100,6 @@ public static class GameData
     public static readonly GameObject PrefabMissile = Resources.Load<GameObject>("Missile");
     public static readonly GameObject PrefabMissileBoss = Resources.Load<GameObject>("Missile Boss");
     public static readonly GameObject PrefabRock = Resources.Load<GameObject>("Rock");
-    public static readonly GameObject PrefabGunEquipped = Resources.Load<GameObject>("EquippedWeapon/GunEquipped");
-    public static readonly GameObject PrefabShotGunEquipped = Resources.Load<GameObject>("EquippedWeapon/ShotGunEquipped");
-    public static readonly GameObject PrefabSwordEquipped = Resources.Load<GameObject>("EquippedWeapon/SwordEquipped");
-    public static readonly GameObject PrefabLongSwordEquipped = Resources.Load<GameObject>("EquippedWeapon/LongSwordEquipped");
 
 }
 public enum WeaponType { Sword, Longsword, Gun, Shotgun }
