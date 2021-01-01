@@ -41,6 +41,15 @@ public class Player : GameUnit
         GameManager.Instance.MainCamera.SetObjectToFollow(transform);
         //weaponPoint 오른손으로 초기화
         weaponPoint = transform.GetChild(0).GetChild(0).GetChild(3).GetChild(0).GetChild(1);
+        //플레이어 정보 불러오기
+        if (PlayerPrefs.HasKey("MaxHP"))
+        {
+            InitStat(PlayerPrefs.GetInt("MaxHP"), PlayerPrefs.GetFloat("HP"), Atk, Movespeed, Armor);
+            if (PlayerPrefs.HasKey("Weapon"))
+            {
+                EquipWeapon((WeaponType)PlayerPrefs.GetInt("Weapon"), (ItemGrade)PlayerPrefs.GetInt("WeaponGrade"));
+            }
+        }
     }
 
     void Update()
@@ -122,6 +131,7 @@ public class Player : GameUnit
 
         //무기생성 함수 호출
         weapon = DW.WeaponGenerator.GetWeapon(equipWeapon, grade, weaponPoint);
+        weapon.transform.SetParent(weaponPoint, false);
     }
     public void EquipWeapon(Weapon equipWeapon)
     {

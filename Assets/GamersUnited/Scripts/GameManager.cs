@@ -44,16 +44,6 @@ public class GameManager : MonoBehaviour
 
         //플레이어를 생성
         InstantiateUnit(GameUnitList.Player, GameObject.Find("PlayerSpawnPoint").transform.position);
-
-        //플레이어 정보 불러오기
-        if(PlayerPrefs.HasKey("MaxHP"))
-        {
-            player.InitStat(PlayerPrefs.GetInt("MaxHP"), PlayerPrefs.GetFloat("HP"), player.Atk, player.Movespeed, player.Armor);
-            if(PlayerPrefs.HasKey("Weapon"))
-            {
-                player.EquipWeapon((WeaponType)PlayerPrefs.GetInt("Weapon"), (ItemGrade)PlayerPrefs.GetInt("WeaponGrade"));
-            }
-        }
     }
     public void OnUnitDead(string name, Vector3 point, GameUnitList type)
     {
