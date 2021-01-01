@@ -45,6 +45,15 @@ public class GameManager : MonoBehaviour
         //플레이어를 생성
         InstantiateUnit(GameUnitList.Player, GameObject.Find("PlayerSpawnPoint").transform.position);
 
+        //플레이어 정보 불러오기
+        if(PlayerPrefs.HasKey("MaxHP"))
+        {
+            player.InitStat(PlayerPrefs.GetInt("MaxHP"), PlayerPrefs.GetFloat("HP"), player.Atk, player.Movespeed, player.Armor);
+            if(PlayerPrefs.HasKey("Weapon"))
+            {
+                player.EquipWeapon((WeaponType)PlayerPrefs.GetInt("Weapon"), (ItemGrade)PlayerPrefs.GetInt("WeaponGrade"));
+            }
+        }
     }
     public void OnUnitDead(string name, Vector3 point, GameUnitList type)
     {
@@ -101,6 +110,23 @@ public class GameManager : MonoBehaviour
         var script = instant.GetComponent<GameUnit>();
         script.InitStat((int)(stat.Item1 * GameData.multiple[hpMultiple]), stat.Item2 * GameData.multiple[atkMultiple], stat.Item3, stat.Item4);
         return script;
+    }
+
+    public void SavePlayerInfo()
+    {
+        //다음씬으로 넘어가기전에 플레이어 정보를 저장
+        PlayerPrefs.SetInt("MaxHP", player.MaxHp);
+        PlayerPrefs.SetFloat("HP", player.Health);
+        if (player.Weapon == null)
+        {
+            PlayerPrefs.DeleteKey("Weapon");
+            PlayerPrefs.DeleteKey("WeaponGrade");
+        }
+        else
+        {
+            PlayerPrefs.SetInt("Weapon", (int)player.Weapon.Type);
+            PlayerPrefs.SetInt("WeaponGrade", (int)player.Weapon.Grade);
+        }
     }
 }
 
