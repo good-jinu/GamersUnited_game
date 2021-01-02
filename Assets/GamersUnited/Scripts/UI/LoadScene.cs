@@ -13,5 +13,10 @@ namespace UIMan
         {
             SceneManager.LoadSceneAsync(sceneName);
         }
+
+        public void InitPlayerPrefs()
+        {
+            PlayerPrefs.DeleteAll();
+        }
     }
 }
