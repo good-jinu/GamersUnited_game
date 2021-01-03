@@ -113,7 +113,7 @@ public abstract class GameUnit : MonoBehaviour
         isDamaged = true;
         Rigid.AddForce(dir * pushPower, ForceMode.Impulse);
         transform.LookAt(transform.position - dir);
-        Invoke("DamagedPhysicEnd", 0.5f + (pushPower / (pushPower + 20f)) * 2f);
+        Invoke("DamagedPhysicEnd", (pushPower / (pushPower + 20f)) * 2.5f);
     }
     protected virtual void DamagedPhysicEnd()
     {
