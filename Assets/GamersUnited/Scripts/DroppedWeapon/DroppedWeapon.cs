@@ -8,13 +8,26 @@ namespace DW
 {
     public class DroppedWeapon : MonoBehaviour
     {
-        private GameObject weaponForPlayer = null;
+        private Weapon weaponForPlayer = null;
         private Color gradeColor;
         private Light wlight = null;
         private ParticleSystem particle = null;
+        private Rigidbody rigid;
+        private SphereCollider sphereC;
 
         private void Start()
         {
+            rigid = GetComponent<Rigidbody>();
+            sphereC = GetComponent<SphereCollider>();
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if(collision.gameObject.CompareTag("Floor"))
+            {
+                rigid.isKinematic = true;
+                sphereC.enabled = false;
+            }
         }
 
         private void InitType(WeaponType type)
@@ -23,19 +36,15 @@ namespace DW
             switch (type)
             {
                 case WeaponType.Gun:
-                    weaponForPlayer = Resources.Load<GameObject>("EquippedWeapon/GunEquipped");
                     meshObj = Resources.Load<GameObject>("DroppedWeapon/GunMesh");
                     break;
                 case WeaponType.Shotgun:
-                    weaponForPlayer = Resources.Load<GameObject>("EquippedWeapon/ShotGunEquipped");
                     meshObj = Resources.Load<GameObject>("DroppedWeapon/ShotGunMesh");
                     break;
                 case WeaponType.Sword:
-                    weaponForPlayer = Resources.Load<GameObject>("EquippedWeapon/SwordEquipped");
                     meshObj = Resources.Load<GameObject>("DroppedWeapon/SwordMesh");
                     break;
                 case WeaponType.Longsword:
-                    weaponForPlayer = Resources.Load<GameObject>("EquippedWeapon/LongSwordEquipped");
                     meshObj = Resources.Load<GameObject>("DroppedWeapon/LongSwordMesh");
                     break;
             }//type에 따라 다른 오브젝트 참조
@@ -45,12 +54,10 @@ namespace DW
             meshObj.transform.rotation = Quaternion.Euler(new Vector3(0, 0, -30));
             meshObj.transform.SetParent(transform, false);
             //메쉬오브젝트 자식오브젝트로 추가
-
         }
 
         private void InitGrade(ItemGrade grade)
         {
-            weaponForPlayer.GetComponent<Weapon>().Init(grade);
             wlight = GetComponentInChildren<Light>();
             particle = GetComponentInChildren<ParticleSystem>();
             ParticleSystem.MainModule Pmain = particle.main;
@@ -78,11 +85,13 @@ namespace DW
             //무기 타입 초기화 과정
             InitGrade(grade);
             //무기 등급 초기화 과정
+            weaponForPlayer = DW.WeaponGenerator.GetWeapon(type, grade, transform);
+            weaponForPlayer.gameObject.SetActive(false);
         }
 
         public Weapon GetWeapon()
         {
-            return weaponForPlayer.GetComponent<Weapon>();
+            return weaponForPlayer;
         }
 
         public void DestroyObject()

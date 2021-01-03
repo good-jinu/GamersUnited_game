@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     private UIManager ui;
     private EffectManager effect;
     private Player player;
+    private PlayerSpawnPoint playerSpawn;
+    private MainCameraController mainCamera;
 
     // Prefab 참조 GameData로 이전
 
@@ -17,7 +19,9 @@ public class GameManager : MonoBehaviour
     public Dictionary<string, GameUnit> Units { get => units; set => units = value; }
     public UIManager UI { get => ui; set => ui = value; }
     public EffectManager Effect { get => effect; set => effect = value; }
-    public Player Player { get => player; set => player = value; }  
+    public Player Player { get => player; set => player = value; }
+    public PlayerSpawnPoint PlayerSpawn { get => playerSpawn; set => playerSpawn = value; }
+    public MainCameraController MainCamera { get => mainCamera; set => mainCamera = value; }
 
     void Awake()
     {
@@ -39,8 +43,7 @@ public class GameManager : MonoBehaviour
         //Scene 재시작/이동시 마다 각종 초기화 작업을 이 함수에서 수행할 것.
 
         //플레이어를 생성
-        InstantiateUnit(GameUnitList.Player, GameObject.Find("PlayerSpawnPoint").GetComponent<Transform>().position);
-
+        InstantiateUnit(GameUnitList.Player, GameObject.Find("PlayerSpawnPoint").transform.position);
     }
     public void OnUnitDead(string name, Vector3 point, GameUnitList type)
     {
@@ -97,6 +100,23 @@ public class GameManager : MonoBehaviour
         var script = instant.GetComponent<GameUnit>();
         script.InitStat((int)(stat.Item1 * GameData.multiple[hpMultiple]), stat.Item2 * GameData.multiple[atkMultiple], stat.Item3, stat.Item4);
         return script;
+    }
+
+    public void SavePlayerInfo()
+    {
+        //다음씬으로 넘어가기전에 플레이어 정보를 저장
+        PlayerPrefs.SetInt("MaxHP", player.MaxHp);
+        PlayerPrefs.SetFloat("HP", player.Health);
+        if (player.Weapon == null)
+        {
+            PlayerPrefs.DeleteKey("Weapon");
+            PlayerPrefs.DeleteKey("WeaponGrade");
+        }
+        else
+        {
+            PlayerPrefs.SetInt("Weapon", (int)player.Weapon.Type);
+            PlayerPrefs.SetInt("WeaponGrade", (int)player.Weapon.Grade);
+        }
     }
 }
 
