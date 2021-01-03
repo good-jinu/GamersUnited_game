@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     private PlayerSpawnPoint playerSpawn;
     private MainCameraController mainCamera;
 
+    private DW.DroppedWeaponGenerator weaponGenerator = new DW.DroppedWeaponGenerator();
+
     // Prefab 참조 GameData로 이전
 
     public static GameManager Instance { get => instance; }
@@ -55,6 +57,32 @@ public class GameManager : MonoBehaviour
         //      Monster 전부 사망 시 다음 중 하나 : 바로(또는 일정시간 후) 다음 레벨로 이동 / 다음 레벨로 이동하게 할 워프 Object 생성시키기
         //                                         후자의 경우 워프 오브젝트의 스크립트도 GameManager 담당이 코딩
         //      Player 사망시 다음 중 하나 : 바로 게임 재시작 / UI창 뛰운 후 재시작 또는 메뉴로 되돌아가기 선택
+
+        if(type==GameUnitList.Player)
+        {
+            ui.PlayerDied();
+        }
+        else
+        {
+            units.Remove(name);
+            switch (type)
+            {
+                case GameUnitList.MonsterA:
+                    weaponGenerator.SetGradeChance(20, 1, 1);
+                    break;
+                case GameUnitList.MonsterB:
+                    weaponGenerator.SetGradeChance(15, 2, 1);
+                    break;
+                case GameUnitList.MonsterC:
+                    weaponGenerator.SetGradeChance(10, 5, 1);
+                    break;
+                case GameUnitList.MonsterD:
+                    weaponGenerator.SetGradeChance(4, 3, 1);
+                    break;
+            }
+            weaponGenerator.SetPos(point + Vector3.up);
+            weaponGenerator.GenDW();
+        }
     }
 
     //TODO : Scene 시작시 마다 Monster 랜덤으로 3개 생성/스탯 설정
