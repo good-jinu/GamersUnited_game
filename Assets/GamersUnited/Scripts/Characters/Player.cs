@@ -15,6 +15,7 @@ public class Player : GameUnit
     private float vertical;
     private bool attackDown;
     private bool dodgeDown;
+    private bool equipDown;
 
     //private method variables
     private Vector3 moveVec;
@@ -62,7 +63,7 @@ public class Player : GameUnit
         }
         GetInput();
         Move();
-        Look();
+        LookToMoveDirection();
         Dodge();
         Attack();
 
@@ -77,7 +78,7 @@ public class Player : GameUnit
     }
     private void OnTriggerStay(Collider other)
     {
-        if (other.GetComponent<DW.DroppedWeapon>() && Input.GetKeyDown(KeyCode.E))
+        if (equipDown && other.GetComponent<DW.DroppedWeapon>())
         {
             EquipWeapon(other.GetComponent<DW.DroppedWeapon>().GetWeapon());
             other.GetComponent<DW.DroppedWeapon>().DestroyObject();
@@ -87,7 +88,7 @@ public class Player : GameUnit
     {
         base.DamagedPhysic(dir, pushPower);
         ani.SetBool("isDamaged", true);
-        ani.SetBool("doDamaged", true);
+        ani.SetTrigger("doDamaged");
     }
     protected override void DamagedPhysicEnd()
     {
@@ -163,23 +164,24 @@ public class Player : GameUnit
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
         attackDown = Input.GetButton("Fire1");
-        dodgeDown = Input.GetButtonDown("Dodge");
+        dodgeDown = Input.GetButton("Dodge");
+        equipDown = Input.GetButtonDown("Equip");
     }
 
-    private void Look()
+    private void LookToMoveDirection()
     {
         if (IsDamaged || isAttack)
             return;
         transform.LookAt(transform.position + moveVec);
-        if (attackDown)
+    }
+    private void LookToMouse()
+    {
+        Ray ray = GameManager.Instance.MainCamera.GetCamera().ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, 100))
         {
-            Ray ray = GameManager.Instance.MainCamera.GetCamera().ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, 100))
-            {
-                Vector3 nextVec = hit.point - transform.position;
-                nextVec.y = 0;
-                transform.LookAt(transform.position + nextVec);
-            }
+            Vector3 nextVec = hit.point - transform.position;
+            nextVec.y = 0;
+            transform.LookAt(transform.position + nextVec);
         }
     }
     private void Move()
@@ -215,6 +217,7 @@ public class Player : GameUnit
             return;
         if (Weapon.Attack())
         {
+            LookToMouse();
             string animationName = null;
             float animationTime = 0f;
             isAttack = true;
