@@ -97,20 +97,21 @@ public class MonsterD : Monster
     private IEnumerator Separation()
     {
         Monster[] monster = new Monster[2];
-        //TODO : Layer를 "Dead" 로 임시로 변경하여 벽/바닥에만 충돌이 되도록 할것
         for(int i = 0; i < 2; ++i)
         {
             monster[i] = GameManager.Instance.InstantiateUnit((GameUnitList)Random.Range(1, 4), transform.position) as Monster;
             monster[i].AIActive = false;
             monster[i].transform.Rotate(Vector3.up * Random.Range(0,360));
-            monster[i].Rigid.AddForce((Vector3.up + monster[i].transform.forward) * 30, ForceMode.Impulse);
+            monster[i].Rigid.AddForce((Vector3.up + monster[i].transform.forward) * 10, ForceMode.Impulse);
             monster[i].SetInvincible(1f);
+            monster[i].gameObject.layer = 12;
         }
         yield return new WaitForSeconds(1f);
         for(int i = 0; i < 2; ++i)
         {
             monster[i].AIActive = true;
             monster[i].Rigid.velocity = Vector3.zero;
+            monster[i].gameObject.layer = 8;
         }
     }
     private IEnumerator Taunt()
@@ -120,7 +121,7 @@ public class MonsterD : Monster
         var target = GameManager.Instance.Player.transform.position;
         target.y = 0;
         var warningArea = GameManager.Instance.Effect.WarningAreaEffect(target, range, 2f);
-        warningArea.SetAttackWhenDestory(range-1, TauntDamage * Atk, 15, "Player", this, null);
+        warningArea.SetAttackWhenDestory(range, TauntDamage * Atk, 15, "Player", this, null);
         warningArea.SetAttackWhenDestory(15, 0, 10, "Monster", this, null);
         warningArea.SetSignalWhenDestory(TauntMoveEnd);
         yield return new WaitForSeconds(0.4f);
@@ -199,7 +200,7 @@ public class MonsterD : Monster
                 effectivePos.x += transform.position.x;
                 effectivePos.z += transform.position.z;
                 var instant = GameManager.Instance.Effect.WarningAreaEffect(effectivePos, explosionRange, 1.5f);
-                instant.SetAttackWhenDestory(explosionRange-1, ExplosionDamage * Atk, 5f, "Player", this, hashSet, null);
+                instant.SetAttackWhenDestory(explosionRange, ExplosionDamage * Atk, 5f, "Player", this, hashSet, null);
             }
             yield return new WaitForSeconds(0.1f);
             minRange = maxRange;

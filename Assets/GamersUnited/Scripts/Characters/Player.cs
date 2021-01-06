@@ -83,15 +83,21 @@ public class Player : GameUnit
             other.GetComponent<DW.DroppedWeapon>().DestroyObject();
         }
     }
-    protected override void OnDamaged(in Vector3 dir, in float pushPower)
+    protected override void DamagedPhysic(in Vector3 dir, in float pushPower)
     {
-        base.OnDamaged(dir, pushPower);
-        //TODO : 경직애니메이션이 없음.....
+        base.DamagedPhysic(dir, pushPower);
+        ani.SetBool("isDamaged", true);
+        ani.SetBool("doDamaged", true);
+    }
+    protected override void DamagedPhysicEnd()
+    {
+        base.DamagedPhysicEnd();
+        ani.SetBool("isDamaged", false);
     }
     protected override void OnDead(Vector3 dir)
     {
         base.OnDead(dir);
-        //TODO : 마찬가지로 사망 애니메이션이 없음.....
+        ani.SetTrigger("doDead");
     }
 
 
@@ -123,7 +129,6 @@ public class Player : GameUnit
         if (MaxHp < Health)
             Health = MaxHp;
     }
-    //TODO : 아래 함수 삭제할 때, Player.cs Update() 내 EquipWeapon() 호출 부분을 Sword/Common 장착하도록 변경해주고 삭제할것
     public void EquipWeapon(WeaponType equipWeapon, ItemGrade grade)
     {
         if (weapon != null)
@@ -131,6 +136,7 @@ public class Player : GameUnit
 
         //무기생성 함수 호출
         weapon = DW.WeaponGenerator.GetWeapon(equipWeapon, grade, weaponPoint);
+        weapon.Unit = this;
         weapon.transform.SetParent(weaponPoint, false);
     }
     public void EquipWeapon(Weapon equipWeapon)
@@ -162,14 +168,12 @@ public class Player : GameUnit
 
     private void Look()
     {
-        if (IsDamaged)
+        if (IsDamaged || isAttack)
             return;
-        if(!isAttack)
-            transform.LookAt(transform.position + moveVec);
-        /*
+        transform.LookAt(transform.position + moveVec);
         if (attackDown)
         {
-            Ray ray = //(Camera Component).ScreenPointToRay(Input.mousePosition);
+            Ray ray = GameManager.Instance.MainCamera.GetCamera().ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, 100))
             {
                 Vector3 nextVec = hit.point - transform.position;
@@ -177,7 +181,6 @@ public class Player : GameUnit
                 transform.LookAt(transform.position + nextVec);
             }
         }
-        */
     }
     private void Move()
     {

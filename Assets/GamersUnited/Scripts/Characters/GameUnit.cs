@@ -94,11 +94,11 @@ public abstract class GameUnit : MonoBehaviour
     }
     protected virtual void OnDead(Vector3 dir)
     {
-        //TODO : 레이어 변경 추가
         GameManager.Instance.OnUnitDead(gameObject.name, transform.position, type);
         Rigid.AddForce(dir * 10 + Vector3.up * 5, ForceMode.Impulse);
         transform.LookAt(transform.position - dir);
         isDead = true;
+        gameObject.layer = 12;
     }
 
     protected virtual void OnDamaged(in Vector3 dir, in float pushPower)
@@ -113,7 +113,7 @@ public abstract class GameUnit : MonoBehaviour
         isDamaged = true;
         Rigid.AddForce(dir * pushPower, ForceMode.Impulse);
         transform.LookAt(transform.position - dir);
-        Invoke("DamagedPhysicEnd", 0.5f + (pushPower / (pushPower + 20f)) * 2f);
+        Invoke("DamagedPhysicEnd", (pushPower / (pushPower + 20f)) * 2.5f);
     }
     protected virtual void DamagedPhysicEnd()
     {
