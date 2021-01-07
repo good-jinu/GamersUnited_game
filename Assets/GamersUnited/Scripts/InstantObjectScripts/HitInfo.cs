@@ -9,6 +9,8 @@ public class HitInfo
     private readonly Vector3 _hitPosition;
     public HitInfo(GameUnit hitUnit, float damage, Vector3 hitPosition)
     {
+        _ = hitUnit != null ? hitUnit : throw new System.ArgumentNullException(nameof(hitUnit));
+        //allocate
         _hitUnit = hitUnit;
         _damage = damage;
         _hitPosition = hitPosition;

@@ -45,8 +45,14 @@ public abstract class GameUnit : MonoBehaviour
     }
     public void InitStat(int maxHp, float currentHp, float atk, float speed, int armor)
     {
-        if (maxHp < currentHp)
-            throw new System.ArgumentException("Set to (currentHp > maxHp) is unable");
+        if (maxHp < 1)
+            throw new System.ArgumentOutOfRangeException(nameof(MaxHp), "Must be greater than or equal to 1.");
+        if (currentHp <= 0f || maxHp < currentHp)
+            throw new System.ArgumentOutOfRangeException(nameof(currentHp), $"Must be greater than 0, less than or equal to {nameof(maxHp)}.");
+        if (atk < 0f)
+            throw new System.ArgumentOutOfRangeException(nameof(atk), "Must be greater than or equal to 0.");
+        if (speed < 0f)
+            throw new System.ArgumentOutOfRangeException(nameof(speed), "Must be greater than or equal to 0.");
         this.maxHp = maxHp;
         health = currentHp;
         this.atk = atk;
@@ -58,6 +64,7 @@ public abstract class GameUnit : MonoBehaviour
     //반환값 : HifInfo class
     public virtual HitInfo HitbyAttack(AttackInfo attackInfo)
     {
+        _ = attackInfo ?? throw new System.ArgumentNullException(nameof(attackInfo));
         if (invincible || IsDead)
         {
             //테스트용 코드
@@ -129,6 +136,8 @@ public abstract class GameUnit : MonoBehaviour
     //매개변수로 지정한 시간 동안 무적상태로 만든다.
     public void SetInvincible(float seconds)
     {
+        if (seconds < 0f)
+            throw new System.ArgumentOutOfRangeException(nameof(seconds), "Must be greater than or equal to 0.");
         System.DateTime newEndTime = System.DateTime.Now.AddSeconds(seconds);
         if (invincibleEndTime < newEndTime)
         {

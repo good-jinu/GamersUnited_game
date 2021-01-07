@@ -161,7 +161,7 @@ public class MonsterD : Monster
                 {
                     var attackInfo = new AttackInfo(this, Atk * MissileDamage, 5f, "Player", missile.transform.position, 1);
                     ((AttackObject)script).SetAttackInfo(attackInfo);
-                    attackInfo.AttackTransform = missile.transform;
+                    attackInfo.SetSyncPosition(missile.transform);
                     script.ChaseBulletFire(7.5f, 90, 8f, GameManager.Instance.Player.transform);
                 }
                 else

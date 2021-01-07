@@ -17,15 +17,20 @@ public class AttackInfo
     public delegate void AttackSuccessDelegate(HitInfo info);
     public delegate void AttackFailedDelegate(Vector3 position);
 
-    public GameUnit Caster { get => _caster;}
-    public float Damage { get => _damage;}
-    public float PushPower { get => _pushPower;}
-    public string TargetTag { get => _targetTag;}
-    public Vector3 AttackPosition { get => _attackTransform == null? _attackPosition : _attackTransform.position;}
-    public int EnableHitCount { get => _enableHitCount;}
-    public AttackSuccessDelegate AttackSuccess { get => _attackSuccess;}
-    public AttackFailedDelegate AttackFailed { get => _attackFailed;}
-    public Transform AttackTransform {set => _attackTransform = value; }
+    public Vector3 AttackPosition => _attackTransform == null? _attackPosition : _attackTransform.position;
+    public AttackFailedDelegate AttackFailed => _attackFailed;
+
+    public AttackSuccessDelegate AttackSuccess => _attackSuccess;
+
+    public int EnableHitCount => _enableHitCount;
+
+    public string TargetTag => _targetTag;
+
+    public float PushPower => _pushPower;
+
+    public float Damage => _damage;
+
+    public GameUnit Caster => _caster;
 
     public AttackInfo(GameUnit caster,
                       float damage,
@@ -36,6 +41,14 @@ public class AttackInfo
                       AttackSuccessDelegate attackSuccess,
                       AttackFailedDelegate attackFailed)
     {
+        _ = caster != null ? caster : throw new System.ArgumentNullException(nameof(caster));
+        if (pushPower < 0f)
+            throw new System.ArgumentOutOfRangeException(nameof(pushPower), "Must be greater than or equal to 0.");
+        _ = targetTag ?? throw new System.ArgumentNullException(nameof(targetTag));
+        if(enableHitCount < 1)
+            throw new System.ArgumentOutOfRangeException(nameof(enableHitCount), "Must be greater than or equal to 0.");
+
+        //allocate
         _caster = caster;
         _damage = damage;
         _pushPower = pushPower;
@@ -70,5 +83,8 @@ public class AttackInfo
                       Vector3 attackPosition,
                       int enableHitCount,
                       AttackFailedDelegate attackFailed) : this(caster, damage, pushPower, targetTag, attackPosition, enableHitCount, null, attackFailed) { }
+
+    public void SetSyncPosition(Transform target) { _attackTransform = target; }
+
 }
 

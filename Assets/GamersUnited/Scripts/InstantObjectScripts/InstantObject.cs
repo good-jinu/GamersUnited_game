@@ -39,7 +39,11 @@ public class InstantObject : MonoBehaviour
     //FixedUpdate를 사용하며, 다른 FixedUpdate 사용 Method와 중복 사용할 시 어떻게 될 지 예측할 수 없음
     public void BulletFire(float speed, float range, bool reservationDestory = true)
     {
-        if(rigid == null)
+        if(speed <= 0f)
+            throw new System.ArgumentOutOfRangeException(nameof(speed), "Must be greater than 0.");
+        if (range <= 0f)
+            throw new System.ArgumentOutOfRangeException(nameof(range), "Must be greater than 0.");
+        if (rigid == null)
             rigid = GetComponent<Rigidbody>();
         fixedUpdateMethod = BulletMoving(speed, range, reservationDestory, transform.position);
     }
@@ -49,8 +53,11 @@ public class InstantObject : MonoBehaviour
     //FixedUpdate를 사용하며, 다른 FixedUpdate 사용 Method와 중복 사용할 시 어떻게 될 지 예측할 수 없음
     public void ChaseBulletFire(float moveSpeed, float rotateSpeed, Transform target)
     {
-        if (moveSpeed < 0f || rotateSpeed < 0f || target == null)
-            throw new System.ArgumentException();
+        if(moveSpeed <= 0f)
+            throw new System.ArgumentOutOfRangeException(nameof(moveSpeed), "Must be greater than 0.");
+        if (rotateSpeed < 0f)
+            throw new System.ArgumentOutOfRangeException(nameof(rotateSpeed), "Must be greater than or equal to 0.");
+        _ = target != null ? target : throw new System.ArgumentNullException(nameof(target));
         if (rigid == null)
             rigid = GetComponent<Rigidbody>();
         fixedUpdateMethod = ChaserMoving(moveSpeed, rotateSpeed, target);
@@ -67,6 +74,8 @@ public class InstantObject : MonoBehaviour
     //       주의 : 동작에 의해 이미 일어난 변화를 초기화 시키지 않음
     public void SetTimer(float seconds, TimerAction action)
     {
+        if(seconds < 0f)
+            throw new System.ArgumentOutOfRangeException(nameof(seconds), "Must be greater than or equal to 0.");
         Method timerMethod = null;
         switch (action)
         {
@@ -86,6 +95,15 @@ public class InstantObject : MonoBehaviour
     //Update를 사용하며, 다른 Update 사용 Method와 중복 사용할 시 어떻게 될 지 예측할 수 없음
     public void IncreaseScale(float speed, float startScale, float targetScale, IncreaseScaleMode mode = IncreaseScaleMode.WithoutYAxis)
     {
+        if(startScale < 0f || startScale == targetScale)
+            throw new System.ArgumentOutOfRangeException(nameof(startScale), $"Must be greater than or equal to 0, not equal to {nameof(targetScale)}.");
+        if(targetScale < 0f)
+            throw new System.ArgumentOutOfRangeException(nameof(targetScale), "Must be greater than or equal to 0.");
+        if (speed == 0f)
+            throw new System.ArgumentOutOfRangeException(nameof(speed), "Must not be equal to 0.");
+        if((startScale < targetScale && speed < 0f) || (startScale > targetScale))
+            throw new System.ArgumentOutOfRangeException(nameof(speed), $"{nameof(targetScale)} - {nameof(startScale)} and {nameof(speed)} must have the same sign.");
+
         Vector3 scale = Vector3.one * startScale;
         if (mode == IncreaseScaleMode.WithoutYAxis)
             scale.y = transform.localScale.y;
@@ -116,6 +134,9 @@ public class InstantObject : MonoBehaviour
     }
     public void SetAttackWhenDestory(float scale, AttackInfo attackInfo, HashSet<GameObject> hitSet)
     {
+        if(scale <= 0f)
+            throw new System.ArgumentOutOfRangeException(nameof(scale),"Must be greater than 0.");
+        _ = attackInfo ?? throw new System.ArgumentNullException(nameof(attackInfo));
         destoryMethod += DeathAttack(scale, attackInfo, hitSet);
     }
 
@@ -124,8 +145,7 @@ public class InstantObject : MonoBehaviour
     //다른 Public Method로 오브젝트 내부에서 Destory 작업을 수행하도록 유도해야만 method 호출이 수행된다.
     public void SetSignalWhenDestory(SignalMethod method)
     {
-        if (method == null)
-            throw new System.ArgumentNullException();
+        _ = method ?? throw new System.ArgumentNullException(nameof(method));
         destoryMethod += method;
     }
 

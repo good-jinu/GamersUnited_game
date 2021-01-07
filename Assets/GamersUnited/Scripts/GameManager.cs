@@ -69,8 +69,10 @@ public class GameManager : MonoBehaviour
     //multiple 변수들은 반드시 0~9 사이의 정수여야 한다.
     public GameUnit InstantiateUnit(GameUnitList unit, Vector3 pos, int hpMultiple = 0, int atkMultiple = 0)
     {
-        if (hpMultiple < 0 || hpMultiple > 9 || atkMultiple < 0 || atkMultiple > 9)
-            throw new System.ArgumentOutOfRangeException();
+        if (hpMultiple < 0 || hpMultiple > 9)
+            throw new System.ArgumentOutOfRangeException(nameof(hpMultiple), "Must be in range 0~9.");
+        if (atkMultiple < 0 || atkMultiple > 9)
+            throw new System.ArgumentOutOfRangeException(nameof(atkMultiple), "Must be in range 0~9.");
         GameObject target = null;
         (int, float, float, int) stat = (0,0,0,0);
         switch (unit)

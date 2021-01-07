@@ -105,7 +105,7 @@ public abstract class Monster : GameUnit
         public float patternCooldown;
         public int useRate;
         private System.DateTime cooldownEndTime;
-        public Pattern(AttackMethodDelegate attackMethod = null, float patternCooldown = 0f,int useRate = 0)
+        public Pattern(AttackMethodDelegate attackMethod, float patternCooldown = 0f,int useRate = 0)
         {
             this.attackMethod = attackMethod;
             this.patternCooldown = patternCooldown;
