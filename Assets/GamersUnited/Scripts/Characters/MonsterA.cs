@@ -28,7 +28,8 @@ public class MonsterA : Monster
         yield return new WaitForSeconds(0.15f);
         var area = Instantiate(GameData.PrefabMonsterMeleeAttackArea, transform);
         var script = area.GetComponent<AttackObject>();
-        script.Init(Atk * MeleeAttackDamage, "Player", 0, transform.position, this, int.MaxValue, null, AttackObject.IgnoreType.IgnoreWallAndFloor);
+        var attackInfo = new AttackInfo(this, Atk * MeleeAttackDamage, 0, "Player", transform.position);
+        script.SetAttackInfo(attackInfo, AttackObject.IgnoreType.IgnoreWallAndFloor);
         script.SetTimer(0.25f, InstantObject.TimerAction.Destory);
         yield return new WaitForSeconds(1.85f);
         //공격 후딜레이

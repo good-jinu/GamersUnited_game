@@ -16,7 +16,6 @@ public class Gun : Weapon
     public override void Init(ItemGrade grade)
     {
         base.Init(grade);
-        HitEffect = GameManager.Instance.Effect.HitEffect;
         ammo = GameData.GetWeaponExtensionStat(WeaponType.Gun, grade).Item2;
     }
     public override bool Attack()
@@ -37,7 +36,8 @@ public class Gun : Weapon
         var bullet = Instantiate(GameData.PrefabGunBullet, Unit.transform.position, Unit.transform.rotation);
         var script = bullet.GetComponent<AttackObject>();
         var bulletstat = GameData.GetWeaponExtensionStat(WeaponType.Gun, Grade);
-        script.Init(damage, "Enemy", 0, bullet.transform.position, Unit, bulletstat.Item3, HitEffect);
+        var info = new AttackInfo(Unit, damage, 0, "Enemy", bullet.transform.position, bulletstat.Item3);
+        script.SetAttackInfo(info);
         script.BulletFire(BulletSpeed, bulletstat.Item1);
         yield break;
     }

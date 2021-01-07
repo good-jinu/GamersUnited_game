@@ -5,7 +5,6 @@ using UnityEngine;
 public abstract class Weapon : MonoBehaviour
 {
     private ItemGrade grade;
-    private EffectManager.EffectMethod hitEffect;
     private GameUnit unit;
     private System.DateTime cooldownEndTime = DateTime.MinValue;
     private WeaponType type;
@@ -13,7 +12,6 @@ public abstract class Weapon : MonoBehaviour
     public GameUnit Unit { get => unit; set => unit = value; }
     protected DateTime CooldownEndTime { get => cooldownEndTime; set => cooldownEndTime = value; }
     public ItemGrade Grade { get => grade; }
-    protected EffectManager.EffectMethod HitEffect { get => hitEffect; set => hitEffect = value; }
     public WeaponType Type { get => type; protected set => type = value; }
 
     public virtual void Init(ItemGrade grade)

@@ -12,6 +12,7 @@ public class AttackInfo
     private readonly int _enableHitCount;
     private readonly AttackSuccessDelegate _attackSuccess;
     private readonly AttackFailedDelegate _attackFailed;
+    private Transform _attackTransform;
 
     public delegate void AttackSuccessDelegate(HitInfo info);
     public delegate void AttackFailedDelegate(Vector3 position);
@@ -20,10 +21,11 @@ public class AttackInfo
     public float Damage { get => _damage;}
     public float PushPower { get => _pushPower;}
     public string TargetTag { get => _targetTag;}
-    public Vector3 AttackPosition { get => _attackPosition;}
+    public Vector3 AttackPosition { get => _attackTransform == null? _attackPosition : _attackTransform.position;}
     public int EnableHitCount { get => _enableHitCount;}
     public AttackSuccessDelegate AttackSuccess { get => _attackSuccess;}
     public AttackFailedDelegate AttackFailed { get => _attackFailed;}
+    public Transform AttackTransform {set => _attackTransform = value; }
 
     public AttackInfo(GameUnit caster,
                       float damage,

@@ -9,12 +9,10 @@ public class InstantObject : MonoBehaviour
     private Method updateMethod;
     private Method fixedUpdateMethod;
     private SignalMethod destoryMethod;
-    private Vector3 startpos;
     private Rigidbody rigid;
     public enum IncreaseScaleMode { WithoutYAxis, AllAxis }
     public enum TimerAction { Destory, Stop }
 
-    public Vector3 Startpos { get => startpos; set => startpos = value; }
 
     protected virtual void Update()
     {
@@ -27,7 +25,7 @@ public class InstantObject : MonoBehaviour
             fixedUpdateMethod();
     }
 
-    protected void DestoryThis()
+    protected virtual void DestoryThis()
     {
         if (destoryMethod != null)
             destoryMethod(transform);
@@ -38,20 +36,16 @@ public class InstantObject : MonoBehaviour
 
     //BulletFire : 지정한 거리만큼 지정한 속도로 빠르게 이동한다.
     //reservationDestory = true 일시 지정한 거리만큼 이동 후 Destory한다.
-    //이 함수 사용 시, 이동을 시작할 떄 startPos가 오브젝트 위치로 갱신된다. AttackObject/startPos 사용시 주의
     //FixedUpdate를 사용하며, 다른 FixedUpdate 사용 Method와 중복 사용할 시 어떻게 될 지 예측할 수 없음
     public void BulletFire(float speed, float range, bool reservationDestory = true)
     {
-        if (startpos == null) startpos = transform.position;
         if(rigid == null)
             rigid = GetComponent<Rigidbody>();
-        startpos = transform.position;
-        fixedUpdateMethod = BulletMoving(speed, range, reservationDestory);
+        fixedUpdateMethod = BulletMoving(speed, range, reservationDestory, transform.position);
     }
 
     //ChaseBulletFire : target을 목표로 지정한 이동속도/회전속도에 기반하여 계속 이동한다.
     //time 매개변수를 사용 시 지정한 시간 경과 후 Destory한다.
-    //이 함수 사용시 매 FixedUpdate마다 startPos가 오브젝트 위치로 갱신된다. AttackObject/startPos 사용시 주의
     //FixedUpdate를 사용하며, 다른 FixedUpdate 사용 Method와 중복 사용할 시 어떻게 될 지 예측할 수 없음
     public void ChaseBulletFire(float moveSpeed, float rotateSpeed, Transform target)
     {
@@ -116,21 +110,13 @@ public class InstantObject : MonoBehaviour
     //공격 판정이 생기는 위치는 오브젝트의 transform과 동일함, 판정 범위는 Capsule 형태이며 scale에 비례한다.
     //이 Method를 수행하더라도, 외부에서 Destroy() 등을 통해 오브젝트를 파괴하면 공격 판정이 발동하지 않는다.
     //다른 Public Method로 오브젝트 내부에서 Destory 작업을 수행하도록 유도해야만 공격 판정이 발동한다.(ex : SetTimer Method 사용(TimerAction.Destory로 지정))
-    public void SetAttackWhenDestory(float scale, float damage, float pushPower, string targetTag, GameUnit caster, EffectManager.EffectMethod effect = null)
+    public void SetAttackWhenDestory(float scale, AttackInfo attackInfo)
     {
-        SetAttackWhenDestory(scale, damage, pushPower, targetTag, caster, null, effect);
+        SetAttackWhenDestory(scale, attackInfo, null);
     }
-    public void SetAttackWhenDestory(float scale,
-                                     float damage,
-                                     float pushPower,
-                                     string targetTag,
-                                     GameUnit caster,
-                                     HashSet<GameObject> hitSet,
-                                     EffectManager.EffectMethod effect = null)
+    public void SetAttackWhenDestory(float scale, AttackInfo attackInfo, HashSet<GameObject> hitSet)
     {
-        if (targetTag == null || caster == null)
-            throw new System.ArgumentNullException();
-        destoryMethod += DeathAttack(scale, damage, pushPower, targetTag, caster, hitSet, effect);
+        destoryMethod += DeathAttack(scale, attackInfo, hitSet);
     }
 
     //SetSignalWhenDestory : 이 오브젝트가 사라질 떄 SignalMethod method를 호출한다.
@@ -156,11 +142,11 @@ public class InstantObject : MonoBehaviour
     }
 
     //Delegate 또는 Coroutine용 함수들
-    private Method BulletMoving(float speed, float range, bool destroyAfterFire)
+    private Method BulletMoving(float speed, float range, bool destroyAfterFire, Vector3 startPos)
     {
         return () => 
         {
-            Vector3 diff = startpos - transform.position;
+            Vector3 diff = startPos - transform.position;
             float distance = Mathf.Sqrt(Mathf.Pow(diff.x, 2) + Mathf.Pow(diff.z, 2));
             if (distance < range)
             {
@@ -204,7 +190,7 @@ public class InstantObject : MonoBehaviour
         yield return new WaitForSeconds(seconds);
         method();
     }
-    private SignalMethod DeathAttack(float scale, float damage, float pushPower, string targetTag, GameUnit caster, HashSet<GameObject> hitSet, EffectManager.EffectMethod effect)
+    private SignalMethod DeathAttack(float scale, AttackInfo attackInfo, HashSet<GameObject> hitSet = null)
     {
         return (objTransform) =>
         {
@@ -212,7 +198,7 @@ public class InstantObject : MonoBehaviour
             var script = instant.GetComponent<AttackObject>();
             instant.transform.localScale = Vector3.one * scale;
             script.HitSet = hitSet;
-            script.Init(damage, targetTag, pushPower, instant.transform.position, caster, int.MaxValue, effect);
+            script.SetAttackInfo(attackInfo,AttackObject.IgnoreType.IgnoreWallAndFloor);
             script.SetTimer(0.1f, TimerAction.Destory);
         };
     }
@@ -221,7 +207,6 @@ public class InstantObject : MonoBehaviour
     {
         return () =>
         {
-            startpos = transform.position;
             Vector2 bulletPos = new Vector2(transform.position.x, transform.position.z);
             Vector2 targetPos = new Vector2(target.position.x, target.position.z);
             Vector2 DirectionVec = (targetPos - bulletPos).normalized;

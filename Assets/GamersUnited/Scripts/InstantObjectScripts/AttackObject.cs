@@ -3,15 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 public class AttackObject : InstantObject
 {
-    private float damage;
-    private string targetTag;
-    private GameUnit caster;
-    private int enableHitCount;
-    private EffectManager.EffectMethod hitEffect;
+    private AttackInfo attackInfo;
+    private int hitCount;
     private HashSet<GameObject> hitSet;
     private bool isActive = false;
     private IgnoreType ignore;
-    private float pushPower;
 
     public enum IgnoreType { None, IgnoreWall, IgnoreFloor, IgnoreWallAndFloor }
 
@@ -20,25 +16,13 @@ public class AttackObject : InstantObject
     //HitSet을 여러개의 AttackObject가 공유하게 함으로써 AttackObject들이 동일한 공격체로 인식되게 처리 할 수 있다.
     public HashSet<GameObject> HitSet { set => hitSet = value; }
 
-    public void Init(float damage,
-                     string targetTag,
-                     float pushPower,
-                     Vector3 pos,
-                     GameUnit caster,
-                     int enableHitCount,
-                     EffectManager.EffectMethod effect,
-                     IgnoreType ignore = IgnoreType.IgnoreFloor)
+    public void SetAttackInfo(AttackInfo attackInfo,IgnoreType ignore = IgnoreType.IgnoreFloor)
     {
-        Startpos = pos;
-        this.damage = damage;
-        this.targetTag = targetTag;
-        this.caster = caster;
-        this.enableHitCount = enableHitCount;
-        hitEffect = effect;
-        this.ignore = ignore;
-        this.pushPower = pushPower;
         if (hitSet == null)
             hitSet = new HashSet<GameObject>();
+        this.attackInfo = attackInfo;
+        this.ignore = ignore;
+        hitCount = 0;
         isActive = true;
     }
 
@@ -47,30 +31,24 @@ public class AttackObject : InstantObject
         //Init() 메소드 호출 전일시 충돌을 모두 무시한다.
         if (!isActive) return;
         //충돌체가 공격 대상이고, 아직 공격하지 않았어야 함
-        if (targetTag.Equals(other.tag) && !hitSet.Contains(other.gameObject))
+        if (attackInfo.TargetTag.Equals(other.tag) && !hitSet.Contains(other.gameObject))
         {
             hitSet.Add(other.gameObject);
             var hitscript = GameManager.Instance.Units[other.gameObject.name];
-            var validDamage = hitscript.HitbyAttack(damage, Startpos, pushPower);
-            //적용된 데미지가 0 초과일시 공격 성공으로 판정
-            if (validDamage > 0.0f)
+            var hitInfo = hitscript.HitbyAttack(attackInfo);
+            //적용된 데미지가 0 초과일시 데미지 프린트
+            if (hitInfo.Damage > 0.0f)
             {
-                //타격 이펙트
-                //hitpos 식을 타격 위치로 얻어오도록 변경..
-                if (hitEffect != null)
-                {
-                    var hitpos = Vector3.zero;
-
-                    var hitdir = hitpos - Startpos;
-                    hitdir.y = 0;
-                    hitdir = hitdir.normalized;
-                    hitEffect(hitpos, hitdir);
-                }
                 //데미지 이펙트
-                GameManager.Instance.UI.PrintDamage(validDamage, hitscript.transform.position);
-                //그외 공격 성공 후 처리 필요할 시 작성
+                GameManager.Instance.UI.PrintDamage(hitInfo.Damage, hitscript.transform.position);
             }
-            if (--enableHitCount <= 0)
+            //공격 성공 메소드 있을시 수행
+            if(attackInfo.AttackSuccess != null)
+            {
+                attackInfo.AttackSuccess(hitInfo);
+            }
+            //최대 타격수 만족시 파괴
+            if (++hitCount >= attackInfo.EnableHitCount)
             {
                 DestoryThis();
             }
@@ -96,5 +74,16 @@ public class AttackObject : InstantObject
     {
         base.StopActions();
         isActive = false;
+    }
+    protected override void DestoryThis()
+    {
+        if(attackInfo != null)
+        {
+            if(attackInfo.AttackFailed != null)
+            {
+                attackInfo.AttackFailed(transform.position);
+            }
+        }
+        base.DestoryThis();
     }
 }

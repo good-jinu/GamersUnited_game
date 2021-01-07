@@ -28,11 +28,12 @@ public class MonsterC : Monster
         yield return new WaitForSeconds(0.4f);
         var missile = Instantiate(GameData.PrefabMissile, transform.position, transform.rotation);
         var scripts = missile.GetComponentsInChildren<InstantObject>();
+        var attackInfo = new AttackInfo(this, Atk * MissileDamage, 0, "Player", transform.position, 1);
         foreach (InstantObject script in scripts)
         {
             if (script as AttackObject)
             {
-                ((AttackObject)script).Init(Atk * MissileDamage, "Player", 0, transform.position, this, 1, null);
+                ((AttackObject)script).SetAttackInfo(attackInfo);
                 script.BulletFire(MissileSpeed, MissileRange, true);
             }
             else

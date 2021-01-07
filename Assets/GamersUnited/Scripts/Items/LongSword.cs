@@ -11,7 +11,6 @@ public class LongSword : Weapon
     public override void Init(ItemGrade grade)
     {
         base.Init(grade);
-        HitEffect = GameManager.Instance.Effect.HitEffect;
     }
     public override bool Attack()
     {
@@ -28,7 +27,8 @@ public class LongSword : Weapon
     {
         var area = Instantiate(GameData.PrefabLongSwordAttackArea, Unit.transform);
         var script = area.GetComponent<AttackObject>();
-        script.Init(damage, "Enemy", 0, Unit.transform.position, Unit, int.MaxValue, HitEffect, AttackObject.IgnoreType.IgnoreWallAndFloor);
+        var info = new AttackInfo(Unit, damage, 0, "Enemy", Unit.transform.position, int.MaxValue);
+        script.SetAttackInfo(info, AttackObject.IgnoreType.IgnoreWallAndFloor);
         script.SetTimer(0.25f, InstantObject.TimerAction.Destory);
         yield break;
     }

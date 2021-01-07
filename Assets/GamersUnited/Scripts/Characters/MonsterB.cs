@@ -27,7 +27,8 @@ public class MonsterB : Monster
         yield return new WaitForSeconds(0.2f);
         var area = Instantiate(GameData.PrefabMonsterMeleeAttackArea, transform);
         var script = area.GetComponent<AttackObject>();
-        script.Init(Atk * AssaultDamage, "Player", 5, transform.position, this, int.MaxValue, null, AttackObject.IgnoreType.IgnoreWallAndFloor);
+        var attackInfo = new AttackInfo(this, Atk * AssaultDamage, 5f, "Player", transform.position);
+        script.SetAttackInfo(attackInfo, AttackObject.IgnoreType.IgnoreWallAndFloor);
         Rigid.AddForce(transform.forward * AssaultForce, ForceMode.Impulse);
         yield return new WaitForSeconds(1f);
         Rigid.velocity = Vector3.zero;

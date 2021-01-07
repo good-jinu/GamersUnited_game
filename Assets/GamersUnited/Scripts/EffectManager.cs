@@ -8,8 +8,7 @@ public class EffectManager : MonoBehaviour
     {
         GameManager.Instance.Effect = this;
     }
-    public delegate void EffectMethod(Vector3 pos, Vector3 dir);
-    public void HitEffect(Vector3 pos, Vector3 dir)
+    public void HitEffect(Vector3 pos)
     {
         //기본 타격 이펙트
     }

@@ -54,9 +54,9 @@ public abstract class GameUnit : MonoBehaviour
         this.armor = armor;
     }
 
-    //공격 투사체에 피격됬을 때 호출될 함수, damage는 데미지, pos는 공격자의 위치, pushPower : 미는 힘
-    //반환값 : 실제 적용된 데미지
-    public virtual float HitbyAttack(float damage, Vector3 pos, float pushPower)
+    //공격 투사체에 피격됬을 때 호출될 함수
+    //반환값 : HifInfo class
+    public virtual HitInfo HitbyAttack(AttackInfo attackInfo)
     {
         if (invincible || IsDead)
         {
@@ -64,13 +64,17 @@ public abstract class GameUnit : MonoBehaviour
             Debug.Log($"Damaged GameUnit Name : {gameObject.name}\nInvincible : {Invincible}, IsDead : {IsDead}, remainHp : {health}");
 
             //테스트용 코드 끝
-            return 0f;
+            return new HitInfo(this, 0f, attackInfo.AttackPosition);
         }
-        //Damage 적용
-        float validDamage = damage - armor;
+        //Damage 적용, 최소 1의 피해를 입도록 설정하였음.
+        float validDamage = attackInfo.Damage - armor;
+        if(validDamage < 1f)
+        {
+            validDamage = 1f;
+        }
         health -= validDamage;
-        //피격 방향 계산
-        Vector3 dir = transform.position - pos;
+        //피격 방향 계산(타격 위치가 아닌 공격자의 위치를 기준으로 계산한다.)
+        Vector3 dir = transform.position - attackInfo.AttackPosition;
         dir.y = 0;
         if (dir == Vector3.zero)
         {
@@ -85,12 +89,12 @@ public abstract class GameUnit : MonoBehaviour
         }
         else
         {
-            OnDamaged(dir, pushPower);
+            OnDamaged(dir, attackInfo.PushPower);
         }
         //테스트용 코드
-        Debug.Log($"Damaged GameUnit Name : {gameObject.name}\noriginalDamage : {damage}, validDamage : {validDamage}, remainHp : {health}");
+        Debug.Log($"Damaged GameUnit Name : {gameObject.name}\noriginalDamage : {attackInfo.Damage}, validDamage : {validDamage}, remainHp : {health}");
         //테스트용 코드 끝
-        return validDamage < 0 ? 0 : validDamage;
+        return new HitInfo(this,validDamage,attackInfo.AttackPosition);
     }
     protected virtual void OnDead(Vector3 dir)
     {

@@ -121,8 +121,10 @@ public class MonsterD : Monster
         var target = GameManager.Instance.Player.transform.position;
         target.y = 0;
         var warningArea = GameManager.Instance.Effect.WarningAreaEffect(target, range, 2f);
-        warningArea.SetAttackWhenDestory(range, TauntDamage * Atk, 15, "Player", this, null);
-        warningArea.SetAttackWhenDestory(15, 0, 10, "Monster", this, null);
+        var playerAttackInfo = new AttackInfo(this, Atk * TauntDamage, 20f, "Player", warningArea.transform.position);
+        var monsterAttackInfo = new AttackInfo(this, 0f, 10f, "Enemy", warningArea.transform.position);
+        warningArea.SetAttackWhenDestory(range, playerAttackInfo);
+        warningArea.SetAttackWhenDestory(10f, monsterAttackInfo);
         warningArea.SetSignalWhenDestory(TauntMoveEnd);
         yield return new WaitForSeconds(0.4f);
         gameObject.layer = 9;
@@ -157,7 +159,9 @@ public class MonsterD : Monster
             {
                 if(script as AttackObject)
                 {
-                    ((AttackObject)script).Init(Atk * MissileDamage, "Player", 0, missile.transform.position, this, 1, null);
+                    var attackInfo = new AttackInfo(this, Atk * MissileDamage, 0, "Player", missile.transform.position, 1);
+                    ((AttackObject)script).SetAttackInfo(attackInfo);
+                    attackInfo.AttackTransform = missile.transform;
                     script.ChaseBulletFire(7.5f, 90, 8f, GameManager.Instance.Player.transform);
                 }
                 else
@@ -200,7 +204,8 @@ public class MonsterD : Monster
                 effectivePos.x += transform.position.x;
                 effectivePos.z += transform.position.z;
                 var instant = GameManager.Instance.Effect.WarningAreaEffect(effectivePos, explosionRange, 1.5f);
-                instant.SetAttackWhenDestory(explosionRange, ExplosionDamage * Atk, 5f, "Player", this, hashSet, null);
+                var attackInfo = new AttackInfo(this, ExplosionDamage * Atk, 8f, "Player", instant.transform.position);
+                instant.SetAttackWhenDestory(explosionRange, attackInfo, hashSet);
                 instant.SetSignalWhenDestory((objTransform)=> { GameManager.Instance.Effect.ExplosionEffect(objTransform.position); });
             }
             yield return new WaitForSeconds(0.1f);
