@@ -37,6 +37,20 @@ public class EffectManager : MonoBehaviour
         return returnValue;
     }
 
+    //ShockWaveEffect() : pos 위치에 충격파 이펙트 생성.
+    public void ShockWaveEffect(Vector3 pos)
+    {
+        var instant = Instantiate(GameData.PrefabShockWave, pos, new Quaternion(), transform);
+        Destroy(instant, 1f);
+    }
+
+    //ExplosionEffect() : pos 위치에 폭발 이펙트 생성.
+    public void ExplosionEffect(Vector3 pos)
+    {
+        var instant = Instantiate(GameData.PrefabExplosion, pos, new Quaternion(), transform);
+        Destroy(instant, 2f);
+    }
+
     //선택 : 추가적인 각종 이펙트 구현, 필요한 에셋 직접 다운로드하여 사용하여도 됨.
     
     //이 클래스에서의 이펙트는 타격 이펙트를 의미하며, Youtube 강좌 내에서는 없는 내용이므로 후순위로 구현하고

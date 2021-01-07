@@ -142,7 +142,7 @@ public class MonsterD : Monster
         Movespeed = 0;
         transform.position = new Vector3(objTransform.position.x, transform.position.y, objTransform.position.z);
         doTaunt = false;
-        //TODO : 충격파 이펙트 있을시 넣기
+        GameManager.Instance.Effect.ShockWaveEffect(objTransform.position);
     }
 
     private IEnumerator ShotMissile()
@@ -201,6 +201,7 @@ public class MonsterD : Monster
                 effectivePos.z += transform.position.z;
                 var instant = GameManager.Instance.Effect.WarningAreaEffect(effectivePos, explosionRange, 1.5f);
                 instant.SetAttackWhenDestory(explosionRange, ExplosionDamage * Atk, 5f, "Player", this, hashSet, null);
+                instant.SetSignalWhenDestory((objTransform)=> { GameManager.Instance.Effect.ExplosionEffect(objTransform.position); });
             }
             yield return new WaitForSeconds(0.1f);
             minRange = maxRange;
