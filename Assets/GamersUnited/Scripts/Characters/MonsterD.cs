@@ -159,7 +159,7 @@ public class MonsterD : Monster
             {
                 if(script as AttackObject)
                 {
-                    var attackInfo = new AttackInfo(this, Atk * MissileDamage, 0, "Player", missile.transform.position, 1);
+                    var attackInfo = new AttackInfo(this, Atk * MissileDamage, 5f, "Player", missile.transform.position, 1);
                     ((AttackObject)script).SetAttackInfo(attackInfo);
                     attackInfo.AttackTransform = missile.transform;
                     script.ChaseBulletFire(7.5f, 90, 8f, GameManager.Instance.Player.transform);
@@ -206,6 +206,8 @@ public class MonsterD : Monster
                 var instant = GameManager.Instance.Effect.WarningAreaEffect(effectivePos, explosionRange, 1.5f);
                 var attackInfo = new AttackInfo(this, ExplosionDamage * Atk, 8f, "Player", instant.transform.position);
                 instant.SetAttackWhenDestory(explosionRange, attackInfo, hashSet);
+                //아래 이펙트 호출이 리소스를 많이 잡아먹음.
+                //해결법 생각해볼것
                 instant.SetSignalWhenDestory((objTransform)=> { GameManager.Instance.Effect.ExplosionEffect(objTransform.position); });
             }
             yield return new WaitForSeconds(0.1f);

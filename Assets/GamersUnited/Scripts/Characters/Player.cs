@@ -215,9 +215,9 @@ public class Player : GameUnit
     {
         if (!attackDown || weapon == null || IsDamaged || isAttack || isDodge)
             return;
+        LookToMouse();
         if (Weapon.Attack())
         {
-            LookToMouse();
             string animationName = null;
             float animationTime = 0f;
             isAttack = true;
