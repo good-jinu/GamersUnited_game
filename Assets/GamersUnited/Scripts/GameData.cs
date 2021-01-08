@@ -85,7 +85,6 @@ public static class GameData
 
     //Prefab Instantiate를 위해 Prefab GameObject를 미리 Load해두는 부분
     //Path 기준이 Assets/Resources이기 때문에, 아래에 추가하려 할 시 Prefab 저장 위치를 반드시 Resources로 변경하고 사용할것
-    public static readonly GameObject PrefabShotGunBullet = Resources.Load<GameObject>("ShotGun Bullet");
     public static readonly GameObject PrefabGunBullet = Resources.Load<GameObject>("Gun Bullet");
     public static readonly GameObject PrefabSwordAttackArea = Resources.Load<GameObject>("Sword AttackArea");
     public static readonly GameObject PrefabLongSwordAttackArea = Resources.Load<GameObject>("LongSword AttackArea");
@@ -99,7 +98,6 @@ public static class GameData
     public static readonly GameObject PrefabCapsuleAttackArea = Resources.Load<GameObject>("Capsule AttackArea");
     public static readonly GameObject PrefabMissile = Resources.Load<GameObject>("Missile");
     public static readonly GameObject PrefabMissileBoss = Resources.Load<GameObject>("Missile Boss");
-    public static readonly GameObject PrefabRock = Resources.Load<GameObject>("Rock");
     public static readonly GameObject PrefabExplosion = Resources.Load<GameObject>("Explosion");
     public static readonly GameObject PrefabShockWave = Resources.Load<GameObject>("ShockWave");
 
