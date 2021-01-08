@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     private Player player;
     private PlayerSpawnPoint playerSpawn;
     private MainCameraController mainCamera;
+    private PoolManager pooling;
 
     // Prefab 참조 GameData로 이전
 
@@ -22,6 +23,7 @@ public class GameManager : MonoBehaviour
     public Player Player { get => player; set => player = value; }
     public PlayerSpawnPoint PlayerSpawn { get => playerSpawn; set => playerSpawn = value; }
     public MainCameraController MainCamera { get => mainCamera; set => mainCamera = value; }
+    public PoolManager Pooling { get => pooling; set => pooling = value; }
 
     void Awake()
     {

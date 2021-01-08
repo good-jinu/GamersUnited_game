@@ -10,8 +10,13 @@ public class InstantObject : MonoBehaviour
     private Method fixedUpdateMethod;
     private SignalMethod destoryMethod;
     private Rigidbody rigid;
+    private Queue<InstantObject> poolingContainer;
     public enum IncreaseScaleMode { WithoutYAxis, AllAxis }
     public enum TimerAction { Destory, Stop }
+    public void SetPoolingContainer(Queue<InstantObject> container)
+    {
+        poolingContainer = container;
+    }
 
 
     protected virtual void Update()
@@ -29,7 +34,24 @@ public class InstantObject : MonoBehaviour
     {
         if (destoryMethod != null)
             destoryMethod(transform);
-        Destroy(this.gameObject);
+        if (poolingContainer == null)
+        {
+            Destroy(this.gameObject);
+            Debug.Log($"Destory InstantObject : {gameObject.name}");
+        }
+        else
+        {
+            poolingContainer.Enqueue(this);
+            transform.SetParent(GameManager.Instance.Pooling.transform);
+            gameObject.SetActive(false);
+        }
+    }
+
+    protected virtual void OnDisable()
+    {
+        StopActions();
+        transform.localScale = Vector3.one;
+        transform.rotation = new Quaternion();
     }
 
     //외부 호출용 public 함수들

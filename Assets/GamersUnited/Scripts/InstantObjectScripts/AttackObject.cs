@@ -67,6 +67,11 @@ public class AttackObject : InstantObject
             DestoryThis();
         }
     }
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        attackInfo = null;
+    }
     private bool IsHitWallOrFloor(string tag)
     {
         if (tag.Equals("Floor"))
@@ -83,6 +88,7 @@ public class AttackObject : InstantObject
     {
         base.StopActions();
         isActive = false;
+        hitSet = null;
     }
     protected override void DestoryThis()
     {
