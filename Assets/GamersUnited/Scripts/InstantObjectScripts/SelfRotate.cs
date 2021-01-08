@@ -6,6 +6,6 @@ public class SelfRotate : MonoBehaviour
 {
     void Update()
     {
-        transform.Rotate(new Vector3(90, 0, 0));
+        transform.Rotate(new Vector3(90 * Time.deltaTime, 0, 0));
     }
 }
