@@ -25,14 +25,14 @@ public class MonsterB : Monster
         IsChase = false;
         Ani.SetBool("isAttack", true);
         yield return new WaitForSeconds(0.2f);
-        var area = Instantiate(GameData.PrefabMonsterMeleeAttackArea, transform);
-        var script = area.GetComponent<AttackObject>();
-        var attackInfo = new AttackInfo(this, Atk * AssaultDamage, 5f, "Player", transform.position);
-        script.SetAttackInfo(attackInfo, AttackObject.IgnoreType.IgnoreWallAndFloor);
+        AttackObject attack = GameManager.Instance.Pooling.GetAttackObject(PoolManager.AttackObjectList.MonsterMeleeAttack);
+        attack.transform.SetParent(transform);
+        var attackInfo = new AttackInfo(this, Atk * AssaultDamage, 10f, "Player", transform.position);
+        attack.SetAttackInfo(attackInfo, AttackObject.IgnoreType.IgnoreWallAndFloor);
+        attack.SetTimer(1f, InstantObject.TimerAction.Destory);
         Rigid.AddForce(transform.forward * AssaultForce, ForceMode.Impulse);
         yield return new WaitForSeconds(1f);
         Rigid.velocity = Vector3.zero;
-        Destroy(script.gameObject);
         yield return new WaitForSeconds(0.8f);
         //공격 후딜레이
         yield return new WaitForSeconds(0.25f);

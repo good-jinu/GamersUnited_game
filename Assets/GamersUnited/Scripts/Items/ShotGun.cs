@@ -35,14 +35,15 @@ public class ShotGun : Weapon
     IEnumerator BulletFire(float damage)
     {
         for(int i = 0; i < 5; ++i)
-        { 
-            var bullet = Instantiate(GameData.PrefabShotGunBullet, Unit.transform.position, Unit.transform.rotation);
+        {
+            AttackObject bullet = GameManager.Instance.Pooling.GetAttackObject(PoolManager.AttackObjectList.Bullet);
+            bullet.transform.position = Unit.transform.position;
+            bullet.transform.rotation = Unit.transform.rotation;
             bullet.transform.Rotate(new Vector3(0, (i - 2) * Angle, 0));
-            var script = bullet.GetComponent<AttackObject>();
             var bulletstat = GameData.GetWeaponExtensionStat(WeaponType.Shotgun, Grade);
             var info = new AttackInfo(Unit, damage, 0, "Enemy", bullet.transform.position, bulletstat.Item3);
-            script.SetAttackInfo(info);
-            script.BulletFire(BulletSpeed, bulletstat.Item1);
+            bullet.SetAttackInfo(info);
+            bullet.BulletFire(BulletSpeed, bulletstat.Item1);
         }
         yield break;
     }

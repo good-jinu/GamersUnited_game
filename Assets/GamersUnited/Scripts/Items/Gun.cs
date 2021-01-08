@@ -33,12 +33,13 @@ public class Gun : Weapon
 
     IEnumerator BulletFire(float damage)
     {
-        var bullet = Instantiate(GameData.PrefabGunBullet, Unit.transform.position, Unit.transform.rotation);
-        var script = bullet.GetComponent<AttackObject>();
+        AttackObject bullet = GameManager.Instance.Pooling.GetAttackObject(PoolManager.AttackObjectList.Bullet);
+        bullet.transform.position = Unit.transform.position;
+        bullet.transform.rotation = Unit.transform.rotation;
         var bulletstat = GameData.GetWeaponExtensionStat(WeaponType.Gun, Grade);
         var info = new AttackInfo(Unit, damage, 0, "Enemy", bullet.transform.position, bulletstat.Item3);
-        script.SetAttackInfo(info);
-        script.BulletFire(BulletSpeed, bulletstat.Item1);
+        bullet.SetAttackInfo(info);
+        bullet.BulletFire(BulletSpeed, bulletstat.Item1);
         yield break;
     }
 }

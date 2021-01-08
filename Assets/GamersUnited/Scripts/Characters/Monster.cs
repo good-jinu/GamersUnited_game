@@ -27,7 +27,7 @@ public abstract class Monster : GameUnit
         meshes = GetComponentsInChildren<MeshRenderer>();
         if (nav != null)
         {
-            Invoke("StartChase", 2.5f);
+            Invoke("StartChase", 1f);
         }
     }
 
@@ -64,6 +64,7 @@ public abstract class Monster : GameUnit
         if (IsDead || !AIActive)
             return;
         nav.SetDestination(GameManager.Instance.Player.transform.position);
+        nav.speed = Movespeed;
         nav.isStopped = !IsChase;
     }
     protected virtual void FixedUpdate()
@@ -94,7 +95,6 @@ public abstract class Monster : GameUnit
     private void StartChase()
     {
         isChase = true;
-        nav.speed = Movespeed;
         ani.SetBool("isWalk", true);
     }
 

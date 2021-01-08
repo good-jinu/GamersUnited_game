@@ -236,12 +236,12 @@ public class InstantObject : MonoBehaviour
     {
         return (objTransform) =>
         {
-            var instant = Instantiate(GameData.PrefabCapsuleAttackArea, transform.position, transform.rotation);
-            var script = instant.GetComponent<AttackObject>();
-            instant.transform.localScale = Vector3.one * scale;
-            script.HitSet = hitSet;
-            script.SetAttackInfo(attackInfo,AttackObject.IgnoreType.IgnoreWallAndFloor);
-            script.SetTimer(0.1f, TimerAction.Destory);
+            var area = GameManager.Instance.Pooling.GetAttackObject(PoolManager.AttackObjectList.CapsuleAttack);
+            area.transform.position = transform.position;
+            area.transform.localScale = Vector3.one * scale;
+            area.HitSet = hitSet;
+            area.SetAttackInfo(attackInfo,AttackObject.IgnoreType.IgnoreWallAndFloor);
+            area.SetTimer(0.1f, TimerAction.Destory);
         };
     }
     

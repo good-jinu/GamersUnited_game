@@ -7,7 +7,8 @@ public class MonsterD : Monster
     private const float TauntDamage = 40f;
     private const float MissileDamage = 8f;
     private const float ExplosionDamage = 30f;
-    public Transform[] Ports = new Transform[2];
+    [SerializeField]
+    private Transform[] ports = new Transform[2];
 
     private Pattern taunt, shotMissile, explosion;
     private bool doTaunt;
@@ -153,22 +154,13 @@ public class MonsterD : Monster
         Ani.SetTrigger("doShot");
         yield return new WaitForSeconds(0.15f);
         for (int i = 0; i < 2; ++i) {
-            var missile = Instantiate(GameData.PrefabMissileBoss, Ports[i].position, transform.rotation);
-            var scripts = missile.GetComponentsInChildren<InstantObject>();
-            foreach(InstantObject script in scripts)
-            {
-                if(script as AttackObject)
-                {
-                    var attackInfo = new AttackInfo(this, Atk * MissileDamage, 5f, "Player", missile.transform.position, 1);
-                    ((AttackObject)script).SetAttackInfo(attackInfo);
-                    attackInfo.SetSyncPosition(missile.transform);
-                    script.ChaseBulletFire(7.5f, 90, 8f, GameManager.Instance.Player.transform);
-                }
-                else
-                {
-                    script.SelfRotate(90f, true, false, false);
-                }
-            }
+            AttackObject missile = GameManager.Instance.Pooling.GetAttackObject(PoolManager.AttackObjectList.MissileBoss);
+            missile.transform.position = ports[i].transform.position;
+            missile.transform.rotation = transform.rotation;
+            var attackInfo = new AttackInfo(this, Atk * MissileDamage, 5f, "Player", missile.transform.position, 1);
+            missile.SetAttackInfo(attackInfo);
+            attackInfo.SetSyncPosition(missile.transform);
+            missile.ChaseBulletFire(7.5f, 90, 8f, GameManager.Instance.Player.transform);
             yield return new WaitForSeconds(0.1f);
         }
         yield return new WaitForSeconds(0.7f);

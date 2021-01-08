@@ -23,22 +23,13 @@ public class EffectManager : MonoBehaviour
         if (areaLifeTime <= 0f)
             throw new System.ArgumentOutOfRangeException(nameof(areaLifeTime), "Must be greater than 0.");
 
-        var area = Instantiate(GameData.PrefabWarningArea, pos, new Quaternion(), transform);
-        InstantObject returnValue = null;
-        area.transform.localScale = new Vector3(areaScale, 1, areaScale);
-        foreach (var script in area.GetComponentsInChildren<InstantObject>())
-        {
-            if(script.gameObject == area)
-            {
-                script.SetTimer(areaLifeTime,InstantObject.TimerAction.Destory);
-                returnValue = script;
-            }
-            else
-            {
-                script.IncreaseScale(1f / areaLifeTime, 0, 1, InstantObject.IncreaseScaleMode.WithoutYAxis);
-            }
-        }
-        return returnValue;
+        var area = GameManager.Instance.Pooling.GetWarningAreaEffect();
+        area.first.transform.localScale = new Vector3(areaScale, 1, areaScale);
+        area.first.transform.position = pos;
+        area.first.SetTimer(areaLifeTime, InstantObject.TimerAction.Destory);
+        area.second.transform.localScale = new Vector3(1, 0.01f, 1);
+        area.second.IncreaseScale(1f / areaLifeTime, 0, 1, InstantObject.IncreaseScaleMode.WithoutYAxis);
+        return area.first;
     }
 
     //ShockWaveEffect() : pos 위치에 충격파 이펙트 생성.
@@ -51,8 +42,9 @@ public class EffectManager : MonoBehaviour
     //ExplosionEffect() : pos 위치에 폭발 이펙트 생성.
     public void ExplosionEffect(Vector3 pos)
     {
-        var instant = Instantiate(GameData.PrefabExplosion, pos, new Quaternion(), transform);
-        Destroy(instant, 2f);
+        var explosion = GameManager.Instance.Pooling.GetExplosionEffect();
+        explosion.transform.position = pos;
+        explosion.SetTimer(2f, InstantObject.TimerAction.Destory);
     }
 
     //선택 : 추가적인 각종 이펙트 구현, 필요한 에셋 직접 다운로드하여 사용하여도 됨.

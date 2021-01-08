@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a8ee8f95c80f954881c4c58906889d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Ports:
+  ports:
   - {fileID: 4383675148473201661}
   - {fileID: 3039782550655436988}
 --- !u!1001 &2118632795754867347
