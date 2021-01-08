@@ -51,7 +51,7 @@ public class MonsterD : Monster
                 }
                 else
                 {
-                    SelectRandomPattern(taunt, shotMissile);
+                    pattern = SelectRandomPattern(taunt, shotMissile);
                 }
                 //Do Pattern
                 if(pattern != null)
@@ -134,7 +134,7 @@ public class MonsterD : Monster
         Movespeed = Mathf.Sqrt(Mathf.Pow(target.x - transform.position.x, 2) + Mathf.Pow(target.z - transform.position.z, 2)) / 1.1f;
         tauntTarget = new Vector2(target.x, target.z);
         doTaunt = true;
-        SetInvincible(1.5f);
+        SetInvincible(1.75f);
         yield return new WaitForSeconds(1.75f);
         gameObject.layer = 8;
         IsAttack = false;

@@ -37,7 +37,6 @@ public class InstantObject : MonoBehaviour
         if (poolingContainer == null)
         {
             Destroy(this.gameObject);
-            Debug.Log($"Destory InstantObject : {gameObject.name}");
         }
         else
         {

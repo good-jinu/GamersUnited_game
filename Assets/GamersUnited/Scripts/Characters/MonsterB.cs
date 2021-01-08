@@ -27,6 +27,8 @@ public class MonsterB : Monster
         yield return new WaitForSeconds(0.2f);
         AttackObject attack = GameManager.Instance.Pooling.GetAttackObject(PoolManager.AttackObjectList.MonsterMeleeAttack);
         attack.transform.SetParent(transform);
+        attack.transform.localPosition = Vector3.zero;
+        attack.transform.rotation = transform.rotation;
         var attackInfo = new AttackInfo(this, Atk * AssaultDamage, 10f, "Player", transform.position);
         attack.SetAttackInfo(attackInfo, AttackObject.IgnoreType.IgnoreWallAndFloor);
         attack.SetTimer(1f, InstantObject.TimerAction.Destory);

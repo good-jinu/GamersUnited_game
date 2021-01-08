@@ -44,7 +44,7 @@ public class EffectManager : MonoBehaviour
     {
         var explosion = GameManager.Instance.Pooling.GetExplosionEffect();
         explosion.transform.position = pos;
-        explosion.SetTimer(2f, InstantObject.TimerAction.Destory);
+        explosion.SetTimer(1f, InstantObject.TimerAction.Destory);
     }
 
     //선택 : 추가적인 각종 이펙트 구현, 필요한 에셋 직접 다운로드하여 사용하여도 됨.
