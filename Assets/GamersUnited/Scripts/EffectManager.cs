@@ -10,7 +10,9 @@ public class EffectManager : MonoBehaviour
     }
     public void HitEffect(Vector3 pos)
     {
-        //기본 타격 이펙트
+        var effect = GameManager.Instance.Pooling.GetParticleEffect(PoolManager.ParticleList.HitEffectA);
+        effect.transform.position = pos + new Vector3(0, 10, -3);
+        effect.SetTimer(0.2f, InstantObject.TimerAction.Destory);
     }
     //WarningAreaEffect() : pos 위치에 경고 장판 생성.
     //areaScale : 경고 장판의 크기
@@ -42,7 +44,7 @@ public class EffectManager : MonoBehaviour
     //ExplosionEffect() : pos 위치에 폭발 이펙트 생성.
     public void ExplosionEffect(Vector3 pos)
     {
-        var explosion = GameManager.Instance.Pooling.GetExplosionEffect();
+        var explosion = GameManager.Instance.Pooling.GetParticleEffect(PoolManager.ParticleList.Explosion);
         explosion.transform.position = pos;
         explosion.SetTimer(1f, InstantObject.TimerAction.Destory);
     }

@@ -18,6 +18,8 @@ public class PoolManager : MonoBehaviour
     private int capsuleAttackCount;
     [SerializeField]
     private int monsterMeleeAttackCount;
+    [SerializeField]
+    private int hitEffectACount;
 
     //Container
     private Queue<InstantObject> _bullet;
@@ -27,10 +29,15 @@ public class PoolManager : MonoBehaviour
     private Queue<InstantObject> _explosionEffect;
     private Queue<InstantObject> _capsuleAttack;
     private Queue<InstantObject> _monsterMeleeAttack;
+    private Queue<InstantObject> _hitEffectA;
 
     public enum AttackObjectList
     {
         Bullet, Missile, MissileBoss, CapsuleAttack, MonsterMeleeAttack
+    }
+    public enum ParticleList
+    {
+        Explosion, HitEffectA
     }
 
     //Initialize (Unity method)
@@ -70,6 +77,11 @@ public class PoolManager : MonoBehaviour
         for (int i = 0; i < monsterMeleeAttackCount; ++i)
         {
             AddToContainer(GameData.PrefabMonsterMeleeAttackArea, _monsterMeleeAttack);
+        }
+        _hitEffectA = new Queue<InstantObject>();
+        for (int i = 0; i < monsterMeleeAttackCount; ++i)
+        {
+            AddToContainer(GameData.PrefabHitEffectA, _hitEffectA);
         }
     }
     private void Start()
@@ -133,13 +145,28 @@ public class PoolManager : MonoBehaviour
         }
         return pair;
     }
-    public InstantObject GetExplosionEffect()
+    public InstantObject GetParticleEffect(ParticleList type)
     {
-        if(_explosionEffect.Count == 0)
+        Queue<InstantObject> container = null;
+        GameObject prefab = null;
+
+        switch (type)
         {
-            AddToContainer(GameData.PrefabExplosion, _explosionEffect);
+            case ParticleList.Explosion:
+                container = _explosionEffect;
+                prefab = GameData.PrefabExplosion;
+                break;
+            case ParticleList.HitEffectA:
+                container = _hitEffectA;
+                prefab = GameData.PrefabHitEffectA;
+                break;
         }
-        InstantObject rv = _explosionEffect.Dequeue();
+
+        if (container.Count == 0)
+        {
+            AddToContainer(prefab, container);
+        }
+        InstantObject rv = container.Dequeue();
         rv.gameObject.SetActive(true);
         return rv;
     }

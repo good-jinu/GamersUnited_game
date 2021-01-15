@@ -27,7 +27,8 @@ public class Sword : Weapon
     {
         var area = Instantiate(GameData.PrefabSwordAttackArea, Unit.transform);
         var script = area.GetComponent<AttackObject>();
-        var info = new AttackInfo(Unit, damage, 0, "Enemy", Unit.transform.position, int.MaxValue);
+        var info = new AttackInfo(Unit, damage, 0, "Enemy", Unit.transform.position, int.MaxValue, 
+            (HitInfo hitInfo) => { GameManager.Instance.Effect.HitEffect(hitInfo.HitUnit.transform.position); });
         script.SetAttackInfo(info, AttackObject.IgnoreType.IgnoreWallAndFloor);
         script.SetTimer(0.25f, InstantObject.TimerAction.Destory);
         yield break;

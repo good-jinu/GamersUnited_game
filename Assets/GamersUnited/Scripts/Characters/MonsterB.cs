@@ -23,13 +23,15 @@ public class MonsterB : Monster
     {
         IsAttack = true;
         IsChase = false;
+        yield return new WaitForSeconds(0.3f);
         Ani.SetBool("isAttack", true);
         yield return new WaitForSeconds(0.2f);
         AttackObject attack = GameManager.Instance.Pooling.GetAttackObject(PoolManager.AttackObjectList.MonsterMeleeAttack);
         attack.transform.SetParent(transform);
         attack.transform.localPosition = Vector3.zero;
         attack.transform.rotation = transform.rotation;
-        var attackInfo = new AttackInfo(this, Atk * AssaultDamage, 10f, "Player", transform.position);
+        var attackInfo = new AttackInfo(this, Atk * AssaultDamage, 10f, "Player", transform.position, int.MaxValue,
+            (HitInfo info) => { GameManager.Instance.Effect.HitEffect(info.HitUnit.transform.position); });
         attack.SetAttackInfo(attackInfo, AttackObject.IgnoreType.IgnoreWallAndFloor);
         attack.SetTimer(1f, InstantObject.TimerAction.Destory);
         Rigid.AddForce(transform.forward * AssaultForce, ForceMode.Impulse);

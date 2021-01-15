@@ -100,6 +100,7 @@ public static class GameData
     public static readonly GameObject PrefabMissileBoss = Resources.Load<GameObject>("Missile Boss");
     public static readonly GameObject PrefabExplosion = Resources.Load<GameObject>("Explosion");
     public static readonly GameObject PrefabShockWave = Resources.Load<GameObject>("ShockWave");
+    public static readonly GameObject PrefabHitEffectA = Resources.Load<GameObject>("HitEffect_A");
 
 
 }

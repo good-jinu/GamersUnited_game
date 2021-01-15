@@ -50,3 +50,4 @@ MonoBehaviour:
   explosionEffectCount: 50
   capsuleAttackCount: 50
   monsterMeleeAttackCount: 3
+  hitEffectACount: 3
