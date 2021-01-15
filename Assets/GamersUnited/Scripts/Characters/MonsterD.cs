@@ -157,7 +157,7 @@ public class MonsterD : Monster
             AttackObject missile = GameManager.Instance.Pooling.GetAttackObject(PoolManager.AttackObjectList.MissileBoss);
             missile.transform.position = ports[i].transform.position;
             missile.transform.rotation = transform.rotation;
-            var attackInfo = new AttackInfo(this, Atk * MissileDamage, 5f, "Player", missile.transform.position, 1);
+            var attackInfo = new AttackInfo(this, Atk * MissileDamage, 5f, "Player", missile.transform.position, 1, (HitInfo info) => { GameManager.Instance.Effect.ExplosionEffect(info.HitPosition); });
             missile.SetAttackInfo(attackInfo);
             attackInfo.SetSyncPosition(missile.transform);
             missile.ChaseBulletFire(7.5f, 90, 8f, GameManager.Instance.Player.transform);

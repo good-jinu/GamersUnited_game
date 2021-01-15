@@ -29,7 +29,7 @@ public class MonsterC : Monster
         AttackObject missile = GameManager.Instance.Pooling.GetAttackObject(PoolManager.AttackObjectList.Missile);
         missile.transform.position = transform.position;
         missile.transform.rotation = transform.rotation;
-        var attackInfo = new AttackInfo(this, Atk * MissileDamage, 0, "Player", transform.position, 1);
+        var attackInfo = new AttackInfo(this, Atk * MissileDamage, 0, "Player", transform.position, 1, (HitInfo info) => { GameManager.Instance.Effect.ExplosionEffect(info.HitPosition + Vector3.up * 2); });
         missile.SetAttackInfo(attackInfo);
         missile.BulletFire(MissileSpeed, MissileRange);
         yield return new WaitForSeconds(0.7f);

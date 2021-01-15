@@ -44,7 +44,7 @@ public class AttackObject : InstantObject
         {
             hitSet.Add(other.gameObject);
             var hitscript = GameManager.Instance.Units[other.gameObject.name];
-            var hitInfo = hitscript.HitbyAttack(attackInfo);
+            var hitInfo = hitscript.HitbyAttack(attackInfo, transform.position);
             //적용된 데미지가 0 초과일시 데미지 프린트
             if (hitInfo.Damage > 0.0f)
             {

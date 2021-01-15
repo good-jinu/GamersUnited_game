@@ -62,7 +62,7 @@ public abstract class GameUnit : MonoBehaviour
 
     //공격 투사체에 피격됬을 때 호출될 함수
     //반환값 : HifInfo class
-    public virtual HitInfo HitbyAttack(AttackInfo attackInfo)
+    public virtual HitInfo HitbyAttack(AttackInfo attackInfo, Vector3 hitPosition)
     {
         _ = attackInfo ?? throw new System.ArgumentNullException(nameof(attackInfo));
         if (invincible || IsDead)
@@ -71,7 +71,7 @@ public abstract class GameUnit : MonoBehaviour
             Debug.Log($"Damaged GameUnit Name : {gameObject.name}\nInvincible : {Invincible}, IsDead : {IsDead}, remainHp : {health}");
 
             //테스트용 코드 끝
-            return new HitInfo(this, 0f, attackInfo.AttackPosition);
+            return new HitInfo(this, 0f, hitPosition);
         }
         //Damage 적용, 최소 1의 피해를 입도록 설정하였음.
         float validDamage = attackInfo.Damage - armor;
@@ -101,7 +101,7 @@ public abstract class GameUnit : MonoBehaviour
         //테스트용 코드
         Debug.Log($"Damaged GameUnit Name : {gameObject.name}\noriginalDamage : {attackInfo.Damage}, validDamage : {validDamage}, remainHp : {health}");
         //테스트용 코드 끝
-        return new HitInfo(this,validDamage,attackInfo.AttackPosition);
+        return new HitInfo(this,validDamage,hitPosition);
     }
     protected virtual void OnDead(Vector3 dir)
     {
