@@ -14,11 +14,13 @@ public class UIManager : MonoBehaviour
     [Header("Pause Menu")]
     //일시정지 메뉴
     public GameObject PauseMenu;
+    public GameObject youDied;
 
     // Start is called before the first frame update
     void Start()
     {
         GameManager.Instance.UI = this;
+        youDied.SetActive(false);
     }
 
     private void Update()
@@ -99,6 +101,11 @@ public class UIManager : MonoBehaviour
                     break;
             }
         }
+    }
+
+    public void PlayerDied()
+    {
+        youDied.SetActive(true);
     }
     
     public void PrintDamage(float damage, Vector3 pos)
